@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
+import Link from "next/link";
 
 const Bar = styled.div`
   box-sizing: border-box;
@@ -53,7 +54,25 @@ const Login = styled.div`
   overflow: visible;
   position: relative;
   line-height: 1.2;
-  margin-right: auto;
+  margin-left: auto;
+`;
+
+const Columns = styled.div`
+  flex-shrink: 0;
+  flex: 1 0 0px;
+  width: 1px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  position: relative;
+  padding: 0px 0px 0px 0px;
+  align-content: center;
+  flex-wrap: nowrap;
+  gap: 10;
+  border-radius: 0px 0px 0px 0px;
 `;
 
 const Search = styled(Image)`
@@ -68,7 +87,6 @@ const Search = styled(Image)`
   background-position: center;
   border-radius: 24px;
   margin-left: auto;
-  filter: grayscale(100%);
 `;
 
 const User = styled.div`
@@ -82,21 +100,40 @@ const User = styled.div`
   aspect-ratio: 1 / 1;
   border-radius: 16px;
   margin-left: 16px;
+  margin-right: 0;
 `;
 
 export default function Topbar() {
   return (
     <Bar>
-      <Logo
-        src={`/images/whatsubs-small.png`}
-        width="24"
-        height="24"
-        alt="logo"
-      />
-      <About>About</About>
-      <Login>Login</Login>
-      <Search src={`/images/search.png`} width="24" height="24" alt="search" />
-      <User />
+      <Link href={"/"}>
+        <Logo
+          src={`/images/whatsubs-small.png`}
+          width="24"
+          height="24"
+          alt="logo"
+        />
+      </Link>
+      <Link href={"/"}>
+        <About>About</About>
+      </Link>
+      <Link href={"/login"}>
+        <Login>Login</Login>
+      </Link>
+
+      <Columns></Columns>
+
+      <Link href={"/"}>
+        <Search
+          src={`/images/search.png`}
+          width="24"
+          height="24"
+          alt="search"
+        />
+      </Link>
+      <Link href={"/"}>
+        <User />
+      </Link>
     </Bar>
   );
 }
