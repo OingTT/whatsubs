@@ -5,12 +5,18 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 24px;
   gap: 24px;
+
+  @media (max-width: 810px) {
+    padding: 16px;
+    gap: 16px;
+  }
 `;
 
 export default function Home() {
