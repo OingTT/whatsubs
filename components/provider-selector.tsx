@@ -1,43 +1,55 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
+import Link from "next/link";
 
-const Bar = styled.div`
-  box-sizing: border-box;
-  width: 936px;
-  height: min-content;
-  flex-direction: row;
-  justify-content: flex-start;
+const Selector = styled.div`
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 16px 16px 16px 16px;
-  background-color: #eeeeee;
-  overflow: hidden;
-  align-content: center;
-  flex-wrap: nowrap;
-  gap: 12;
-  position: absolute;
+  padding: 16px;
+  background-color: #eee;
   border-radius: 16px;
 `;
 
-const Logo = styled(Image)`
-  overflow: hidden;
+const Providers = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const Provider = styled(Image)`
   border-radius: 100%;
 `;
 
-const Button = styled.button`
-  width: 100px;
-  height: 40px;
-  float: right;
+const SuggestionLink = styled(Link)`
+  color: #333;
+  font-weight: 600;
 `;
 
 export default function ProviderSelector() {
   return (
-    <Bar>
-      <Logo src={`/images/netflix.png`} width="40" height="40" alt="logo" />
-      <Logo src={`/images/watcha.png`} width="40" height="40" alt="logo" />
-      <Logo src={`/images/disneyplus.png`} width="40" height="40" alt="logo" />
-      <Button>
-        <h3>조합 추천받기</h3>
-      </Button>
-    </Bar>
+    <Selector>
+      <Providers>
+        <Provider
+          src={`/images/whatsubs-dark.png`}
+          width="40"
+          height="40"
+          alt="logo"
+        />
+        <Provider
+          src={`/images/whatsubs-dark.png`}
+          width="40"
+          height="40"
+          alt="logo"
+        />
+        <Provider
+          src={`/images/whatsubs-dark.png`}
+          width="40"
+          height="40"
+          alt="logo"
+        />
+      </Providers>
+
+      <SuggestionLink href="/">조합 추천받기</SuggestionLink>
+    </Selector>
   );
 }
