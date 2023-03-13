@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 
 const Bar = styled.div`
   box-sizing: border-box;
@@ -10,15 +11,12 @@ const Bar = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 32px 32px 32px 32px;
+  padding: 32px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   overflow: hidden;
   align-content: center;
-  flex-wrap: nowrap;
-  gap: 24;
   position: absolute;
-  border-radius: 0px 0px 0px 0px;
 `;
 
 const Logo = styled(Image)`
@@ -27,12 +25,11 @@ const Logo = styled(Image)`
   overflow: visible;
   position: relative;
   aspect-ratio: 1 / 1;
-  background-image: url(Frame 29.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 24px;
-  margin-right: 16px;
+  margin-right: 32px;
 `;
 
 const About = styled.div`
@@ -43,7 +40,7 @@ const About = styled.div`
   overflow: visible;
   position: relative;
   line-height: 1.2;
-  margin-right: 16px;
+  margin-right: 32px;
 `;
 
 const Login = styled.div`
@@ -60,33 +57,11 @@ const Login = styled.div`
 const Columns = styled.div`
   flex-shrink: 0;
   flex: 1 0 0px;
-  width: 1px;
   height: 100%;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  overflow: visible;
-  position: relative;
-  padding: 0px 0px 0px 0px;
-  align-content: center;
-  flex-wrap: nowrap;
-  gap: 10;
-  border-radius: 0px 0px 0px 0px;
-`;
-
-const Search = styled(Image)`
-  flex-shrink: 0;
-  display: block;
-  overflow: visible;
-  position: relative;
-  aspect-ratio: 1 / 1;
-  background-image: url(Frame 29.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 24px;
-  margin-left: auto;
+  padding: 0 10px;
 `;
 
 const User = styled.div`
@@ -99,39 +74,34 @@ const User = styled.div`
   position: relative;
   aspect-ratio: 1 / 1;
   border-radius: 16px;
-  margin-left: 16px;
+  margin-left: 32px;
   margin-right: 0;
 `;
 
 export default function Topbar() {
   return (
     <Bar>
-      <Link href={"/"}>
+      <Link href={"/"} passHref>
         <Logo
           src={`/images/whatsubs-small.png`}
-          width="24"
-          height="24"
+          width="32"
+          height="32"
           alt="logo"
         />
       </Link>
-      <Link href={"/"}>
+      <Link href={"/"} passHref>
         <About>About</About>
       </Link>
-      <Link href={"/login"}>
+      <Link href={"/login"} passHref>
         <Login>Login</Login>
       </Link>
 
       <Columns></Columns>
 
-      <Link href={"/"}>
-        <Search
-          src={`/images/search.png`}
-          width="24"
-          height="24"
-          alt="search"
-        />
+      <Link href={"/"} passHref>
+        <MagnifyingGlass size={32}></MagnifyingGlass>
       </Link>
-      <Link href={"/"}>
+      <Link href={"/"} passHref>
         <User />
       </Link>
     </Bar>
