@@ -9,6 +9,10 @@ const Selector = styled.div`
   padding: 16px;
   background-color: #eee;
   border-radius: 16px;
+
+  @media (min-width: 1200px) {
+    width: 936px;
+  }
 `;
 
 const Providers = styled.div`
