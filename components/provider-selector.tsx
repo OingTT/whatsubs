@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Selector = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
