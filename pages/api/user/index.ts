@@ -8,7 +8,7 @@ export default async function session(
 ) {
   const session = await getSession({ req });
 
-  if (!session) return res.json(null);
+  if (!session) return res.status(400).end();
 
   const user = await prisma.user.findUnique({
     where: {

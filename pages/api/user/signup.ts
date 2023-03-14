@@ -8,9 +8,11 @@ export default async function session(
 ) {
   const session = await getSession({ req });
 
+  if (!session) return res.status(400).end();
+
   const user = await prisma.user.create({
     data: {
-      ...session?.user,
+      ...session.user,
       ...req.body,
     },
   });
