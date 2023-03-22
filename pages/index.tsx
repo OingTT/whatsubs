@@ -3,6 +3,7 @@ import ProviderSelector from "@/components/provider-selector";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
 import { signOut } from "next-auth/react";
+import Sliders from "@/components/sliders";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -27,7 +28,7 @@ export default function Home() {
       <Wrapper>
         <ProviderSelector />
       </Wrapper>
-
+      <Sliders />
       {user && (
         <div>
           <h1>Login status</h1>
