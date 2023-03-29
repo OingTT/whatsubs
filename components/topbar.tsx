@@ -42,8 +42,7 @@ export default function Topbar() {
         />
       </Link>
 
-      <Nav href="/about">About</Nav>
-      <Nav href="/login">Login</Nav>
+      <Nav href="/review">평가하기</Nav>
 
       <Spacer />
 
