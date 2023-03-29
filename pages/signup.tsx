@@ -1,17 +1,42 @@
 import PrimaryButton from "@/components/button/primary-button";
 import SecondaryButton from "@/components/button/secondary-button";
-import Input from "@/components/input/input";
+import TextInput from "@/components/input/text-input";
 import Radio from "@/components/input/radio";
 import useMutation from "@/lib/client/useMutation";
 import styled from "@emotion/styled";
 import { PencilSimple } from "@phosphor-icons/react";
-import { User } from "@prisma/client";
+import { Occupation, User } from "@prisma/client";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
+import Select from "@/components/input/select";
+
+const occupations = [
+  "기타",
+  "교육자",
+  "예술가",
+  "사무직",
+  "대학(원)생",
+  "서비스직",
+  "의료직",
+  "경영자",
+  "농업",
+  "건축가",
+  "초/중/고등학생",
+  "변호사",
+  "개발자",
+  "은퇴",
+  "영업직",
+  "과학자",
+  "자영업자",
+  "공학자",
+  "수공업자",
+  "미취업자/주부",
+  "작가",
+];
 
 const Wrapper = styled.form`
   width: 100vw;
@@ -61,7 +86,7 @@ const Group = styled.div`
 `;
 
 const Hint = styled.span`
-  font-weight: 600;
+  font-weight: bold;
   font-size: 12px;
   color: #fff;
 `;
@@ -69,6 +94,7 @@ const Hint = styled.span`
 interface SignupForm {
   name: string;
   birth: Date;
+  occupation: string;
   gender: "M" | "F";
 }
 
@@ -130,19 +156,30 @@ export default function Signup() {
       </ImageWrapper>
 
       <Group>
-        <Input
+        <TextInput
           type="text"
           register={register("name", { required: true })}
           defaultValue={session?.user?.name!}
           label="닉네임"
           required
         />
-        <Input
+        <TextInput
           type="date"
           register={register("birth", { required: true, valueAsDate: true })}
           label="생년월일"
           required
         />
+        <Select
+          register={register("occupation", { required: true })}
+          label="직업"
+          required
+        >
+          {Object.keys(Occupation).map((occupation, index) => (
+            <option key={index} value={occupation}>
+              {occupations[index]}
+            </option>
+          ))}
+        </Select>
         <Radio
           register={register("gender", { required: true })}
           ids={["M", "F"]}
@@ -154,7 +191,7 @@ export default function Signup() {
       <Group>
         <SecondaryButton onClick={onCancel}>취소</SecondaryButton>
         <PrimaryButton>{loading ? "가입 중..." : "가입하기"}</PrimaryButton>
-        <Hint>생년월일과 성별은 보다 정확한 콘텐츠 추천을 위해 수집해요.</Hint>
+        <Hint>개인정보는 보다 정확한 콘텐츠 추천을 위해 수집해요.</Hint>
       </Group>
     </Wrapper>
   );
