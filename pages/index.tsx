@@ -1,5 +1,6 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
+import Slider from "@/components/touch-slider";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
 import MovieRating from "@/components/Random/movieRating";
