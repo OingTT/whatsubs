@@ -1,6 +1,8 @@
+import { Movie } from "@/lib/client/interface";
 import useIsDesktop from "@/lib/client/useIsDesktop";
 import styled from "@emotion/styled";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
+import Poster from "./poster";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -48,18 +50,6 @@ const Contents = styled.div`
   }
 `;
 
-const Poster = styled.div`
-  min-width: 168px;
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.25);
-  background-color: #333333;
-  aspect-ratio: 2/3;
-  border-radius: 16px;
-
-  @media (max-width: 810px) {
-    min-width: 120px;
-  }
-`;
-
 const Button = styled.div`
   width: 72px;
   height: 72px;
@@ -72,9 +62,10 @@ const Button = styled.div`
 
 interface SliderProps {
   title: string;
+  data?: Movie[];
 }
 
-export default function Slider({ title }: SliderProps) {
+export default function Slider({ title, data }: SliderProps) {
   const isDesktop = useIsDesktop();
 
   return (
@@ -85,8 +76,8 @@ export default function Slider({ title }: SliderProps) {
           <Button>
             <CaretLeft size={24} color="#333" weight="bold" />
           </Button>
-          {Array.from({ length: 5 }, (_, index) => (
-            <Poster key={index} />
+          {data?.slice(0, 5).map((movie, index) => (
+            <Poster key={index} data={movie} />
           ))}
           <Button>
             <CaretRight size={24} color="#333" weight="bold" />
@@ -94,8 +85,8 @@ export default function Slider({ title }: SliderProps) {
         </Contents>
       ) : (
         <Contents>
-          {Array.from({ length: 20 }, (_, index) => (
-            <Poster key={index} />
+          {data?.map((movie, index) => (
+            <Poster key={index} data={movie} />
           ))}
         </Contents>
       )}

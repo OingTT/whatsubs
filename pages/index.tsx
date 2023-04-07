@@ -1,8 +1,10 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
 import Slider from "@/components/slider";
+import { MovieDiscover } from "@/lib/client/interface";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,6 +27,9 @@ const Wrapper = styled.div`
 
 export default function Home() {
   const user = useUser();
+  const { data } = useSWR<MovieDiscover>(
+    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
+  );
 
   return (
     <Layout>
