@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   border-radius: 16px;
 `;
 
-const Inp = styled.input`
+const Input = styled.input`
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -35,7 +35,7 @@ const Label = styled.label`
   align-items: center;
   border-radius: 8px;
   color: #bbb;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
 `;
 
@@ -44,7 +44,7 @@ const Button = styled.div`
   height: 100%;
 `;
 
-interface TextInputProps {
+interface RadioProps {
   register: UseFormRegisterReturn;
   defaultValue?: string;
   labels?: string[];
@@ -58,12 +58,12 @@ export default function Radio({
   labels,
   ids,
   required,
-}: TextInputProps) {
+}: RadioProps) {
   return (
     <Wrapper>
       {ids.map((id, index) => (
         <Button key={index}>
-          <Inp
+          <Input
             id={id}
             value={id}
             type="radio"

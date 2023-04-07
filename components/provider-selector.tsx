@@ -27,7 +27,7 @@ const Provider = styled(Image)`
 
 const SuggestionLink = styled(Link)`
   color: #333;
-  font-weight: 600;
+  font-weight: bold;
 `;
 
 export default function ProviderSelector() {

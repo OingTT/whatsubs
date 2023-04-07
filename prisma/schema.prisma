@@ -8,11 +8,36 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum Occupation {
+  OTHER
+  ACADEMIC_EDUCATOR
+  ARTIST
+  CLERICAL_ADMIN
+  COLLEGE_GRADSTUDENT
+  CUSTOMERSERVICE
+  DOCTOR_HEALTHCARE
+  EXECUTIVE_MANAGERIAL
+  FARMER
+  HOMEMAKER
+  K12STUDENT
+  LAWYER
+  PROGRAMMER
+  RETIRED
+  SALES_MARKETING
+  SCIENTIST
+  SELFEMPLOYED
+  TECHNICIAN_ENGINEER
+  TRADESMAN_CRAFTSMAN
+  UNEMPLOYED
+  WRITER
+}
+
 model User {
-  id     Int      @id @default(autoincrement())
-  email  String   @unique
-  name   String
-  birth  DateTime @db.Date
-  gender String   @db.Char(1)
-  image  String?
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  name       String
+  birth      DateTime   @db.Date
+  occupation Occupation
+  gender     String     @db.Char(1)
+  image      String?
 }

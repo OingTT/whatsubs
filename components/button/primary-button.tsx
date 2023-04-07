@@ -12,7 +12,7 @@ const Button = styled.button`
   overflow: hidden;
   border-radius: 16px;
   color: #fff;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 16px;
   border: none;
   cursor: pointer;
