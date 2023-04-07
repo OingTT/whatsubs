@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
-import Slider from "@/components/touch-slider";
+import Slider from "@/components/slider";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
 
@@ -31,6 +31,11 @@ export default function Home() {
       <Wrapper>
         <ProviderSelector />
       </Wrapper>
+
+      <Slider title="추천 콘텐츠" />
+      <Slider title="인기 콘텐츠" />
+      <Slider title="시청 중인 콘텐츠" />
+      <Slider title="찜한 콘텐츠" />
     </Layout>
   );
 }
