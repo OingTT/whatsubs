@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import TouchSlider from "@/components/touch-slider";
+// import TouchSlider from "@/components/touch-slider";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
 import { BookmarkSimple, Check, Eye, Play } from "@phosphor-icons/react";
@@ -242,9 +242,9 @@ export default function Home() {
         </Genres>
       </Wrapper>
 
+      {/* <TouchSlider />
       <TouchSlider />
-      <TouchSlider />
-      <TouchSlider />
+      <TouchSlider /> */}
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
