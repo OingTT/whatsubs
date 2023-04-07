@@ -1,3 +1,4 @@
+import { Movie } from "@/lib/client/interface";
 import useIsDesktop from "@/lib/client/useIsDesktop";
 import styled from "@emotion/styled";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
