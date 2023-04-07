@@ -1,9 +1,8 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
-import Slider from "@/components/touch-slider";
+import Slider from "@/components/slider";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
-import MovieRating from "@/components/Random/movieRating";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -32,7 +31,11 @@ export default function Home() {
       <Wrapper>
         <ProviderSelector />
       </Wrapper>
-      <MovieRating />
+
+      <Slider title="추천 콘텐츠" />
+      <Slider title="인기 콘텐츠" />
+      <Slider title="시청 중인 콘텐츠" />
+      <Slider title="찜한 콘텐츠" />
     </Layout>
   );
 }
