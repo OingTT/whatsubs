@@ -14,6 +14,7 @@ const Bar = styled.div`
   gap: 24px;
   position: fixed;
   top: 0;
+  z-index: 100;
 `;
 
 const Nav = styled(Link)`
@@ -39,6 +40,7 @@ export default function Topbar() {
           width="24"
           height="24"
           alt="Logo"
+          priority
         />
       </Link>
 
