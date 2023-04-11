@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import useUser from "@/lib/client/useUser";
 
 const Bar = styled.div`
   width: 100%;
@@ -14,6 +15,7 @@ const Bar = styled.div`
   gap: 24px;
   position: fixed;
   top: 0;
+  z-index: 100;
 `;
 
 const Nav = styled(Link)`
@@ -26,24 +28,25 @@ const Spacer = styled.div`
 `;
 
 const User = styled(Image)`
-  background-color: #333333;
   border-radius: 100%;
 `;
 
 export default function Topbar() {
+  const user = useUser();
+
   return (
     <Bar>
       <Link href="/">
         <Image
-          src={`/images/whatsubs-small.png`}
+          src="/images/whatsubs-small.png"
           width="24"
           height="24"
           alt="Logo"
+          priority
         />
       </Link>
 
-      <Nav href="/about">About</Nav>
-      <Nav href="/login">Login</Nav>
+      <Nav href="/review">평가하기</Nav>
 
       <Spacer />
 
@@ -52,7 +55,7 @@ export default function Topbar() {
       </Link>
       <Link href="/user">
         <User
-          src="/images/whatsubs-dark.png"
+          src={user?.image || "/images/whatsubs-dark.png"}
           width="32"
           height="32"
           alt="User"

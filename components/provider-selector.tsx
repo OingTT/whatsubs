@@ -10,10 +10,6 @@ const Selector = styled.div`
   padding: 16px;
   background-color: #eee;
   border-radius: 16px;
-
-  @media (min-width: 1200px) {
-    width: 936px;
-  }
 `;
 
 const Providers = styled.div`
@@ -27,7 +23,7 @@ const Provider = styled(Image)`
 
 const SuggestionLink = styled(Link)`
   color: #333;
-  font-weight: 600;
+  font-weight: bold;
 `;
 
 export default function ProviderSelector() {
