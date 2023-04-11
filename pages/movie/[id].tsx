@@ -1,8 +1,9 @@
 import Layout from "@/components/layout";
-// import TouchSlider from "@/components/touch-slider";
-import useUser from "@/lib/client/useUser";
+import WatchSelector from "@/components/watch-selector";
+import useIsMobile from "@/lib/client/useIsMobile";
 import styled from "@emotion/styled";
-import { BookmarkSimple, Check, Eye, Play } from "@phosphor-icons/react";
+import { Play } from "@phosphor-icons/react";
+import { useRouter } from "next/router";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -67,26 +68,6 @@ const SubTitle = styled.span`
 
   @media (max-width: 810px) {
     font-size: 16px;
-  }
-`;
-
-const Buttons = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const Button = styled.div`
-  width: 48px;
-  height: 48px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #eeeeee;
-  border-radius: 100%;
-
-  @media (max-width: 810px) {
-    width: 40px;
-    height: 40px;
   }
 `;
 
@@ -188,8 +169,12 @@ const DetailsBody = styled.div`
   }
 `;
 
-export default function Home() {
-  const user = useUser();
+export default function Movie() {
+  const isMobile = useIsMobile();
+
+  const {
+    query: { id },
+  } = useRouter();
 
   return (
     <Layout>
@@ -201,17 +186,7 @@ export default function Home() {
             <SubTitle>평점 개봉연도 관람등급</SubTitle>
           </TitleBar>
 
-          <Buttons>
-            <Button>
-              <BookmarkSimple />
-            </Button>
-            <Button>
-              <Eye />
-            </Button>
-            <Button>
-              <Check />
-            </Button>
-          </Buttons>
+          <WatchSelector id={Number(id)} large={!isMobile} absoluteStars />
         </Header>
 
         <Selector>

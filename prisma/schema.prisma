@@ -40,4 +40,23 @@ model User {
   occupation Occupation
   gender     String     @db.Char(1)
   image      String?
+  reviews    Review[]
+}
+
+enum Watch {
+  WATCHED
+  WATCHING
+  WANT_TO_WATCH
+}
+
+model Review {
+  id      Int     @id @default(autoincrement())
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int
+  movieId Int
+  watch   Watch
+  rating  Int     @default(0) @db.TinyInt
+  summary String? @db.Text
+
+  @@index([userId])
 }

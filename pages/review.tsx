@@ -1,6 +1,9 @@
 import Layout from "@/components/layout";
-import useUser from "@/lib/client/useUser";
+import ReviewPoster from "@/components/review-poster";
+import { MovieDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
+import { useEffect, useRef } from "react";
+import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -10,6 +13,7 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 24px;
   gap: 24px;
+  position: relative;
 
   @media (min-width: 1200px) {
     width: 984px;
@@ -41,15 +45,41 @@ const Grid = styled.div`
   }
 `;
 
-const Poster = styled.div`
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.25);
-  background-color: #333333;
-  aspect-ratio: 2/3;
-  border-radius: 16px;
+const Loader = styled.div`
+  position: absolute;
+  bottom: 800px;
 `;
 
+const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+  if (previousPageData && !previousPageData.results.length) return null;
+  return `https://api.themoviedb.org/3/trending/movie/week?api_key=${
+    process.env.NEXT_PUBLIC_TMDB_API_KEY
+  }&language=ko-KR&page=${pageIndex + 1}`;
+};
+
 export default function Review() {
-  const user = useUser();
+  const { data, setSize } = useSWRInfinite<MovieDiscover>(getKey, {
+    revalidateFirstPage: false,
+  });
+
+  const loader = useRef<HTMLDivElement>(null);
+
+  // Load more when the loader is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log("scroll");
+        setSize((size) => size + 1);
+      }
+    });
+    const ref = loader.current;
+
+    if (ref) observer.observe(ref);
+
+    return () => {
+      if (ref) observer.unobserve(ref);
+    };
+  }, [setSize]);
 
   return (
     <Layout>
@@ -59,10 +89,13 @@ export default function Review() {
         </Header>
 
         <Grid>
-          {Array.from({ length: 120 }, (_, index) => (
-            <Poster key={index} />
-          ))}
+          {data?.map((page) => {
+            return page.results.map((movie) => (
+              <ReviewPoster key={movie.id} movie={movie} />
+            ));
+          })}
         </Grid>
+        <Loader ref={loader} />
       </Wrapper>
     </Layout>
   );
