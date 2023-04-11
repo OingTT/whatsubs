@@ -1,16 +1,17 @@
 import Layout from "@/components/layout";
 import WatchSelector from "@/components/watch-selector";
+import { MovieDetail } from "@/lib/client/interface";
 import useIsMobile from "@/lib/client/useIsMobile";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 24px;
   gap: 24px;
 
@@ -24,10 +25,12 @@ const Wrapper = styled.div`
   }
 `;
 
-const Background = styled.div`
+const Backdrop = styled.div`
   width: 100%;
-  height: 240px;
+  height: 480px;
   background-color: #dddddd;
+  position: relative;
+  object-fit: fill;
 `;
 
 const Header = styled.div`
@@ -176,14 +179,39 @@ export default function Movie() {
     query: { id },
   } = useRouter();
 
+  const { data } = useSWR<MovieDetail>(
+    id &&
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
+  );
+
+  const director = data?.credits?.crew.find((crew) => crew.job === "Director");
+  const writer = data?.credits?.crew.find((crew) => crew.job === "Screenplay");
+  const rating = data?.release_dates?.results
+    ?.find((result) => result.iso_3166_1 === "KR")
+    ?.release_dates?.find((date) => date.certification !== "")?.certification;
+
+  console.log(data?.["watch/providers"]?.results?.KR?.flatrate);
+
   return (
     <Layout>
-      <Background />
+      <Backdrop>
+        {data?.backdrop_path && (
+          <Image
+            src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
+            fill
+            alt="Backdrop"
+            style={{ objectFit: "cover" }}
+          />
+        )}
+      </Backdrop>
       <Wrapper>
         <Header>
           <TitleBar>
-            <Title>제목</Title>
-            <SubTitle>평점 개봉연도 관람등급</SubTitle>
+            <Title>{data ? data.title : "제목"}</Title>
+            <SubTitle>
+              평점 {data?.vote_average.toFixed(1)} 개봉연도{" "}
+              {data?.release_date.slice(0, 4)} 관람등급 {rating || "정보 없음"}
+            </SubTitle>
           </TitleBar>
 
           <WatchSelector id={Number(id)} large={!isMobile} absoluteStars />
@@ -200,20 +228,12 @@ export default function Movie() {
           </Providers>
         </Selector>
 
-        <Overview>
-          우는 못할 봄날의 하는 때문이다. 청춘 그와 청춘 보라. 속잎나고, 얼마나
-          고행을 미인을 인간에 우리 불어 피고, 위하여 힘있다. 영원히 힘차게
-          무엇을 고동을 풀이 사막이다. 사람은 열락의 석가는 하는 하는 청춘
-          그들은 아름다우냐? 얼마나 청춘에서만 영락과 바이며, 사는가 풍부하게
-          그러므로 싸인 칼이다. 생생하며, 그들은 원질이 것이다. 피가 들어 기관과
-          천지는 피고, 무엇을 못할 인간의 만물은 것이다. 평화스러운 과실이 뭇
-          온갖 어디 피다.
-        </Overview>
+        <Overview>{data?.overview}</Overview>
 
         <Genres>
-          <Genre>SF</Genre>
-          <Genre>모험</Genre>
-          <Genre>액션</Genre>
+          {data?.genres.map((genre) => (
+            <Genre key={genre.id}>{genre.name}</Genre>
+          ))}
         </Genres>
       </Wrapper>
 
@@ -224,11 +244,11 @@ export default function Movie() {
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
         <DetailsBody>
-          감독: 홍길동
+          감독: {director?.name || "정보 없음"}
           <br />
-          각본: 홍길동
+          각본: {writer?.name || "정보 없음"}
           <br />
-          관람등급: 전체관람가
+          관람등급: {rating || "정보 없음"}
         </DetailsBody>
       </Details>
     </Layout>
