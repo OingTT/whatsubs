@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import { makeImagePath } from "./util";
 
 const API_KEY = "d238c45f06327ae8e6b021ac09482bf8";
+const Netflix = 8;
+const APV = 119;
+const Disney = 337;
+const Wavve = 356;
+const Watcha = 97;
+const AppleTV = 350;
 
 interface SetData {
   id: number;
@@ -32,7 +38,7 @@ export default function MovieRating() {
   const getMovies = async () => {
     const { results } = await (
       await fetch(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR&page=${getRandom()}`
+        `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_watch_providers=${Netflix}|${APV}|${Disney}|${Wavve}|${Watcha}|${AppleTV}&watch_region=KR&language=ko&page=${getRandom()}`
       )
     ).json();
     setMovies(results);
@@ -45,7 +51,9 @@ export default function MovieRating() {
     <div>
       {movies?.map((movie) => (
         <Li key={movie.id}>
-          <Poster src={makeImagePath(movie.poster_path, "w200")} />
+          <Poster
+            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+          />
           <Box>
             <h3>{movie.title}</h3>
           </Box>
