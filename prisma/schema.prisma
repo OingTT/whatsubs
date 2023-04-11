@@ -55,7 +55,7 @@ model Review {
   userId  Int
   movieId Int
   watch   Watch
-  rating  Int?    @default(0) @db.TinyInt
+  rating  Int     @default(0) @db.TinyInt
   summary String? @db.Text
 
   @@index([userId])

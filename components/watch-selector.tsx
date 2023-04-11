@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { BookmarkSimple, Check, Eye } from "@phosphor-icons/react";
 import Stars from "./stars";
 import React, { useEffect, useState } from "react";
-import { Watch } from "@prisma/client";
+import { Review, Watch } from "@prisma/client";
 import useSWR from "swr";
 import useMutation from "@/lib/client/useMutation";
 
@@ -37,11 +37,6 @@ const StarsWrapper = styled.div<{ absolute?: boolean }>`
   bottom: ${(props) => (props.absolute ? "-40px" : "0")};
 `;
 
-interface ReviewResponse {
-  watch: Watch;
-  rating: number;
-}
-
 interface WatchSelectorProps {
   id: number;
   large?: boolean;
@@ -53,24 +48,29 @@ export default function WatchSelector({
   large,
   absoluteStars,
 }: WatchSelectorProps) {
-  const [review] = useMutation(`/api/review/${id}`);
-  const { data } = useSWR<ReviewResponse>(`/api/review/${id}`);
+  const [updateReview] = useMutation(`/api/review/${id}`);
+  const { data } = useSWR<Review[]>("/api/review");
   const [watch, setWatch] = useState<Watch>();
+  const [review, setReview] = useState<Review>();
 
   const handleWatch = (value: Watch) => {
     const newWatch = watch === value ? undefined : value;
 
     setWatch(newWatch);
-    review({ watch: newWatch });
+    updateReview({ watch: newWatch });
   };
 
   const handleStars = (stars: number) => {
-    review({ watch, stars });
+    updateReview({ watch, stars });
   };
 
   useEffect(() => {
-    setWatch(data?.watch);
-  }, [data?.watch]);
+    setReview(data?.find((review) => review.movieId === id));
+  }, [data, id]);
+
+  useEffect(() => {
+    setWatch(review?.watch);
+  }, [review?.watch]);
 
   return (
     <Selector>
@@ -100,7 +100,7 @@ export default function WatchSelector({
 
       <StarsWrapper absolute={absoluteStars}>
         {watch === "WATCHED" && (
-          <Stars rating={data?.rating} onChange={handleStars} />
+          <Stars rating={review?.rating} onChange={handleStars} />
         )}
       </StarsWrapper>
     </Selector>

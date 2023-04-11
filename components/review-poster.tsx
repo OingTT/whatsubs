@@ -6,7 +6,8 @@ import { Variants, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import WatchSelector from "./watch-selector";
 import useSWR from "swr";
-import { Watch } from "@prisma/client";
+import { Review } from "@prisma/client";
+import React from "react";
 
 const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
@@ -68,14 +69,16 @@ interface ReviewPosterProps {
   movie: Movie;
 }
 
-export default function ReviewPoster({ movie }: ReviewPosterProps) {
-  const { data } = useSWR<Watch>(`/api/review/${movie.id}`);
+export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
+  const { data } = useSWR<Review[]>("/api/review");
   const [isFlipped, setIsFlipped] = useState(false);
 
   // Flip when data is loaded
   useEffect(() => {
-    setIsFlipped(data ? true : false);
-  }, [data]);
+    setIsFlipped(
+      data?.find((review) => review.movieId === movie.id) ? true : false
+    );
+  }, [data, movie.id]);
 
   // Flip when clicked
   const handleFlip = () => {
@@ -132,4 +135,4 @@ export default function ReviewPoster({ movie }: ReviewPosterProps) {
       </Back>
     </Wrapper>
   );
-}
+});
