@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import ReviewPoster from "@/components/review-poster";
-import { MovieDiscover } from "@/lib/client/interface";
+import { MovieDiscover, watchProviders } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
@@ -52,9 +52,15 @@ const Loader = styled.div`
 
 const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
   if (previousPageData && !previousPageData.results.length) return null;
-  return `https://api.themoviedb.org/3/trending/movie/week?api_key=${
+  return `https://api.themoviedb.org/3/discover/movie?api_key=${
     process.env.NEXT_PUBLIC_TMDB_API_KEY
-  }&language=ko-KR&region=KR&page=${pageIndex + 1}`;
+  }&language=ko-KR&region=KR&with_watch_providers=${Object.values(
+    watchProviders
+  )
+    .map((watchProvider) => watchProvider.id)
+    .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
+    pageIndex + 1
+  }`;
 };
 
 export default function Review() {
