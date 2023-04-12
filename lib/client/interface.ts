@@ -26,6 +26,7 @@ export interface MovieDetail {
   backdrop_path: string;
   genres: Array<{ id: number; name: string }>;
   overview: string;
+  poster_path: string;
   release_date: string;
   title: string;
   vote_average: number;
