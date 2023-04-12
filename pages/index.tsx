@@ -2,6 +2,7 @@ import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
+import MovieRating from "@/components/Random/movieRating";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -30,6 +31,7 @@ export default function Home() {
       <Wrapper>
         <ProviderSelector />
       </Wrapper>
+      <MovieRating />
     </Layout>
   );
 }
