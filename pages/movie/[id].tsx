@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail } from "@/lib/client/interface";
+import { MovieDetail, watchProviders } from "@/lib/client/interface";
 import useIsMobile from "@/lib/client/useIsMobile";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
@@ -98,10 +98,7 @@ const Providers = styled.div`
   gap: 8px;
 `;
 
-const Provider = styled.div`
-  width: 32px;
-  height: 32px;
-  background-color: #000000;
+const Provider = styled(Image)`
   border-radius: 100%;
 `;
 
@@ -190,8 +187,6 @@ export default function Movie() {
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
-  console.log(data?.["watch/providers"]?.results?.KR?.flatrate);
-
   return (
     <Layout>
       <Backdrop>
@@ -222,9 +217,24 @@ export default function Movie() {
             <Play color="white" weight="fill" />
           </PlayButton>
           <Providers>
-            <Provider />
-            <Provider />
-            <Provider />
+            {data?.["watch/providers"]?.results?.KR?.flatrate?.map(
+              (provider) => {
+                const watchProvider = watchProviders.find(
+                  (watchProvider) => watchProvider.id === provider.provider_id
+                );
+                return (
+                  watchProvider && (
+                    <Provider
+                      key={provider.provider_id}
+                      src={`/images/${watchProvider.key}.png`}
+                      width={32}
+                      height={32}
+                      alt="Provider"
+                    />
+                  )
+                );
+              }
+            )}
           </Providers>
         </Selector>
 

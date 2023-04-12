@@ -64,3 +64,42 @@ export interface MovieDetail {
     };
   };
 }
+
+export interface WatchProvider {
+  id: number;
+  key: string;
+  name: string;
+}
+
+export const watchProviders: WatchProvider[] = [
+  {
+    id: 8,
+    key: "netflix",
+    name: "Netflix",
+  },
+  {
+    id: 119,
+    key: "amazonprimevideo",
+    name: "Amazon Prime Video",
+  },
+  {
+    id: 337,
+    key: "disneyplus",
+    name: "Disney+",
+  },
+  {
+    id: 356,
+    key: "wavve",
+    name: "Wavve",
+  },
+  {
+    id: 97,
+    key: "watcha",
+    name: "Watcha",
+  },
+  {
+    id: 350,
+    key: "appletvplus",
+    name: "Apple TV+",
+  },
+];
