@@ -74,7 +74,8 @@ const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #eeeeee;
+  backdrop-filter: blur(32px);
+  background-color: rgba(232, 232, 232, 0.75);
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
