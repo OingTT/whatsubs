@@ -54,7 +54,7 @@ const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
   if (previousPageData && !previousPageData.results.length) return null;
   return `https://api.themoviedb.org/3/trending/movie/week?api_key=${
     process.env.NEXT_PUBLIC_TMDB_API_KEY
-  }&language=ko-KR&page=${pageIndex + 1}`;
+  }&language=ko-KR&region=KR&page=${pageIndex + 1}`;
 };
 
 export default function Review() {
