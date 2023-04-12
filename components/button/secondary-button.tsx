@@ -11,7 +11,7 @@ const Button = styled.button`
   overflow: hidden;
   border-radius: 16px;
   color: #333;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 16px;
   border: none;
   cursor: pointer;

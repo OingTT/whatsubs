@@ -1,8 +1,7 @@
 import Layout from "@/components/layout";
-import ProviderSelector from "@/components/provider-selector";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
-import MovieRating from "@/components/Random/movieRating";
+import { signOut } from "next-auth/react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -29,9 +28,20 @@ export default function Home() {
   return (
     <Layout>
       <Wrapper>
-        <ProviderSelector />
+        {user && (
+          <div>
+            <h1>사용자 정보</h1>
+            <textarea
+              rows={9}
+              cols={120}
+              value={JSON.stringify(user, null, 2)}
+              readOnly
+            />
+            <br />
+            <button onClick={() => signOut()}>로그아웃</button>
+          </div>
+        )}
       </Wrapper>
-      <MovieRating />
     </Layout>
   );
 }

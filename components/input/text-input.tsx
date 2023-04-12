@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Inp = styled.input`
+const Input = styled.input`
   width: 288px;
   height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
@@ -17,7 +17,7 @@ const Inp = styled.input`
   padding: 24px 16px 8px 16px;
   color: #333;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
   font-family: inherit;
 `;
 
@@ -26,7 +26,7 @@ const Label = styled.label`
   top: 8px;
   left: 16px;
   color: #999;
-  font-weight: 600;
+  font-weight: bold;
   font-size: 12px;
 `;
 
@@ -38,7 +38,7 @@ interface TextInputProps {
   required?: boolean;
 }
 
-export default function Input({
+export default function TextInput({
   type,
   register,
   defaultValue,
@@ -47,7 +47,7 @@ export default function Input({
 }: TextInputProps) {
   return (
     <Wrapper>
-      <Inp
+      <Input
         id={label}
         type={type}
         {...register}
