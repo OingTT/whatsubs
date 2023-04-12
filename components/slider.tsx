@@ -1,8 +1,9 @@
-import { Movie } from "@/lib/client/interface";
 import useIsDesktop from "@/lib/client/useIsDesktop";
 import styled from "@emotion/styled";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import Poster from "./poster";
+import { useState } from "react";
+import { AnimatePresence, Variants, motion } from "framer-motion";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -12,7 +13,7 @@ const Wrapper = styled.div`
   align-items: flex-start;
 
   @media (min-width: 1200px) {
-    width: fit-content;
+    width: 1176px;
   }
 `;
 
@@ -43,11 +44,28 @@ const Contents = styled.div`
   padding: 16px 24px 24px 24px;
   overflow: auto;
   gap: 24px;
+  position: relative;
 
   @media (max-width: 810px) {
     padding: 8px 16px 16px 16px;
     gap: 16px;
   }
+`;
+
+const PostersWrapper = styled.div`
+  position: relative;
+  width: 936px;
+  height: 252px;
+`;
+
+const Posters = styled(motion.div)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  position: absolute;
 `;
 
 const Button = styled.div`
@@ -58,35 +76,86 @@ const Button = styled.div`
   align-items: center;
   background-color: #eeeeee;
   border-radius: 100%;
+  cursor: pointer;
+  z-index: 1;
 `;
+
+const postersVariants: Variants = {
+  initial: (isGoingBack: boolean) => ({
+    opacity: 0,
+    scale: 0.5,
+    x: isGoingBack ? -160 : 160,
+  }),
+  visible: {
+    opacity: 1,
+    scale: 1,
+    x: 0,
+  },
+  exit: (isGoingBack: boolean) => ({
+    opacity: 0,
+    scale: 0.5,
+    x: isGoingBack ? 160 : -160,
+  }),
+};
+
+const offset = 5;
 
 interface SliderProps {
   title: string;
-  data?: Movie[];
+  ids?: number[];
 }
 
-export default function Slider({ title, data }: SliderProps) {
+export default function Slider({ title, ids }: SliderProps) {
   const isDesktop = useIsDesktop();
+  const [index, setIndex] = useState(0);
+  const [isGoingBack, setIsGoingBack] = useState(false);
+
+  const handlePrev = async () => {
+    setIsGoingBack(true);
+    setIndex((prev) => prev && prev - 1);
+  };
+
+  const handleNext = async () => {
+    setIsGoingBack(false);
+    setIndex((prev) =>
+      ids && prev + 1 < Math.ceil(ids.length / offset) ? prev + 1 : prev
+    );
+  };
 
   return (
     <Wrapper>
       <Title>{title}</Title>
       {isDesktop ? (
         <Contents>
-          <Button>
+          <Button onClick={handlePrev}>
             <CaretLeft size={24} color="#333" weight="bold" />
           </Button>
-          {data?.slice(0, 5).map((movie, index) => (
-            <Poster key={index} data={movie} />
-          ))}
-          <Button>
+          <PostersWrapper>
+            <AnimatePresence>
+              <Posters
+                variants={postersVariants}
+                custom={isGoingBack}
+                initial="initial"
+                animate="visible"
+                exit="exit"
+                key={ids?.[index]}
+              >
+                {ids
+                  ?.slice(index * offset, (index + 1) * offset)
+                  .map((id, index) => (
+                    <Poster key={index} id={id} />
+                  ))}
+              </Posters>
+            </AnimatePresence>
+          </PostersWrapper>
+          <Button onClick={handleNext}>
             <CaretRight size={24} color="#333" weight="bold" />
           </Button>
         </Contents>
       ) : (
         <Contents>
-          {data?.map((movie, index) => (
-            <Poster key={index} data={movie} />
+          {ids?.map((id, index) => (
+            <Poster key={index} id={id} />
           ))}
         </Contents>
       )}
