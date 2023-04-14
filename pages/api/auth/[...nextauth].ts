@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -18,4 +18,10 @@ export default NextAuth({
       clientSecret: process.env.NAVER_CLIENT_SECRET!,
     }),
   ],
-});
+  pages: {
+    signIn: "/login",
+    newUser: "/signup",
+  },
+};
+
+export default NextAuth(authOptions);

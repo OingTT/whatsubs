@@ -1,9 +1,12 @@
 import LoginButton from "@/components/login-button";
 import styled from "@emotion/styled";
+import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { GetServerSidePropsContext } from "next";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -31,6 +34,24 @@ const Group = styled.div`
   flex-direction: column;
   gap: 16px;
 `;
+
+// Prevent user from accessing login page if they are already logged in
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 export default function Login() {
   const { data: session } = useSession();
