@@ -26,13 +26,6 @@ const Wrapper = styled.div`
 `;
 
 export default function Home() {
-  const trending = useSWR<MovieDiscover>(
-    `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR`
-  ).data?.results.map((movie) => movie.id);
-  const popular = useSWR<MovieDiscover>(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR`
-  ).data?.results.map((movie) => movie.id);
-
   const { data: reviewData } = useSWR<Review[]>("/api/review");
   const wantToWatch = reviewData
     ?.filter((review) => review.watch === Watch.WANT_TO_WATCH)
@@ -47,8 +40,8 @@ export default function Home() {
         <ProviderSelector />
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" ids={trending} />
-      <Slider title="인기 콘텐츠" ids={popular} />
+      <Slider title="추천 콘텐츠" />
+      <Slider title="인기 콘텐츠" />
       <Slider title="시청 중인 콘텐츠" ids={watching} />
       <Slider title="찜한 콘텐츠" ids={wantToWatch} />
     </Layout>
