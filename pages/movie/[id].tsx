@@ -1,4 +1,5 @@
 import Layout from "@/components/layout";
+import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
 import { MovieDetail, watchProviders } from "@/lib/client/interface";
 import useIsMobile from "@/lib/client/useIsMobile";
@@ -247,9 +248,8 @@ export default function Movie() {
         </Genres>
       </Wrapper>
 
-      {/* <TouchSlider />
-      <TouchSlider />
-      <TouchSlider /> */}
+      <Slider title="추천 콘텐츠" />
+      <Slider title="비슷한 콘텐츠" />
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
