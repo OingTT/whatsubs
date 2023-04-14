@@ -1,8 +1,10 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
-import useUser from "@/lib/client/useUser";
+import Slider from "@/components/slider";
+import { MovieDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
-import MovieRating from "@/components/Random/movieRating";
+import { Review, Watch } from "@prisma/client";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -24,14 +26,24 @@ const Wrapper = styled.div`
 `;
 
 export default function Home() {
-  const user = useUser();
+  const { data: reviewData } = useSWR<Review[]>("/api/review");
+  const wantToWatch = reviewData
+    ?.filter((review) => review.watch === Watch.WANT_TO_WATCH)
+    .map((review) => review.movieId);
+  const watching = reviewData
+    ?.filter((review) => review.watch === Watch.WATCHING)
+    .map((review) => review.movieId);
 
   return (
     <Layout>
       <Wrapper>
         <ProviderSelector />
       </Wrapper>
-      <MovieRating />
+
+      <Slider title="추천 콘텐츠" />
+      <Slider title="인기 콘텐츠" />
+      <Slider title="시청 중인 콘텐츠" ids={watching} />
+      <Slider title="찜한 콘텐츠" ids={wantToWatch} />
     </Layout>
   );
 }
