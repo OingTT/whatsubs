@@ -115,7 +115,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
         animate={isFlipped ? "hidden" : "visible"}
       >
         <Content onClick={handleClick}>
-          <WatchSelector id={movie.id} />
+          <WatchSelector id={movie.id} small />
         </Content>
 
         <Content onClick={handleClick}>

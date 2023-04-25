@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive";
 
 export default function useIsMobile() {
   const [isMobile, setisMobile] = useState(true);
-  const desktop = useMediaQuery({ query: "(max-width: 810px)" });
+  const desktop = useMediaQuery({ query: "(max-width: 809px)" });
 
   useEffect(() => {
     setisMobile(desktop);

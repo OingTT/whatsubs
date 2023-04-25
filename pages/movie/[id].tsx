@@ -2,7 +2,6 @@ import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
 import { MovieDetail, watchProviders } from "@/lib/client/interface";
-import useIsMobile from "@/lib/client/useIsMobile";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import Image from "next/image";
@@ -20,7 +19,7 @@ const Wrapper = styled.div`
     width: 984px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding: 16px;
     gap: 16px;
   }
@@ -28,10 +27,14 @@ const Wrapper = styled.div`
 
 const Backdrop = styled.div`
   width: 100%;
-  height: 480px;
+  height: 320px;
   background-color: #dddddd;
   position: relative;
   object-fit: fill;
+
+  @media (max-width: 809px) {
+    height: 240px;
+  }
 `;
 
 const Header = styled.div`
@@ -54,11 +57,11 @@ const Title = styled.span`
   letter-spacing: -1.5px;
   color: #111;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1199px) {
     font-size: 32px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     font-size: 24px;
   }
 `;
@@ -70,7 +73,7 @@ const SubTitle = styled.span`
   line-height: 1.4;
   letter-spacing: -0.5px;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     font-size: 16px;
   }
 `;
@@ -125,7 +128,7 @@ const Genre = styled.div`
   border-radius: 8px;
   color: #333;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     height: 32px;
     padding: 0px 16px 0px 16px;
     font-size: 12px;
@@ -144,7 +147,7 @@ const Details = styled.div`
     width: 984px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding: 0px 16px 16px 16px;
     gap: 8px;
   }
@@ -155,7 +158,7 @@ const DetailsTitle = styled.div`
   font-weight: bold;
   color: #333;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     font-size: 16px;
   }
 `;
@@ -165,14 +168,12 @@ const DetailsBody = styled.div`
   font-weight: 500;
   color: #666;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     font-size: 12px;
   }
 `;
 
 export default function Movie() {
-  const isMobile = useIsMobile();
-
   const {
     query: { id },
   } = useRouter();
@@ -182,14 +183,20 @@ export default function Movie() {
       `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
   );
 
-  const director = data?.credits?.crew.find((crew) => crew.job === "Director");
-  const writer = data?.credits?.crew.find((crew) => crew.job === "Screenplay");
+  const director = data?.credits?.crew
+    .filter((crew) => crew.job === "Director")
+    .map((crew) => crew.name)
+    .join(", ");
+  const writer = data?.credits?.crew
+    .filter((crew) => crew.job === "Writer" || crew.job === "Screenplay")
+    .map((crew) => crew.name)
+    .join(", ");
   const rating = data?.release_dates?.results
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
   return (
-    <Layout>
+    <Layout fit>
       <Backdrop>
         {data?.backdrop_path && (
           <Image
@@ -210,7 +217,7 @@ export default function Movie() {
             </SubTitle>
           </TitleBar>
 
-          <WatchSelector id={Number(id)} large={!isMobile} absoluteStars />
+          <WatchSelector id={Number(id)} absoluteStars />
         </Header>
 
         <Selector>
@@ -254,11 +261,9 @@ export default function Movie() {
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
         <DetailsBody>
-          감독: {director?.name || "정보 없음"}
+          감독: {director || "정보 없음"}
           <br />
-          각본: {writer?.name || "정보 없음"}
-          <br />
-          관람등급: {rating || "정보 없음"}
+          각본: {writer || "정보 없음"}
         </DetailsBody>
       </Details>
     </Layout>

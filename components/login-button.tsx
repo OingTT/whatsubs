@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const Button = styled.div`
   box-sizing: border-box;
-  width: 288px;
+  width: 100%;
   height: 56px;
   display: flex;
   flex-direction: row;
@@ -25,7 +25,7 @@ const Button = styled.div`
     flex: 1;
     text-align: center;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     color: #333;
   }
 `;

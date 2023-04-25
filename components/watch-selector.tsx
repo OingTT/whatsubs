@@ -20,9 +20,9 @@ const Buttons = styled.div`
   gap: 8px;
 `;
 
-const Button = styled.div<{ selected?: boolean; large?: boolean }>`
-  width: ${(props) => (props.large ? "48px" : "40px")};
-  height: ${(props) => (props.large ? "48px" : "40px")};
+const Button = styled.div<{ selected?: boolean; small?: boolean }>`
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,6 +30,18 @@ const Button = styled.div<{ selected?: boolean; large?: boolean }>`
   color: ${(props) => (props.selected ? "white" : "black")};
   border-radius: 100%;
   cursor: pointer;
+
+  @media (min-width: 810px) {
+    width: ${(props) => (props.small ? "40px" : "48px")};
+    height: ${(props) => (props.small ? "40px" : "48px")};
+  }
+`;
+
+const Icon = styled.div<{ small?: boolean }>`
+  @media (min-width: 810px) {
+    width: ${(props) => (props.small ? "16px" : "20px")};
+    height: ${(props) => (props.small ? "16px" : "20px")};
+  }
 `;
 
 const StarsWrapper = styled.div<{ absolute?: boolean }>`
@@ -39,13 +51,13 @@ const StarsWrapper = styled.div<{ absolute?: boolean }>`
 
 interface WatchSelectorProps {
   id: number;
-  large?: boolean;
+  small?: boolean;
   absoluteStars?: boolean;
 }
 
 export default function WatchSelector({
   id,
-  large,
+  small,
   absoluteStars,
 }: WatchSelectorProps) {
   const [updateReview] = useMutation(`/api/review/${id}`);
@@ -78,23 +90,23 @@ export default function WatchSelector({
         <Button
           selected={watch === "WANT_TO_WATCH"}
           onClick={() => handleWatch("WANT_TO_WATCH")}
-          large={large}
+          small={small}
         >
-          <BookmarkSimple size={large ? 20 : 16} />
+          <Icon as={BookmarkSimple} small={small} />
         </Button>
         <Button
           selected={watch === "WATCHING"}
           onClick={() => handleWatch("WATCHING")}
-          large={large}
+          small={small}
         >
-          <Eye size={large ? 20 : 16} />
+          <Icon as={Eye} small={small} />
         </Button>
         <Button
           selected={watch === "WATCHED"}
           onClick={() => handleWatch("WATCHED")}
-          large={large}
+          small={small}
         >
-          <Check size={large ? 20 : 16} />
+          <Icon as={Check} small={small} />
         </Button>
       </Buttons>
 

@@ -2,34 +2,37 @@ import LoginButton from "@/components/login-button";
 import styled from "@emotion/styled";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "./api/auth/[...nextauth]";
+import SignupLayout from "@/components/welcome-layout";
+import Image from "next/image";
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 800px;
-  gap: 80px;
-  background-image: url(https://images.unsplash.com/photo-1549226024-48875665c1ea);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  gap: 120px;
 `;
 
 const Logo = styled(Image)`
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  border-radius: 100%;
+  @media (max-width: 1199px) {
+    display: none;
+  }
 `;
 
-const Group = styled.div`
+const FullLogo = styled(Image)`
+  @media (min-width: 1200px) {
+    display: none;
+  }
+`;
+
+const Buttons = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -64,13 +67,28 @@ export default function Login() {
   }, [router, session]);
 
   return (
-    <Wrapper>
-      <Logo src="/images/whatsubs-dark.png" width="80" height="80" alt="Logo" />
-      <Group>
-        <LoginButton provider="google" text="Google 계정으로 로그인" />
-        <LoginButton provider="naver" text="네이버 아이디로 로그인" />
-        <LoginButton provider="kakao" text="카카오 로그인" />
-      </Group>
-    </Wrapper>
+    <SignupLayout>
+      <Wrapper>
+        <Logo
+          src="/images/whatsubs-small.png"
+          width="48"
+          height="48"
+          alt="Logo"
+          priority
+        />
+        <FullLogo
+          src="/images/whatsubs-full-dark.png"
+          width="191"
+          height="64"
+          alt="FullLogo"
+          priority
+        />
+        <Buttons>
+          <LoginButton provider="google" text="Google 계정으로 로그인" />
+          <LoginButton provider="naver" text="네이버 아이디로 로그인" />
+          <LoginButton provider="kakao" text="카카오 로그인" />
+        </Buttons>
+      </Wrapper>
+    </SignupLayout>
   );
 }
