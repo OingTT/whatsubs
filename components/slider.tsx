@@ -54,8 +54,15 @@ const Contents = styled.div`
 
 const PostersWrapper = styled.div`
   position: relative;
-  width: 936px;
   height: 252px;
+
+  @media (min-width: 1200px) {
+    width: 936px;
+  }
+
+  @media (max-width: 809px) {
+    height: 180px;
+  }
 `;
 
 const Posters = styled(motion.div)`
@@ -66,6 +73,10 @@ const Posters = styled(motion.div)`
   gap: 24px;
   width: 100%;
   position: absolute;
+
+  @media (max-width: 809px) {
+    gap: 16px;
+  }
 `;
 
 const Button = styled.div`
@@ -79,6 +90,10 @@ const Button = styled.div`
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
+
+  @media (max-width: 1199px) {
+    display: none;
+  }
 `;
 
 const postersVariants: Variants = {
@@ -126,40 +141,35 @@ export default function Slider({ title, ids }: SliderProps) {
   return (
     <Wrapper>
       <Title>{title}</Title>
-      {isDesktop ? (
-        <Contents>
-          <Button onClick={handlePrev}>
-            <CaretLeft size={24} color="#333" weight="bold" />
-          </Button>
-          <PostersWrapper>
-            <AnimatePresence>
-              <Posters
-                variants={postersVariants}
-                custom={isGoingBack}
-                initial="initial"
-                animate="visible"
-                exit="exit"
-                key={ids?.[index]}
-              >
-                {ids
-                  ?.slice(index * offset, (index + 1) * offset)
-                  .map((id, index) => (
-                    <Poster key={index} id={id} />
-                  ))}
-              </Posters>
-            </AnimatePresence>
-          </PostersWrapper>
-          <Button onClick={handleNext}>
-            <CaretRight size={24} color="#333" weight="bold" />
-          </Button>
-        </Contents>
-      ) : (
-        <Contents>
-          {ids?.map((id, index) => (
-            <Poster key={index} id={id} />
-          ))}
-        </Contents>
-      )}
+
+      <Contents>
+        <Button onClick={handlePrev}>
+          <CaretLeft size={24} color="#333" weight="bold" />
+        </Button>
+
+        <PostersWrapper>
+          <AnimatePresence>
+            <Posters
+              variants={postersVariants}
+              custom={isGoingBack}
+              initial="initial"
+              animate="visible"
+              exit="exit"
+              key={ids?.[index]}
+            >
+              {isDesktop
+                ? ids
+                    ?.slice(index * offset, (index + 1) * offset)
+                    .map((id, index) => <Poster key={index} id={id} />)
+                : ids?.map((id, index) => <Poster key={index} id={id} />)}
+            </Posters>
+          </AnimatePresence>
+        </PostersWrapper>
+
+        <Button onClick={handleNext}>
+          <CaretRight size={24} color="#333" weight="bold" />
+        </Button>
+      </Contents>
     </Wrapper>
   );
 }
