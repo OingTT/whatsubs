@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     width: 984px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding: 16px;
     gap: 16px;
   }

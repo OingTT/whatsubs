@@ -7,13 +7,12 @@ import useSWR from "swr";
 const Wrapper = styled.div`
   min-width: 168px;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.25);
-  background-color: #333333;
   aspect-ratio: 2/3;
   border-radius: 16px;
   position: relative;
   overflow: hidden;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     min-width: 120px;
   }
 `;
@@ -34,7 +33,7 @@ export default function Poster({ id }: PosterProps) {
           <Image
             src={"https://image.tmdb.org/t/p/w500/" + data?.poster_path}
             fill
-            sizes="(max-width: 810px) 120px, 168px"
+            sizes="(max-width: 809px) 120px, 168px"
             alt="Poster"
           />
         )}

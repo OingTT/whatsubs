@@ -29,7 +29,7 @@ const Title = styled.div`
     padding-left: 120px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding-left: 16px;
     font-size: 16px;
   }
@@ -46,7 +46,7 @@ const Contents = styled.div`
   gap: 24px;
   position: relative;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding: 8px 16px 16px 16px;
     gap: 16px;
   }

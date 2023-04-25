@@ -19,7 +19,7 @@ const Wrapper = styled.div`
     width: 984px;
   }
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     padding: 16px;
     gap: 16px;
   }
@@ -40,7 +40,7 @@ const Grid = styled.div`
   grid-auto-rows: min-content;
   gap: 24px;
 
-  @media (max-width: 810px) {
+  @media (max-width: 809px) {
     gap: 16px;
   }
 `;
