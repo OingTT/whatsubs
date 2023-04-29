@@ -67,6 +67,7 @@ export default function WelcomeLayout({ children }: WelcomeLayoutProps) {
             width="191"
             height="64"
             alt="FullLogo"
+            priority
           />
         </Left>
         <Right>

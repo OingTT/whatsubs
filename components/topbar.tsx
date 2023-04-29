@@ -46,7 +46,7 @@ export default function Topbar() {
         />
       </Link>
 
-      <Nav href="/review">평가하기</Nav>
+      <Nav href="/review">평가</Nav>
 
       <Spacer />
 
@@ -55,7 +55,7 @@ export default function Topbar() {
       </Link>
       <Link href="/user">
         <User
-          src={user?.image || "/images/whatsubs-dark.png"}
+          src={user?.avatar || "/images/avatar.png"}
           width="32"
           height="32"
           alt="User"

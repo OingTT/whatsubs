@@ -3,12 +3,13 @@ import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 const Wrapper = styled.div`
+  width: 100%;
   position: relative;
 `;
 
 const Selector = styled.select`
   appearance: none;
-  width: 288px;
+  width: 100%;
   height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;

@@ -3,11 +3,12 @@ import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 const Wrapper = styled.div`
+  width: 100%;
   position: relative;
 `;
 
 const Input = styled.input`
-  width: 288px;
+  width: 100%;
   height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
@@ -33,7 +34,6 @@ const Label = styled.label`
 interface TextInputProps {
   type: React.HTMLInputTypeAttribute;
   register: UseFormRegisterReturn;
-  defaultValue?: string;
   label: string;
   required?: boolean;
 }
@@ -41,7 +41,6 @@ interface TextInputProps {
 export default function TextInput({
   type,
   register,
-  defaultValue,
   label,
   required,
 }: TextInputProps) {
@@ -51,7 +50,6 @@ export default function TextInput({
         id={label}
         type={type}
         {...register}
-        defaultValue={defaultValue}
         required={required}
         onKeyDown={(
           e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -1,29 +1,26 @@
-import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import useSWR from "swr";
 
 export default function useUser() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { data, isLoading } = useSWR<User>("/api/user");
 
   // Check login
   useEffect(() => {
-    if (status !== "loading" && !session) {
+    if (status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [router, session, status]);
+  }, [router, status]);
 
   // Check signup
   useEffect(() => {
     if (status === "authenticated") {
-      if (!isLoading && !data) {
-        router.replace("/signup");
+      if (!session.user.gender) {
+        router.replace("/new/1");
       }
     }
-  }, [data, isLoading, router, status]);
+  }, [router, session?.user.gender, status]);
 
-  return data || null;
+  return session?.user;
 }
