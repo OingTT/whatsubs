@@ -1,10 +1,13 @@
-import Button from "@/components/button";
 import SignupLayout from "@/components/signup-layout";
 import styled from "@emotion/styled";
 import { ContentType, Subscription } from "@prisma/client";
 import { useRouter } from "next/router";
+import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
+import DraggableCard from "@/components/draggable-card";
+import { useEffect } from "react";
+import useMutation from "@/lib/client/useMutation";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,20 +42,58 @@ const Buttons = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
 `;
 
 interface ContentTypesForm {
-  contentTypes: string[];
+  contentTypes: number[];
 }
 
 export default function Subscription() {
   const router = useRouter();
-  const { data } = useSWR<ContentType[]>("/api/content-types");
-  const { register, handleSubmit } = useForm<ContentTypesForm>({});
+  const { data: userContentTypes, mutate } = useSWR<number[]>(
+    "/api/user/content-types"
+  );
+  const { data: contentTypes } = useSWR<ContentType[]>("/api/content-types");
+  const { handleSubmit, setValue, watch } = useForm<ContentTypesForm>();
+  const [updateContentTypes, { loading, data }] = useMutation<number[]>(
+    "/api/user/content-types"
+  );
+
+  useEffect(() => {
+    if (contentTypes) {
+      if (userContentTypes && userContentTypes.length === contentTypes.length) {
+        setValue("contentTypes", userContentTypes, { shouldTouch: true });
+      } else {
+        setValue(
+          "contentTypes",
+          contentTypes.map((contentType) => contentType.id),
+          { shouldTouch: true }
+        );
+      }
+    }
+  }, [contentTypes, setValue, userContentTypes]);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      mutate(data);
+      router.push("/new/3");
+    }
+  }, [data, mutate, router]);
 
   const onSubmit = (data: ContentTypesForm) => {
-    router.push("/new/3");
+    if (loading) return;
+    updateContentTypes(data);
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const newContentTypes = [...watch("contentTypes")];
+    const [removed] = newContentTypes.splice(result.source.index, 1);
+    newContentTypes.splice(result.destination.index, 0, removed);
+
+    setValue("contentTypes", newContentTypes, { shouldValidate: true });
   };
 
   return (
@@ -64,15 +105,29 @@ export default function Subscription() {
     >
       <Wrapper>
         <Numbers>
-          {data?.map((_, index) => (
+          {contentTypes?.map((_, index) => (
             <Number key={index}>{index + 1}</Number>
           ))}
         </Numbers>
-        <Buttons>
-          {data?.map((contentType) => (
-            <Button key={contentType.id}>{contentType.name}</Button>
-          ))}
-        </Buttons>
+
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="content-types">
+            {(provided) => (
+              <Buttons {...provided.droppableProps} ref={provided.innerRef}>
+                {watch("contentTypes")?.map((contentType, index) => (
+                  <DraggableCard
+                    key={contentType}
+                    draggableId={contentType.toString()}
+                    index={index}
+                  >
+                    {contentTypes?.find((ct) => ct.id === contentType)?.name}
+                  </DraggableCard>
+                ))}
+                {provided.placeholder}
+              </Buttons>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Wrapper>
     </SignupLayout>
   );

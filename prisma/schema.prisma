@@ -40,20 +40,20 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
+  id            String                @id @default(cuid())
   name          String?
-  email         String?        @unique
+  email         String?               @unique
   emailVerified DateTime?
   image         String?
   avatar        String?
   birth         DateTime?
-  occupation    Occupation?    @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+  occupation    Occupation?           @relation(fields: [occupationId], references: [id], onDelete: Cascade)
   occupationId  Int?
-  gender        String?        @db.Char(1)
+  gender        String?               @db.Char(1)
   accounts      Account[]
   sessions      Session[]
   subscriptions Subscription[]
-  contentTypes  ContentType[]
+  contentTypes  ContentTypesOnUsers[]
   genres        Genre[]
   reviews       Review[]
 
@@ -66,6 +66,18 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model ContentTypesOnUsers {
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Cascade)
+  contentTypeId Int
+  order         Int
+
+  @@id([userId, contentTypeId])
+  @@index([userId])
+  @@index([contentTypeId])
 }
 
 enum Watch {
@@ -95,9 +107,9 @@ model Subscription {
 }
 
 model ContentType {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users User[]
+  id    Int                   @id @default(autoincrement())
+  name  String                @unique
+  users ContentTypesOnUsers[]
 }
 
 model Genre {
