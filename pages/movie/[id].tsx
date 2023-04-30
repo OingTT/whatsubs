@@ -1,9 +1,10 @@
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail, watchProviders } from "@/lib/client/interface";
+import { MovieDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
+import { Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -177,7 +178,7 @@ export default function Movie() {
   const {
     query: { id },
   } = useRouter();
-
+  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data } = useSWR<MovieDetail>(
     id &&
       `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
@@ -227,8 +228,9 @@ export default function Movie() {
           <Providers>
             {data?.["watch/providers"]?.results?.KR?.flatrate?.map(
               (provider) => {
-                const watchProvider = watchProviders.find(
-                  (watchProvider) => watchProvider.id === provider.provider_id
+                const watchProvider = subscriptions?.find(
+                  (subscription) =>
+                    subscription.providerId === provider.provider_id
                 );
                 return (
                   watchProvider && (

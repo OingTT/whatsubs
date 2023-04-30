@@ -1,8 +1,10 @@
 import Layout from "@/components/layout";
 import ReviewPoster from "@/components/review-poster";
-import { MovieDiscover, watchProviders } from "@/lib/client/interface";
+import { MovieDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
+import { Subscription } from "@prisma/client";
 import { useEffect, useRef } from "react";
+import useSWR from "swr";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 
 const Wrapper = styled.div`
@@ -50,20 +52,20 @@ const Loader = styled.div`
   bottom: 800px;
 `;
 
-const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
-  if (previousPageData && !previousPageData.results.length) return null;
-  return `https://api.themoviedb.org/3/discover/movie?api_key=${
-    process.env.NEXT_PUBLIC_TMDB_API_KEY
-  }&language=ko-KR&region=KR&with_watch_providers=${Object.values(
-    watchProviders
-  )
-    .map((watchProvider) => watchProvider.id)
-    .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
-    pageIndex + 1
-  }`;
-};
-
 export default function Review() {
+  const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.results.length) return null;
+    if (!subscriptions) return null;
+    return `https://api.themoviedb.org/3/discover/movie?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&region=KR&with_watch_providers=${subscriptions
+      .map((subscription) => subscription.providerId)
+      .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
+      pageIndex + 1
+    }`;
+  };
+
+  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data, setSize } = useSWRInfinite<MovieDiscover>(getKey, {
     revalidateFirstPage: false,
   });
