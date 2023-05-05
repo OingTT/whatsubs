@@ -55,6 +55,7 @@ const Contents = styled.div`
 const PostersWrapper = styled.div`
   position: relative;
   height: 252px;
+  width: 100%;
 
   @media (min-width: 1200px) {
     width: 936px;
@@ -77,6 +78,16 @@ const Posters = styled(motion.div)`
   @media (max-width: 809px) {
     gap: 16px;
   }
+`;
+
+const DisableText = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  position: absolute;
 `;
 
 const Button = styled.div`
@@ -119,9 +130,10 @@ const offset = 5;
 interface SliderProps {
   title: string;
   ids?: number[];
+  disable?: boolean;
 }
 
-export default function Slider({ title, ids }: SliderProps) {
+export default function Slider({ title, ids, disable }: SliderProps) {
   const isDesktop = useIsDesktop();
   const [index, setIndex] = useState(0);
   const [isGoingBack, setIsGoingBack] = useState(false);
@@ -149,20 +161,24 @@ export default function Slider({ title, ids }: SliderProps) {
 
         <PostersWrapper>
           <AnimatePresence>
-            <Posters
-              variants={postersVariants}
-              custom={isGoingBack}
-              initial="initial"
-              animate="visible"
-              exit="exit"
-              key={ids?.[index]}
-            >
-              {isDesktop
-                ? ids
-                    ?.slice(index * offset, (index + 1) * offset)
-                    .map((id, index) => <Poster key={index} id={id} />)
-                : ids?.map((id, index) => <Poster key={index} id={id} />)}
-            </Posters>
+            {disable ? (
+              <DisableText>준비 중인 기능이에요.</DisableText>
+            ) : (
+              <Posters
+                variants={postersVariants}
+                custom={isGoingBack}
+                initial="initial"
+                animate="visible"
+                exit="exit"
+                key={ids?.[index]}
+              >
+                {isDesktop
+                  ? ids
+                      ?.slice(index * offset, (index + 1) * offset)
+                      .map((id, index) => <Poster key={index} id={id} />)
+                  : ids?.map((id, index) => <Poster key={index} id={id} />)}
+              </Posters>
+            )}
           </AnimatePresence>
         </PostersWrapper>
 
