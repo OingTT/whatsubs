@@ -19,7 +19,7 @@ const Front = styled(motion.div)`
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.25);
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -28,7 +28,7 @@ const Front = styled(motion.div)`
 const Back = styled(Front)`
   transform: rotateY(180deg);
   background-color: white;
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -103,10 +103,10 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
         animate={isFlipped ? "hidden" : "visible"}
       >
         <Image
-          src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+          src={"https://image.tmdb.org/t/p/w342" + movie.poster_path}
           fill
-          sizes="160px"
           alt="Poster"
+          unoptimized
         />
       </Front>
       <Back

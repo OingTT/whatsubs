@@ -43,7 +43,13 @@ interface LoginButtonProps {
 export default function LoginButton({ provider, text }: LoginButtonProps) {
   return (
     <Button onClick={() => signIn(provider, { callbackUrl: "/" })}>
-      <Logo src={`/images/${provider}.png`} width="24" height="24" alt="logo" />
+      <Logo
+        src={`/images/${provider}.png`}
+        width="24"
+        height="24"
+        alt="Logo"
+        priority
+      />
       <header>{text}</header>
     </Button>
   );
