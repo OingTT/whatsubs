@@ -35,6 +35,7 @@ export default function Poster({ id }: PosterProps) {
             src={"https://image.tmdb.org/t/p/w342" + data?.poster_path}
             fill
             alt="Poster"
+            priority
             unoptimized
           />
         )}

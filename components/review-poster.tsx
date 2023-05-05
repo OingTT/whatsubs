@@ -106,6 +106,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
           src={"https://image.tmdb.org/t/p/w342" + movie.poster_path}
           fill
           alt="Poster"
+          priority
           unoptimized
         />
       </Front>
