@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "./api/auth/[...nextauth]";
-import SignupLayout from "@/components/welcome-layout";
+import WelcomeLayout from "@/components/welcome-layout";
 import Image from "next/image";
 
 const Wrapper = styled.div`
@@ -67,7 +67,7 @@ export default function Login() {
   }, [router, session]);
 
   return (
-    <SignupLayout>
+    <WelcomeLayout>
       <Wrapper>
         <Logo
           src="/images/whatsubs-small.png"
@@ -89,6 +89,6 @@ export default function Login() {
           <LoginButton provider="kakao" text="카카오 로그인" />
         </Buttons>
       </Wrapper>
-    </SignupLayout>
+    </WelcomeLayout>
   );
 }
