@@ -46,7 +46,7 @@ export default function Topbar() {
         />
       </Link>
 
-      <Nav href="/review">평가</Nav>
+      <Nav href="/explore">탐색</Nav>
 
       <Spacer />
 

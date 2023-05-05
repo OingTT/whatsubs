@@ -90,7 +90,7 @@ export default function Review() {
   }, [setSize]);
 
   return (
-    <Layout>
+    <Layout title="탐색">
       <Wrapper>
         <Header>
           <h1>콘텐츠를 평가해주세요.</h1>
