@@ -2,6 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
+import Head from "next/head";
 
 export default function App({
   Component,
@@ -14,6 +15,9 @@ export default function App({
       }}
     >
       <SessionProvider session={session}>
+        <Head>
+          <title>Whatsubs</title>
+        </Head>
         <Component {...pageProps} />
       </SessionProvider>
     </SWRConfig>

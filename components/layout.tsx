@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Topbar from "./topbar";
+import Head from "next/head";
 
 const Wrapper = styled.div<{ fit?: boolean }>`
   display: flex;
@@ -11,13 +12,17 @@ const Wrapper = styled.div<{ fit?: boolean }>`
 `;
 
 interface LayoutProps {
+  title?: string;
   fit?: boolean;
   children?: React.ReactNode;
 }
 
-export default function Layout({ fit, children }: LayoutProps) {
+export default function Layout({ title, fit, children }: LayoutProps) {
   return (
     <Wrapper fit={fit}>
+      <Head>
+        <title>{title ? `${title} - Whatsubs` : "Whatsubs"}</title>
+      </Head>
       <Topbar />
       {children}
     </Wrapper>
