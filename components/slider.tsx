@@ -2,7 +2,7 @@ import useIsDesktop from "@/lib/client/useIsDesktop";
 import styled from "@emotion/styled";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import Poster from "./poster";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, Variants, motion } from "framer-motion";
 
 const Wrapper = styled.div`
@@ -90,7 +90,7 @@ const DisableText = styled.div`
   position: absolute;
 `;
 
-const Button = styled.div`
+const Button = styled.div<{ disable: boolean }>`
   width: 72px;
   height: 72px;
   display: flex;
@@ -101,6 +101,7 @@ const Button = styled.div`
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
+  color: ${(props) => (props.disable ? "#bbb" : "#333")};
 
   @media (max-width: 1199px) {
     display: none;
@@ -136,18 +137,26 @@ interface SliderProps {
 export default function Slider({ title, ids, disable }: SliderProps) {
   const isDesktop = useIsDesktop();
   const [index, setIndex] = useState(0);
+  const [isLast, setIsLast] = useState(true);
   const [isGoingBack, setIsGoingBack] = useState(false);
 
+  useEffect(() => {
+    if (!ids) return;
+    setIsLast(ids.length <= index * offset + offset);
+  }, [ids, index]);
+
   const handlePrev = async () => {
+    if (index === 0) return;
+
     setIsGoingBack(true);
-    setIndex((prev) => prev && prev - 1);
+    setIndex(index - 1);
   };
 
   const handleNext = async () => {
+    if (!ids || isLast) return;
+
     setIsGoingBack(false);
-    setIndex((prev) =>
-      ids && prev + 1 < Math.ceil(ids.length / offset) ? prev + 1 : prev
-    );
+    setIndex(index + 1);
   };
 
   return (
@@ -155,8 +164,8 @@ export default function Slider({ title, ids, disable }: SliderProps) {
       <Title>{title}</Title>
 
       <Contents>
-        <Button onClick={handlePrev}>
-          <CaretLeft size={24} color="#333" weight="bold" />
+        <Button onClick={handlePrev} disable={index === 0}>
+          <CaretLeft size={24} weight="bold" />
         </Button>
 
         <PostersWrapper>
@@ -182,8 +191,8 @@ export default function Slider({ title, ids, disable }: SliderProps) {
           </AnimatePresence>
         </PostersWrapper>
 
-        <Button onClick={handleNext}>
-          <CaretRight size={24} color="#333" weight="bold" />
+        <Button onClick={handleNext} disable={isLast}>
+          <CaretRight size={24} weight="bold" />
         </Button>
       </Contents>
     </Wrapper>
