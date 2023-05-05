@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -32,7 +32,7 @@ export default function Home() {
           <div>
             <h1>사용자 정보</h1>
             <textarea
-              rows={9}
+              rows={11}
               cols={120}
               value={JSON.stringify(user, null, 2)}
               readOnly

@@ -3,7 +3,7 @@ import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 const Wrapper = styled.div`
-  width: 288px;
+  width: 100%;
   height: 56px;
   display: flex;
   flex-direction: row;
