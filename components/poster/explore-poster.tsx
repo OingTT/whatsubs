@@ -12,6 +12,7 @@ import React from "react";
 const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
   position: relative;
+  perspective: 800px;
 `;
 
 const Front = styled(motion.div)`
@@ -50,8 +51,8 @@ const frontVariants: Variants = {
 };
 
 const backVariants: Variants = {
-  visible: { rotateY: -180 },
-  hidden: { rotateY: 0 },
+  visible: { rotateY: 0 },
+  hidden: { rotateY: -180 },
 };
 
 const wrapperVariants: Variants = {
@@ -117,8 +118,8 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
           </Front>
           <Back
             variants={backVariants}
-            initial="visible"
-            animate={isFlipped ? "hidden" : "visible"}
+            initial="hidden"
+            animate={isFlipped ? "visible" : "hidden"}
           >
             <Content onClick={handleClick}>
               <WatchSelector id={movie.id} small />

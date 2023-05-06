@@ -91,6 +91,7 @@ export default function Subscriptions() {
       subtitle="구독 중인 서비스를 선택해주세요."
       onSubmit={handleSubmit(onSubmit)}
       onBack={() => signOut({ callbackUrl: "/login" })}
+      nextText={loading ? "저장 중..." : undefined}
     >
       <Wrapper>
         {subscriptions?.map((subscription) => (

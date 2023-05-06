@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const Label = styled.label`
@@ -39,6 +39,12 @@ const Genre = styled.div`
   background-color: #eeeeee;
   border-radius: 8px;
   color: #333;
+
+  @media (max-width: 809px) {
+    height: 32px;
+    padding: 0px 16px 0px 16px;
+    font-size: 12px;
+  }
 `;
 
 interface GenresForm {
@@ -77,6 +83,7 @@ export default function Genres() {
       title="방금 고른 조합이 나에게 꼭 맞는지 알아볼까요?"
       subtitle="선호하는 장르를 선택해주세요."
       onSubmit={handleSubmit(onSubmit)}
+      nextText={loading ? "저장 중..." : undefined}
     >
       <Wrapper>
         {genres?.map((genre) => (

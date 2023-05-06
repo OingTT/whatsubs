@@ -258,8 +258,8 @@ export default function Movie() {
         </Genres>
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" disable />
-      <Slider title="비슷한 콘텐츠" disable />
+      <Slider title="추천 콘텐츠" disabled />
+      <Slider title="비슷한 콘텐츠" disabled />
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>

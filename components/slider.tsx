@@ -80,7 +80,7 @@ const Posters = styled(motion.div)`
   }
 `;
 
-const DisableText = styled.div`
+const DisabledText = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -90,7 +90,7 @@ const DisableText = styled.div`
   position: absolute;
 `;
 
-const Button = styled.div<{ disable: boolean }>`
+const Button = styled.div<{ disabled: boolean }>`
   width: 72px;
   height: 72px;
   display: flex;
@@ -101,7 +101,7 @@ const Button = styled.div<{ disable: boolean }>`
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
-  color: ${(props) => (props.disable ? "#bbb" : "#333")};
+  color: ${(props) => (props.disabled ? "#bbb" : "#333")};
 
   @media (max-width: 1199px) {
     display: none;
@@ -131,10 +131,10 @@ const offset = 5;
 interface SliderProps {
   title: string;
   ids?: number[];
-  disable?: boolean;
+  disabled?: boolean;
 }
 
-export default function Slider({ title, ids, disable }: SliderProps) {
+export default function Slider({ title, ids, disabled }: SliderProps) {
   const isDesktop = useIsDesktop();
   const [index, setIndex] = useState(0);
   const [isLast, setIsLast] = useState(true);
@@ -164,14 +164,16 @@ export default function Slider({ title, ids, disable }: SliderProps) {
       <Title>{title}</Title>
 
       <Contents>
-        <Button onClick={handlePrev} disable={index === 0}>
+        <Button onClick={handlePrev} disabled={index === 0}>
           <CaretLeft size={24} weight="bold" />
         </Button>
 
         <PostersWrapper>
           <AnimatePresence>
-            {disable ? (
-              <DisableText>준비 중인 기능이에요.</DisableText>
+            {disabled ? (
+              <DisabledText>준비 중인 기능이에요.</DisabledText>
+            ) : ids?.length === 0 ? (
+              <DisabledText>콘텐츠가 없어요.</DisabledText>
             ) : (
               <Posters
                 variants={postersVariants}
@@ -191,7 +193,7 @@ export default function Slider({ title, ids, disable }: SliderProps) {
           </AnimatePresence>
         </PostersWrapper>
 
-        <Button onClick={handleNext} disable={isLast}>
+        <Button onClick={handleNext} disabled={isLast}>
           <CaretRight size={24} weight="bold" />
         </Button>
       </Contents>

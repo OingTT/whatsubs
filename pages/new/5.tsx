@@ -103,6 +103,7 @@ export default function Profile() {
       title="프로필을 설정해주세요."
       subtitle="다른 사용자가 볼 수 있어요."
       onSubmit={handleSubmit(onSubmit)}
+      nextText={loading ? "저장 중..." : undefined}
     >
       <Wrapper>
         <Images>
