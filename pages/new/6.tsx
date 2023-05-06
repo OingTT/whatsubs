@@ -69,7 +69,7 @@ export default function Privacy() {
       title="마지막으로 사용자 정보를 입력해주세요."
       subtitle="꼭 맞는 추천을 위해 수집하며, 외부에 공개되지 않아요."
       onSubmit={handleSubmit(onSubmit)}
-      nextText="🎉 가입하기"
+      nextText={loading ? "저장 중..." : "🎉 가입하기"}
     >
       <Wrapper>
         <TextInput

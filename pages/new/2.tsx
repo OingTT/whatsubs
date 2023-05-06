@@ -102,6 +102,7 @@ export default function Subscription() {
       title="방금 고른 조합이 나에게 꼭 맞는지 알아볼까요?"
       subtitle="콘텐츠 종류를 선호하는 순서대로 나열해주세요."
       onSubmit={handleSubmit(onSubmit)}
+      nextText={loading ? "저장 중..." : undefined}
     >
       <Wrapper>
         <Numbers>

@@ -83,6 +83,7 @@ export default function Genres() {
       title="방금 고른 조합이 나에게 꼭 맞는지 알아볼까요?"
       subtitle="선호하는 장르를 선택해주세요."
       onSubmit={handleSubmit(onSubmit)}
+      nextText={loading ? "저장 중..." : undefined}
     >
       <Wrapper>
         {genres?.map((genre) => (
