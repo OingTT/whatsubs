@@ -50,8 +50,8 @@ const frontVariants: Variants = {
 };
 
 const backVariants: Variants = {
-  visible: { rotateY: -180 },
-  hidden: { rotateY: 0 },
+  visible: { rotateY: 0 },
+  hidden: { rotateY: -180 },
 };
 
 const wrapperVariants: Variants = {
@@ -117,8 +117,8 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
           </Front>
           <Back
             variants={backVariants}
-            initial="visible"
-            animate={isFlipped ? "hidden" : "visible"}
+            initial="hidden"
+            animate={isFlipped ? "visible" : "hidden"}
           >
             <Content onClick={handleClick}>
               <WatchSelector id={movie.id} small />
