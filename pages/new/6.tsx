@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 interface PrivacyForm {
-  birth: Date;
+  birth: string;
   occupation: number;
   gender: string;
 }
@@ -33,7 +33,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   return {
-    props: { session },
+    props: { session: JSON.parse(JSON.stringify(session)) },
   };
 }
 
@@ -43,7 +43,7 @@ export default function Privacy() {
   const { data: occupation } = useSWR<Occupation[]>("/api/occupations");
   const { register, handleSubmit } = useForm<PrivacyForm>({
     defaultValues: {
-      birth: session?.user.birth || undefined,
+      birth: session?.user.birth?.toString().split("T")[0] || undefined,
       occupation: session?.user.occupationId || undefined,
       gender: session?.user.gender || undefined,
     },
