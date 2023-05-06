@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const Label = styled.label`
@@ -39,6 +39,12 @@ const Genre = styled.div`
   background-color: #eeeeee;
   border-radius: 8px;
   color: #333;
+
+  @media (max-width: 809px) {
+    height: 32px;
+    padding: 0px 16px 0px 16px;
+    font-size: 12px;
+  }
 `;
 
 interface GenresForm {
