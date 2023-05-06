@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import ReviewPoster from "@/components/review-poster";
+import ExplorePoster from "@/components/poster/explore-poster";
 import { MovieDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Subscription } from "@prisma/client";
@@ -99,7 +99,7 @@ export default function Review() {
         <Grid>
           {data?.map((page) => {
             return page.results.map((movie) => (
-              <ReviewPoster key={movie.id} movie={movie} />
+              <ExplorePoster key={movie.id} movie={movie} />
             ));
           })}
         </Grid>

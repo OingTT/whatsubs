@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Variants, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import WatchSelector from "./watch-selector";
+import WatchSelector from "../watch-selector";
 import useSWR from "swr";
 import { Review } from "@prisma/client";
 import React from "react";
@@ -72,6 +72,7 @@ interface ReviewPosterProps {
 export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
   const { data } = useSWR<Review[]>("/api/review");
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isInView, setIsInView] = useState(false);
 
   // Flip when data is loaded
   useEffect(() => {
@@ -96,44 +97,50 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
       initial="hidden"
       whileInView="visible"
       onClick={handleFlip}
+      onViewportEnter={() => setIsInView(true)}
+      onViewportLeave={() => setIsInView(false)}
     >
-      <Front
-        variants={frontVariants}
-        initial="visible"
-        animate={isFlipped ? "hidden" : "visible"}
-      >
-        <Image
-          src={"https://image.tmdb.org/t/p/w342" + movie.poster_path}
-          fill
-          alt="Poster"
-          priority
-          unoptimized
-        />
-      </Front>
-      <Back
-        variants={backVariants}
-        initial="visible"
-        animate={isFlipped ? "hidden" : "visible"}
-      >
-        <Content onClick={handleClick}>
-          <WatchSelector id={movie.id} small />
-        </Content>
+      {isInView && (
+        <>
+          <Front
+            variants={frontVariants}
+            initial="visible"
+            animate={isFlipped ? "hidden" : "visible"}
+          >
+            <Image
+              src={"https://image.tmdb.org/t/p/w342" + movie.poster_path}
+              fill
+              alt="Poster"
+              priority
+              unoptimized
+            />
+          </Front>
+          <Back
+            variants={backVariants}
+            initial="visible"
+            animate={isFlipped ? "hidden" : "visible"}
+          >
+            <Content onClick={handleClick}>
+              <WatchSelector id={movie.id} small />
+            </Content>
 
-        <Content onClick={handleClick}>
-          <Link href={`/movie/${movie.id}`}>
-            {movie.title.includes(":") ? (
-              <>
-                <div>{movie.title.split(": ")[0]}</div>
-                <div style={{ fontSize: 14, color: "#999" }}>
-                  {movie.title.split(": ")[1]}
-                </div>
-              </>
-            ) : (
-              movie.title
-            )}
-          </Link>
-        </Content>
-      </Back>
+            <Content onClick={handleClick}>
+              <Link href={`/movie/${movie.id}`}>
+                {movie.title.includes(":") ? (
+                  <>
+                    <div>{movie.title.split(": ")[0]}</div>
+                    <div style={{ fontSize: 14, color: "#999" }}>
+                      {movie.title.split(": ")[1]}
+                    </div>
+                  </>
+                ) : (
+                  movie.title
+                )}
+              </Link>
+            </Content>
+          </Back>
+        </>
+      )}
     </Wrapper>
   );
 });

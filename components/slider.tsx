@@ -1,7 +1,7 @@
 import useIsDesktop from "@/lib/client/useIsDesktop";
 import styled from "@emotion/styled";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
-import Poster from "./poster";
+import Poster from "./poster/poster";
 import { useEffect, useState } from "react";
 import { AnimatePresence, Variants, motion } from "framer-motion";
 
