@@ -8,6 +8,7 @@ const Wrapper = styled.div`
 `;
 
 const Input = styled.input`
+  appearance: none;
   width: 100%;
   height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
