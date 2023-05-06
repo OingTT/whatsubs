@@ -26,7 +26,7 @@ export default function Home() {
   const user = useUser();
 
   return (
-    <Layout>
+    <Layout title="사용자 정보">
       <Wrapper>
         {user && (
           <div>

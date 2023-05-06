@@ -1,7 +1,6 @@
 import Layout from "@/components/layout";
 import ProviderSelector from "@/components/provider-selector";
 import Slider from "@/components/slider";
-import { MovieDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Review, Watch } from "@prisma/client";
 import useSWR from "swr";
@@ -40,8 +39,8 @@ export default function Home() {
         <ProviderSelector />
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" />
-      <Slider title="인기 콘텐츠" />
+      <Slider title="오늘의 인기 콘텐츠" disable />
+      <Slider title="맞춤 추천 콘텐츠" disable />
       <Slider title="시청 중인 콘텐츠" ids={watching} />
       <Slider title="찜한 콘텐츠" ids={wantToWatch} />
     </Layout>

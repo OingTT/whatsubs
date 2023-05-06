@@ -197,13 +197,14 @@ export default function Movie() {
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
   return (
-    <Layout fit>
+    <Layout title={data?.title} fit>
       <Backdrop>
         {data?.backdrop_path && (
           <Image
             src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
             fill
             alt="Backdrop"
+            unoptimized
             style={{ objectFit: "cover" }}
           />
         )}
@@ -257,8 +258,8 @@ export default function Movie() {
         </Genres>
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" />
-      <Slider title="비슷한 콘텐츠" />
+      <Slider title="추천 콘텐츠" disable />
+      <Slider title="비슷한 콘텐츠" disable />
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
