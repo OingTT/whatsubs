@@ -3,13 +3,16 @@ import Image from "next/image";
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
-  min-height: 800px;
   background-image: url(https://images.unsplash.com/photo-1549226024-48875665c1ea);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+
+  @media (min-width: 810px) {
+    min-height: 800px;
+  }
 `;
 
 const Dimmer = styled.div`
