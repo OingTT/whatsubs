@@ -12,6 +12,7 @@ import React from "react";
 const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
   position: relative;
+  perspective: 800px;
 `;
 
 const Front = styled(motion.div)`
