@@ -74,6 +74,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
   const { data } = useSWR<Review[]>("/api/review");
   const [isFlipped, setIsFlipped] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Flip when data is loaded
   useEffect(() => {
@@ -96,7 +97,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
     <Wrapper
       variants={wrapperVariants}
       initial="hidden"
-      whileInView="visible"
+      whileInView={isLoaded ? "visible" : "hidden"}
       onClick={handleFlip}
       onViewportEnter={() => setIsInView(true)}
       onViewportLeave={() => setIsInView(false)}
@@ -114,6 +115,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
               alt="Poster"
               priority
               unoptimized
+              onLoad={() => setIsLoaded(true)}
             />
           </Front>
           <Back
