@@ -39,8 +39,8 @@ export default function Home() {
         <ProviderSelector />
       </Wrapper>
 
-      <Slider title="오늘의 인기 콘텐츠" disable />
-      <Slider title="맞춤 추천 콘텐츠" disable />
+      <Slider title="오늘의 인기 콘텐츠" disabled />
+      <Slider title="맞춤 추천 콘텐츠" disabled />
       <Slider title="시청 중인 콘텐츠" ids={watching} />
       <Slider title="찜한 콘텐츠" ids={wantToWatch} />
     </Layout>
