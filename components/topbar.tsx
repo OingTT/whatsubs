@@ -3,24 +3,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import useUser from "@/lib/client/useUser";
+import Nav from "./nav";
 
-const Bar = styled.div`
+const Wrapper = styled.div`
   width: 100%;
   height: 64px;
   display: flex;
   align-items: center;
   padding: 32px;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   gap: 24px;
   position: fixed;
   top: 0;
   z-index: 100;
-`;
 
-const Nav = styled(Link)`
-  color: #666;
-  font-weight: 400;
+  @media (max-width: 809px) {
+    padding: 24px;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Spacer = styled.div`
@@ -35,7 +36,7 @@ export default function Topbar() {
   const user = useUser();
 
   return (
-    <Bar>
+    <Wrapper>
       <Link href="/">
         <Image
           src="/images/whatsubs-small.png"
@@ -47,6 +48,7 @@ export default function Topbar() {
       </Link>
 
       <Nav href="/explore">탐색</Nav>
+      <Nav href="/chart">차트</Nav>
 
       <Spacer />
 
@@ -61,6 +63,6 @@ export default function Topbar() {
           alt="User"
         />
       </Link>
-    </Bar>
+    </Wrapper>
   );
 }

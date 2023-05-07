@@ -24,6 +24,10 @@ const Front = styled(motion.div)`
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+
+  @media (max-width: 809px) {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
+  }
 `;
 
 const Back = styled(Front)`
@@ -39,6 +43,10 @@ const Back = styled(Front)`
   color: #333333;
   white-space: pre-line;
   line-height: 1.2;
+
+  @media (max-width: 809px) {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Content = styled.div`
