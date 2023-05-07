@@ -13,54 +13,59 @@ export default async function session(
 
   const {
     query: { id },
-    body: { watch, stars: rating },
+    body: { watch, rating },
   } = req;
 
-  const review = await prisma.review.findFirst({
-    where: {
-      user: {
-        email: session.user?.email!,
-      },
-      movieId: Number(id),
-    },
-  });
-
-  if (req.method === "GET") {
-    return res
-      .status(200)
-      .json(review ? { watch: review.watch, rating: review.rating } : null);
-  }
-
-  if (review) {
-    if (watch) {
+  if (!watch) {
+    // HACK: Delete is not working as expected
+    try {
+      await prisma.review.delete({
+        where: {
+          userId_movieId: {
+            userId: session.user?.id!,
+            movieId: Number(id),
+          },
+        },
+      });
+    } catch (error) {}
+  } else {
+    // HACK: Upsert is not working as expected
+    try {
+      await prisma.review.upsert({
+        where: {
+          userId_movieId: {
+            userId: session.user?.id!,
+            movieId: Number(id),
+          },
+        },
+        update: {
+          watch,
+          rating,
+        },
+        create: {
+          user: {
+            connect: {
+              id: session.user?.id!,
+            },
+          },
+          movieId: Number(id),
+          watch,
+        },
+      });
+    } catch (error) {
       await prisma.review.update({
         where: {
-          id: review.id,
+          userId_movieId: {
+            userId: session.user?.id!,
+            movieId: Number(id),
+          },
         },
         data: {
           watch,
           rating,
         },
       });
-    } else {
-      await prisma.review.delete({
-        where: {
-          id: review.id,
-        },
-      });
     }
-  } else {
-    await prisma.review.create({
-      data: {
-        user: {
-          connect: {
-            email: session.user?.email!,
-          },
-        },
-        movieId: Number(id),
-        watch,
-      },
-    });
   }
 
   return res.status(200).end();

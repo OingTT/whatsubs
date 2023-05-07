@@ -87,13 +87,13 @@ enum Watch {
 }
 
 model Review {
-  id      Int    @id @default(autoincrement())
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String
   movieId Int
   watch   Watch
   rating  Int    @default(0) @db.TinyInt
 
+  @@id([userId, movieId])
   @@index([userId])
 }
 

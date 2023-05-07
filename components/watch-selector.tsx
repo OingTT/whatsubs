@@ -73,7 +73,7 @@ export default function WatchSelector({
   };
 
   const handleStars = (stars: number) => {
-    updateReview({ watch, stars });
+    updateReview({ watch, rating: stars });
   };
 
   useEffect(() => {
