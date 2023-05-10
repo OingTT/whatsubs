@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail } from "@/lib/client/interface";
+import { TVDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
@@ -174,30 +174,23 @@ const DetailsBody = styled.div`
   }
 `;
 
-export default function Movie() {
+export default function TV() {
   const {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
-  const { data } = useSWR<MovieDetail>(
+  const { data } = useSWR<TVDetail>(
     id &&
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,watch/providers`
   );
 
-  const director = data?.credits?.crew
-    .filter((crew) => crew.job === "Director")
-    .map((crew) => crew.name)
-    .join(", ");
-  const writer = data?.credits?.crew
-    .filter((crew) => crew.job === "Writer" || crew.job === "Screenplay")
-    .map((crew) => crew.name)
-    .join(", ");
-  const rating = data?.release_dates?.results
-    ?.find((result) => result.iso_3166_1 === "KR")
-    ?.release_dates?.find((date) => date.certification !== "")?.certification;
+  const creator = data?.created_by.map((creator) => creator.name).join(", ");
+  const rating = data?.content_ratings?.results?.find(
+    (result) => result.iso_3166_1 === "KR"
+  )?.rating;
 
   return (
-    <Layout title={data?.title} fit>
+    <Layout title={data?.name} fit>
       <Backdrop>
         {data?.backdrop_path && (
           <Image
@@ -212,18 +205,15 @@ export default function Movie() {
       <Wrapper>
         <Header>
           <TitleBar>
-            <Title>{data ? data.title : "제목"}</Title>
+            <Title>{data ? data.name : "제목"}</Title>
             <SubTitle>
               평점 {data?.vote_average.toFixed(1)} 개봉연도{" "}
-              {data?.release_date.slice(0, 4)} 관람등급 {rating || "정보 없음"}
+              {data?.first_air_date.slice(0, 4)} 관람등급{" "}
+              {rating || "정보 없음"}
             </SubTitle>
           </TitleBar>
 
-          <WatchSelector
-            type={ContentType.MOVIE}
-            id={Number(id)}
-            absoluteStars
-          />
+          <WatchSelector type={ContentType.TV} id={Number(id)} absoluteStars />
         </Header>
 
         <Selector>
@@ -267,11 +257,7 @@ export default function Movie() {
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
-        <DetailsBody>
-          감독: {director || "정보 없음"}
-          <br />
-          각본: {writer || "정보 없음"}
-        </DetailsBody>
+        <DetailsBody>크리에이터: {creator || "정보 없음"}</DetailsBody>
       </Details>
     </Layout>
   );

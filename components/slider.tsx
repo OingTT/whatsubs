@@ -4,6 +4,7 @@ import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import Poster from "./poster/poster";
 import { useEffect, useState } from "react";
 import { AnimatePresence, Variants, motion } from "framer-motion";
+import { Content } from "@/lib/client/interface";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -130,20 +131,20 @@ const offset = 5;
 
 interface SliderProps {
   title: string;
-  ids?: number[];
+  contents?: Content[];
   disabled?: boolean;
 }
 
-export default function Slider({ title, ids, disabled }: SliderProps) {
+export default function Slider({ title, contents, disabled }: SliderProps) {
   const isDesktop = useIsDesktop();
   const [index, setIndex] = useState(0);
   const [isLast, setIsLast] = useState(true);
   const [isGoingBack, setIsGoingBack] = useState(false);
 
   useEffect(() => {
-    if (!ids) return;
-    setIsLast(ids.length <= index * offset + offset);
-  }, [ids, index]);
+    if (!contents) return;
+    setIsLast(contents.length <= index * offset + offset);
+  }, [contents, index]);
 
   const handlePrev = async () => {
     if (index === 0) return;
@@ -153,7 +154,7 @@ export default function Slider({ title, ids, disabled }: SliderProps) {
   };
 
   const handleNext = async () => {
-    if (!ids || isLast) return;
+    if (!contents || isLast) return;
 
     setIsGoingBack(false);
     setIndex(index + 1);
@@ -172,7 +173,7 @@ export default function Slider({ title, ids, disabled }: SliderProps) {
           <AnimatePresence>
             {disabled ? (
               <DisabledText>준비 중인 기능이에요.</DisabledText>
-            ) : ids?.length === 0 ? (
+            ) : contents?.length === 0 ? (
               <DisabledText>콘텐츠가 없어요.</DisabledText>
             ) : (
               <Posters
@@ -181,13 +182,16 @@ export default function Slider({ title, ids, disabled }: SliderProps) {
                 initial="initial"
                 animate="visible"
                 exit="exit"
-                key={ids?.[index]}
               >
                 {isDesktop
-                  ? ids
+                  ? contents
                       ?.slice(index * offset, (index + 1) * offset)
-                      .map((id, index) => <Poster key={index} id={id} />)
-                  : ids?.map((id, index) => <Poster key={index} id={id} />)}
+                      .map((content, index) => (
+                        <Poster key={index} {...content} />
+                      ))
+                  : contents?.map((content, index) => (
+                      <Poster key={index} {...content} />
+                    ))}
               </Posters>
             )}
           </AnimatePresence>

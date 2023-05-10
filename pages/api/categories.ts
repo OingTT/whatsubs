@@ -11,7 +11,7 @@ export default async function session(
 
   if (!session) return res.status(400).end();
 
-  const contentTypes = await prisma.contentType.findMany({
+  const categories = await prisma.category.findMany({
     select: {
       id: true,
       name: true,
@@ -21,5 +21,5 @@ export default async function session(
     },
   });
 
-  return res.json(contentTypes);
+  return res.json(categories);
 }

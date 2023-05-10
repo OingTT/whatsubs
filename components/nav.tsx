@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 
 const Wrapper = styled(Link)<{ active: boolean }>`
   color: ${(props) => (props.active ? "#333333" : "#999999")};
-  font-weight: 400;
 `;
 
 interface NavProps {

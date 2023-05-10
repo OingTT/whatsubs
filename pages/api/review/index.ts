@@ -18,7 +18,8 @@ export default async function session(
       },
     },
     select: {
-      movieId: true,
+      contentType: true,
+      contentId: true,
       watch: true,
       rating: true,
     },

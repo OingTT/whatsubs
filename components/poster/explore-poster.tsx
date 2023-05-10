@@ -1,4 +1,4 @@
-import { Movie } from "@/lib/client/interface";
+import { Movie, TV } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { Variants, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import WatchSelector from "../watch-selector";
 import useSWR from "swr";
-import { Review } from "@prisma/client";
+import { ContentType, Review } from "@prisma/client";
 import React from "react";
 
 const Wrapper = styled(motion.div)`
@@ -74,11 +74,13 @@ const wrapperVariants: Variants = {
   },
 };
 
-interface ReviewPosterProps {
-  movie: Movie;
+interface ExplorePosterProps {
+  content: Movie | TV;
 }
 
-export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
+export default React.memo(function ExplorePoster({
+  content,
+}: ExplorePosterProps) {
   const { data } = useSWR<Review[]>("/api/review");
   const [isFlipped, setIsFlipped] = useState(false);
   const [isInView, setIsInView] = useState(false);
@@ -87,9 +89,9 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
   // Flip when data is loaded
   useEffect(() => {
     setIsFlipped(
-      data?.find((review) => review.movieId === movie.id) ? true : false
+      data?.find((review) => review.contentId === content.id) ? true : false
     );
-  }, [data, movie.id]);
+  }, [content.id, data]);
 
   // Flip when clicked
   const handleFlip = () => {
@@ -100,6 +102,11 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    content.type = "title" in content ? ContentType.MOVIE : ContentType.TV;
+    console.log(content.type);
+  }, [content]);
 
   return (
     <Wrapper
@@ -118,7 +125,7 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
             animate={isFlipped ? "hidden" : "visible"}
           >
             <Image
-              src={"https://image.tmdb.org/t/p/w342" + movie.poster_path}
+              src={"https://image.tmdb.org/t/p/w342" + content.poster_path}
               fill
               alt="Poster"
               priority
@@ -132,21 +139,33 @@ export default React.memo(function ReviewPoster({ movie }: ReviewPosterProps) {
             animate={isFlipped ? "visible" : "hidden"}
           >
             <Content onClick={handleClick}>
-              <WatchSelector id={movie.id} small />
+              <WatchSelector type={content.type} id={content.id} small />
             </Content>
 
             <Content onClick={handleClick}>
-              <Link href={`/movie/${movie.id}`}>
-                {movie.title.includes(":") ? (
-                  <>
-                    <div>{movie.title.split(": ")[0]}</div>
-                    <div style={{ fontSize: 14, color: "#999" }}>
-                      {movie.title.split(": ")[1]}
-                    </div>
-                  </>
-                ) : (
-                  movie.title
-                )}
+              <Link href={`/${content.type.toLowerCase()}/${content.id}`}>
+                {content.type === ContentType.MOVIE &&
+                  (content.title.includes(":") ? (
+                    <>
+                      <div>{content.title.split(": ")[0]}</div>
+                      <div style={{ fontSize: 14, color: "#999" }}>
+                        {content.title.split(": ")[1]}
+                      </div>
+                    </>
+                  ) : (
+                    content.title
+                  ))}
+                {content.type === ContentType.TV &&
+                  (content.name.includes(":") ? (
+                    <>
+                      <div>{content.name.split(": ")[0]}</div>
+                      <div style={{ fontSize: 14, color: "#999" }}>
+                        {content.name.split(": ")[1]}
+                      </div>
+                    </>
+                  ) : (
+                    content.name
+                  ))}
               </Link>
             </Content>
           </Back>
