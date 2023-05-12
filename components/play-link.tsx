@@ -59,7 +59,7 @@ export default function PlayLink() {
     <div>
       <ul>
         {data.urls.map((url, index) => (
-          <li>
+          <li key={index}>
             <a href={url} target="_blank" rel="noreferrer">
               {data.providers[index]}
               <br />
