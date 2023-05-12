@@ -8,6 +8,7 @@ import { Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import * as cheerio from "cheerio";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -196,6 +197,46 @@ export default function Movie() {
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
+  const origin_url = data?.["watch/providers"]?.results.KR?.link;
+  const result_url =
+    "https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/" +
+    origin_url?.replace("https://www.themoviedb.org/", "");
+
+  console.log({ result_url });
+
+  // link
+  const { data: playLink } = useSWR(result_url, async (url) => {
+    const response = await fetch(url);
+    const html = await response.text();
+
+    const $ = cheerio.load(html);
+
+    const providers: string[] = [];
+    const urls: string[] = [];
+
+    $("ul.providers li a").each((index, element) => {
+      const provider = $(element).attr("title");
+
+      if (
+        typeof provider === "string" &&
+        provider[0] === "W" &&
+        !providers.includes(provider)
+      ) {
+        providers.push(provider);
+
+        const url = $(element).attr("href");
+
+        if (typeof url === "string") {
+          urls.push(url);
+        }
+      }
+    });
+
+    return { providers, urls };
+  });
+
+  console.log({ playLink });
+
   return (
     <Layout title={data?.title} fit>
       <Backdrop>
@@ -223,9 +264,12 @@ export default function Movie() {
         </Header>
 
         <Selector>
-          <PlayButton>
-            <Play color="white" weight="fill" />
-          </PlayButton>
+          <a href={playLink?.urls[0]} target="_blank" rel="noopener">
+            <PlayButton>
+              <Play color="white" weight="fill" />
+            </PlayButton>
+          </a>
+
           <Providers>
             {data?.["watch/providers"]?.results?.KR?.flatrate?.map(
               (provider) => {
