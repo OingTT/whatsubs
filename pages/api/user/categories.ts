@@ -12,12 +12,12 @@ export default async function session(
   if (!session) return res.status(400).end();
 
   if (req.method === "GET") {
-    const contentTypes = await prisma.contentTypesOnUsers.findMany({
+    const categories = await prisma.categoriesOnUsers.findMany({
       where: {
         userId: session.user.id,
       },
       select: {
-        contentTypeId: true,
+        categoryId: true,
       },
       orderBy: {
         order: "asc",
@@ -26,23 +26,23 @@ export default async function session(
 
     return res
       .status(200)
-      .json(contentTypes.map((contentType) => contentType.contentTypeId));
+      .json(categories.map((category) => category.categoryId));
   }
 
   if (req.method === "POST") {
     await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        contentTypes: {
+        categories: {
           deleteMany: {},
-          create: req.body.contentTypes.map((id: number, index: number) => ({
-            contentTypeId: id,
+          create: req.body.categories.map((id: number, index: number) => ({
+            categoryId: id,
             order: index,
           })),
         },
       },
     });
 
-    return res.status(200).json(req.body.contentTypes);
+    return res.status(200).json(req.body.categories);
   }
 }

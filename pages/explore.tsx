@@ -1,9 +1,12 @@
+import Radio from "@/components/input/radio";
 import Layout from "@/components/layout";
 import ExplorePoster from "@/components/poster/explore-poster";
-import { MovieDiscover } from "@/lib/client/interface";
+import ProviderSelector from "@/components/provider-selector";
+import { MovieDiscover, TVDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
-import { Subscription } from "@prisma/client";
+import { ContentType, Subscription } from "@prisma/client";
 import { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 
@@ -52,8 +55,12 @@ const Loader = styled.div`
   bottom: 800px;
 `;
 
+interface ExploreForm {
+  type: ContentType;
+}
+
 export default function Review() {
-  const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+  const getMovieKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.results.length) return null;
     if (!subscriptions) return null;
     return `https://api.themoviedb.org/3/discover/movie?api_key=${
@@ -65,9 +72,35 @@ export default function Review() {
     }`;
   };
 
+  const getTVKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+    if (previousPageData && !previousPageData.results.length) return null;
+    if (!subscriptions) return null;
+    return `https://api.themoviedb.org/3/discover/tv?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&with_watch_providers=${subscriptions
+      .map((subscription) => subscription.providerId)
+      .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
+      pageIndex + 1
+    }`;
+  };
+
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
-  const { data, setSize } = useSWRInfinite<MovieDiscover>(getKey, {
-    revalidateFirstPage: false,
+  const { data: movie, setSize: setMovieSize } = useSWRInfinite<MovieDiscover>(
+    getMovieKey,
+    {
+      revalidateFirstPage: false,
+    }
+  );
+  const { data: tv, setSize: setTVSize } = useSWRInfinite<TVDiscover>(
+    getTVKey,
+    {
+      revalidateFirstPage: false,
+    }
+  );
+  const { register, watch } = useForm<ExploreForm>({
+    defaultValues: {
+      type: ContentType.MOVIE,
+    },
   });
 
   const loader = useRef<HTMLDivElement>(null);
@@ -77,7 +110,9 @@ export default function Review() {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         console.log("scroll");
-        setSize((size) => size + 1);
+        watch("type") === ContentType.MOVIE
+          ? setMovieSize((prev) => prev + 1)
+          : setTVSize((prev) => prev + 1);
       }
     });
     const ref = loader.current;
@@ -87,21 +122,32 @@ export default function Review() {
     return () => {
       if (ref) observer.unobserve(ref);
     };
-  }, [setSize]);
+  }, [setMovieSize, setTVSize, watch]);
 
   return (
     <Layout title="탐색">
       <Wrapper>
-        <Header>
-          <h1>콘텐츠를 평가해주세요.</h1>
-        </Header>
-
+        <ProviderSelector />
+        <Radio
+          register={register("type", { required: true })}
+          ids={[ContentType.MOVIE, ContentType.TV]}
+          labels={["영화", "TV 프로그램"]}
+          required
+        />
+      </Wrapper>
+      <Wrapper>
         <Grid>
-          {data?.map((page) => {
-            return page.results.map((movie) => (
-              <ExplorePoster key={movie.id} movie={movie} />
-            ));
-          })}
+          {watch("type") === ContentType.MOVIE
+            ? movie?.map((page) => {
+                return page.results.map((movie) => (
+                  <ExplorePoster key={movie.id} content={movie} />
+                ));
+              })
+            : tv?.map((page) => {
+                return page.results.map((tv) => (
+                  <ExplorePoster key={tv.id} content={tv} />
+                ));
+              })}
         </Grid>
         <Loader ref={loader} />
       </Wrapper>

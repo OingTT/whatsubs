@@ -1,6 +1,6 @@
 import SignupLayout from "@/components/signup-layout";
 import styled from "@emotion/styled";
-import { ContentType, Subscription } from "@prisma/client";
+import { Category, Subscription } from "@prisma/client";
 import { useRouter } from "next/router";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { useForm } from "react-hook-form";
@@ -44,34 +44,34 @@ const Buttons = styled.div`
   align-items: center;
 `;
 
-interface ContentTypesForm {
-  contentTypes: number[];
+interface CategoriesForm {
+  categories: number[];
 }
 
 export default function Subscription() {
   const router = useRouter();
-  const { data: userContentTypes, mutate } = useSWR<number[]>(
-    "/api/user/content-types"
+  const { data: userCategories, mutate } = useSWR<number[]>(
+    "/api/user/categories"
   );
-  const { data: contentTypes } = useSWR<ContentType[]>("/api/content-types");
-  const { handleSubmit, setValue, watch } = useForm<ContentTypesForm>();
-  const [updateContentTypes, { loading, data }] = useMutation<number[]>(
-    "/api/user/content-types"
+  const { data: categories } = useSWR<Category[]>("/api/categories");
+  const { handleSubmit, setValue, watch } = useForm<CategoriesForm>();
+  const [updateCategories, { loading, data }] = useMutation<number[]>(
+    "/api/user/categories"
   );
 
   useEffect(() => {
-    if (contentTypes) {
-      if (userContentTypes && userContentTypes.length === contentTypes.length) {
-        setValue("contentTypes", userContentTypes, { shouldTouch: true });
+    if (categories) {
+      if (userCategories && userCategories.length === categories.length) {
+        setValue("categories", userCategories, { shouldTouch: true });
       } else {
         setValue(
-          "contentTypes",
-          contentTypes.map((contentType) => contentType.id),
+          "categories",
+          categories.map((category) => category.id),
           { shouldTouch: true }
         );
       }
     }
-  }, [contentTypes, setValue, userContentTypes]);
+  }, [categories, setValue, userCategories]);
 
   useEffect(() => {
     if (data) {
@@ -81,19 +81,19 @@ export default function Subscription() {
     }
   }, [data, mutate, router]);
 
-  const onSubmit = (data: ContentTypesForm) => {
+  const onSubmit = (data: CategoriesForm) => {
     if (loading) return;
-    updateContentTypes(data);
+    updateCategories(data);
   };
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const newContentTypes = [...watch("contentTypes")];
-    const [removed] = newContentTypes.splice(result.source.index, 1);
-    newContentTypes.splice(result.destination.index, 0, removed);
+    const newCategories = [...watch("categories")];
+    const [removed] = newCategories.splice(result.source.index, 1);
+    newCategories.splice(result.destination.index, 0, removed);
 
-    setValue("contentTypes", newContentTypes, { shouldValidate: true });
+    setValue("categories", newCategories, { shouldValidate: true });
   };
 
   return (
@@ -106,22 +106,22 @@ export default function Subscription() {
     >
       <Wrapper>
         <Numbers>
-          {contentTypes?.map((_, index) => (
+          {categories?.map((_, index) => (
             <Number key={index}>{index + 1}</Number>
           ))}
         </Numbers>
 
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="content-types">
+          <Droppable droppableId="categories">
             {(provided) => (
               <Buttons {...provided.droppableProps} ref={provided.innerRef}>
-                {watch("contentTypes")?.map((contentType, index) => (
+                {watch("categories")?.map((category, index) => (
                   <DraggableCard
-                    key={contentType}
-                    draggableId={contentType.toString()}
+                    key={category}
+                    draggableId={category.toString()}
                     index={index}
                   >
-                    {contentTypes?.find((ct) => ct.id === contentType)?.name}
+                    {categories?.find((ct) => ct.id === category)?.name}
                   </DraggableCard>
                 ))}
                 {provided.placeholder}

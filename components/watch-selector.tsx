@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { BookmarkSimple, Check, Eye } from "@phosphor-icons/react";
 import Stars from "./stars";
 import React, { useEffect, useState } from "react";
-import { Review, Watch } from "@prisma/client";
+import { ContentType, Review, Watch } from "@prisma/client";
 import useSWR from "swr";
 import useMutation from "@/lib/client/useMutation";
 
@@ -50,17 +50,19 @@ const StarsWrapper = styled.div<{ absolute?: boolean }>`
 `;
 
 interface WatchSelectorProps {
+  type: ContentType;
   id: number;
   small?: boolean;
   absoluteStars?: boolean;
 }
 
 export default function WatchSelector({
+  type,
   id,
   small,
   absoluteStars,
 }: WatchSelectorProps) {
-  const [updateReview] = useMutation(`/api/review/${id}`);
+  const [updateReview] = useMutation(`/api/review/${type.toLowerCase()}/${id}`);
   const { data } = useSWR<Review[]>("/api/review");
   const [watch, setWatch] = useState<Watch>();
   const [review, setReview] = useState<Review>();
@@ -77,7 +79,7 @@ export default function WatchSelector({
   };
 
   useEffect(() => {
-    setReview(data?.find((review) => review.movieId === id));
+    setReview(data?.find((review) => review.contentId === id));
   }, [data, id]);
 
   useEffect(() => {

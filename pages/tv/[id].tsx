@@ -1,14 +1,13 @@
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail } from "@/lib/client/interface";
+import { TVDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import * as cheerio from "cheerio";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -175,70 +174,23 @@ const DetailsBody = styled.div`
   }
 `;
 
-export default function Movie() {
+export default function TV() {
   const {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
-  const { data } = useSWR<MovieDetail>(
+  const { data } = useSWR<TVDetail>(
     id &&
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,watch/providers`
   );
 
-  const director = data?.credits?.crew
-    .filter((crew) => crew.job === "Director")
-    .map((crew) => crew.name)
-    .join(", ");
-  const writer = data?.credits?.crew
-    .filter((crew) => crew.job === "Writer" || crew.job === "Screenplay")
-    .map((crew) => crew.name)
-    .join(", ");
-  const rating = data?.release_dates?.results
-    ?.find((result) => result.iso_3166_1 === "KR")
-    ?.release_dates?.find((date) => date.certification !== "")?.certification;
-
-  const origin_url = data?.["watch/providers"]?.results.KR?.link;
-  const result_url =
-    "https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/" +
-    origin_url?.replace("https://www.themoviedb.org/", "");
-
-  console.log({ result_url });
-
-  // link
-  const { data: playLink } = useSWR(result_url, async (url) => {
-    const response = await fetch(url);
-    const html = await response.text();
-
-    const $ = cheerio.load(html);
-
-    const providers: string[] = [];
-    const urls: string[] = [];
-
-    $("ul.providers li a").each((index, element) => {
-      const provider = $(element).attr("title");
-
-      if (
-        typeof provider === "string" &&
-        provider[0] === "W" &&
-        !providers.includes(provider)
-      ) {
-        providers.push(provider);
-
-        const url = $(element).attr("href");
-
-        if (typeof url === "string") {
-          urls.push(url);
-        }
-      }
-    });
-
-    return { providers, urls };
-  });
-
-  console.log({ playLink });
+  const creator = data?.created_by.map((creator) => creator.name).join(", ");
+  const rating = data?.content_ratings?.results?.find(
+    (result) => result.iso_3166_1 === "KR"
+  )?.rating;
 
   return (
-    <Layout title={data?.title} fit>
+    <Layout title={data?.name} fit>
       <Backdrop>
         {data?.backdrop_path && (
           <Image
@@ -253,27 +205,21 @@ export default function Movie() {
       <Wrapper>
         <Header>
           <TitleBar>
-            <Title>{data ? data.title : "제목"}</Title>
+            <Title>{data ? data.name : "제목"}</Title>
             <SubTitle>
               평점 {data?.vote_average.toFixed(1)} 개봉연도{" "}
-              {data?.release_date.slice(0, 4)} 관람등급 {rating || "정보 없음"}
+              {data?.first_air_date.slice(0, 4)} 관람등급{" "}
+              {rating || "정보 없음"}
             </SubTitle>
           </TitleBar>
 
-          <WatchSelector
-            type={ContentType.MOVIE}
-            id={Number(id)}
-            absoluteStars
-          />
+          <WatchSelector type={ContentType.TV} id={Number(id)} absoluteStars />
         </Header>
 
         <Selector>
-          <a href={playLink?.urls[0]} target="_blank" rel="noopener">
-            <PlayButton>
-              <Play color="white" weight="fill" />
-            </PlayButton>
-          </a>
-
+          <PlayButton>
+            <Play color="white" weight="fill" />
+          </PlayButton>
           <Providers>
             {data?.["watch/providers"]?.results?.KR?.flatrate?.map(
               (provider) => {
@@ -311,11 +257,7 @@ export default function Movie() {
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>
-        <DetailsBody>
-          감독: {director || "정보 없음"}
-          <br />
-          각본: {writer || "정보 없음"}
-        </DetailsBody>
+        <DetailsBody>크리에이터: {creator || "정보 없음"}</DetailsBody>
       </Details>
     </Layout>
   );

@@ -40,20 +40,20 @@ model Session {
 }
 
 model User {
-  id            String                @id @default(cuid())
+  id            String              @id @default(cuid())
   name          String?
-  email         String?               @unique
+  email         String?             @unique
   emailVerified DateTime?
   image         String?
   avatar        String?
   birth         DateTime?
-  occupation    Occupation?           @relation(fields: [occupationId], references: [id], onDelete: Cascade)
+  occupation    Occupation?         @relation(fields: [occupationId], references: [id], onDelete: Cascade)
   occupationId  Int?
-  gender        String?               @db.Char(1)
+  gender        String?             @db.Char(1)
   accounts      Account[]
   sessions      Session[]
   subscriptions Subscription[]
-  contentTypes  ContentTypesOnUsers[]
+  categories    CategoriesOnUsers[]
   genres        Genre[]
   reviews       Review[]
 
@@ -68,16 +68,16 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model ContentTypesOnUsers {
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Cascade)
-  contentTypeId Int
-  order         Int
+model CategoriesOnUsers {
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId Int
+  order      Int
 
-  @@id([userId, contentTypeId])
+  @@id([userId, categoryId])
   @@index([userId])
-  @@index([contentTypeId])
+  @@index([categoryId])
 }
 
 enum Watch {
@@ -86,14 +86,20 @@ enum Watch {
   WANT_TO_WATCH
 }
 
-model Review {
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String
-  movieId Int
-  watch   Watch
-  rating  Int    @default(0) @db.TinyInt
+enum ContentType {
+  MOVIE
+  TV
+}
 
-  @@id([userId, movieId])
+model Review {
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  contentType ContentType
+  contentId   Int
+  watch       Watch
+  rating      Int         @default(0) @db.TinyInt
+
+  @@id([userId, contentType, contentId])
   @@index([userId])
 }
 
@@ -106,10 +112,10 @@ model Subscription {
   users      User[]
 }
 
-model ContentType {
-  id    Int                   @id @default(autoincrement())
-  name  String                @unique
-  users ContentTypesOnUsers[]
+model Category {
+  id    Int                 @id @default(autoincrement())
+  name  String              @unique
+  users CategoriesOnUsers[]
 }
 
 model Genre {

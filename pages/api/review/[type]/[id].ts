@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/server/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "../../auth/[...nextauth]";
+import { ContentType } from "@prisma/client";
 
 export default async function session(
   req: NextApiRequest,
@@ -12,18 +13,23 @@ export default async function session(
   if (!session) return res.status(400).end();
 
   const {
-    query: { id },
+    query: { type, id },
     body: { watch, rating },
   } = req;
+
+  if (type !== "movie" && type !== "tv") return res.status(400).end();
+
+  const contentType = type === "movie" ? ContentType.MOVIE : ContentType.TV;
 
   if (!watch) {
     // HACK: Delete is not working as expected
     try {
       await prisma.review.delete({
         where: {
-          userId_movieId: {
+          userId_contentType_contentId: {
             userId: session.user?.id!,
-            movieId: Number(id),
+            contentType,
+            contentId: Number(id),
           },
         },
       });
@@ -33,9 +39,10 @@ export default async function session(
     try {
       await prisma.review.upsert({
         where: {
-          userId_movieId: {
+          userId_contentType_contentId: {
             userId: session.user?.id!,
-            movieId: Number(id),
+            contentType,
+            contentId: Number(id),
           },
         },
         update: {
@@ -48,16 +55,18 @@ export default async function session(
               id: session.user?.id!,
             },
           },
-          movieId: Number(id),
+          contentType,
+          contentId: Number(id),
           watch,
         },
       });
     } catch (error) {
       await prisma.review.update({
         where: {
-          userId_movieId: {
+          userId_contentType_contentId: {
             userId: session.user?.id!,
-            movieId: Number(id),
+            contentType,
+            contentId: Number(id),
           },
         },
         data: {

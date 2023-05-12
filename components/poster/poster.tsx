@@ -1,5 +1,6 @@
 import { MovieDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
+import { ContentType } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import useSWR from "swr";
@@ -19,16 +20,19 @@ const Wrapper = styled.div`
 `;
 
 interface PosterProps {
+  type: ContentType;
   id: number;
 }
 
-export default function Poster({ id }: PosterProps) {
+export default function Poster({ type, id }: PosterProps) {
   const { data } = useSWR<MovieDetail>(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
+    `https://api.themoviedb.org/3/${type.toLowerCase()}/${id}?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR`
   );
 
   return (
-    <Link href={`/movie/${id}`}>
+    <Link href={`/${type.toLowerCase()}/${id}`}>
       <Wrapper>
         {data && (
           <Image
