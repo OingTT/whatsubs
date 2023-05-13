@@ -56,7 +56,7 @@ const Loader = styled.div`
 `;
 
 interface ExploreForm {
-  type: ContentType;
+  type: ContentType | "TVNETWORK";
 }
 
 export default function Review() {
@@ -84,6 +84,19 @@ export default function Review() {
     }`;
   };
 
+  const getTVNetworkKey: SWRInfiniteKeyLoader = (
+    pageIndex,
+    previousPageData
+  ) => {
+    if (previousPageData && !previousPageData.results.length) return null;
+    if (!subscriptions) return null;
+    return `https://api.themoviedb.org/3/discover/tv?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&with_networks=${subscriptions
+      .map((subscription) => subscription.networkId)
+      .join("|")}&page=${pageIndex + 1}`;
+  };
+
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data: movie, setSize: setMovieSize } = useSWRInfinite<MovieDiscover>(
     getMovieKey,
@@ -97,6 +110,10 @@ export default function Review() {
       revalidateFirstPage: false,
     }
   );
+  const { data: tvNetwork, setSize: setTVNetworkSize } =
+    useSWRInfinite<TVDiscover>(getTVNetworkKey, {
+      revalidateFirstPage: false,
+    });
   const { register, watch } = useForm<ExploreForm>({
     defaultValues: {
       type: ContentType.MOVIE,
@@ -110,9 +127,17 @@ export default function Review() {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         console.log("scroll");
-        watch("type") === ContentType.MOVIE
-          ? setMovieSize((prev) => prev + 1)
-          : setTVSize((prev) => prev + 1);
+        switch (watch("type")) {
+          case ContentType.MOVIE:
+            setMovieSize((prev) => prev + 1);
+            break;
+          case ContentType.TV:
+            setTVSize((prev) => prev + 1);
+            break;
+          case "TVNETWORK":
+            setTVNetworkSize((prev) => prev + 1);
+            break;
+        }
       }
     });
     const ref = loader.current;
@@ -122,7 +147,7 @@ export default function Review() {
     return () => {
       if (ref) observer.unobserve(ref);
     };
-  }, [setMovieSize, setTVSize, watch]);
+  }, [setMovieSize, setTVNetworkSize, setTVSize, watch]);
 
   return (
     <Layout title="탐색">
@@ -130,8 +155,8 @@ export default function Review() {
         <ProviderSelector />
         <Radio
           register={register("type", { required: true })}
-          ids={[ContentType.MOVIE, ContentType.TV]}
-          labels={["영화", "TV 프로그램"]}
+          ids={[ContentType.MOVIE, ContentType.TV, "TVNETWORK"]}
+          labels={["영화", "TV 프로그램", "TV(티빙/쿠플)"]}
           required
         />
       </Wrapper>
@@ -143,7 +168,13 @@ export default function Review() {
                   <ExplorePoster key={movie.id} content={movie} />
                 ));
               })
-            : tv?.map((page) => {
+            : watch("type") === ContentType.TV
+            ? tv?.map((page) => {
+                return page.results.map((tv) => (
+                  <ExplorePoster key={tv.id} content={tv} />
+                ));
+              })
+            : tvNetwork?.map((page) => {
                 return page.results.map((tv) => (
                   <ExplorePoster key={tv.id} content={tv} />
                 ));
