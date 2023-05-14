@@ -164,6 +164,9 @@ export default function Review() {
     <Layout title="탐색">
       <Wrapper>
         <Alert>티빙 / 쿠팡플레이는 현재 일부 TV 콘텐츠만 지원해요.</Alert>
+        <Alert>
+          평점을 남겨주세요. 포스터 클릭 → 체크(봤어요) 클릭 → 평점 남기기
+        </Alert>
         <ProviderSelector onChange={handleChange} />
         <Radio
           register={register("type", { required: true })}
