@@ -42,7 +42,7 @@ export default function Policy({ data, content }: PolicyProps) {
 
 export function getStaticPaths() {
   return {
-    paths: [],
+    paths: [{ params: { slug: "privacy" } }, { params: { slug: "terms" } }],
     fallback: "blocking",
   };
 }
