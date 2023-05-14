@@ -17,7 +17,6 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 24px;
   gap: 24px;
-  position: relative;
 
   @media (min-width: 1200px) {
     width: 984px;
@@ -27,14 +26,6 @@ const Wrapper = styled.div`
     padding: 16px;
     gap: 16px;
   }
-`;
-
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
 `;
 
 const Grid = styled.div`
@@ -49,11 +40,6 @@ const Grid = styled.div`
   }
 `;
 
-const Loader = styled.div`
-  position: absolute;
-  bottom: 800px;
-`;
-
 interface ExploreForm {
   type: ContentType | "TVNETWORK";
 }
@@ -61,67 +47,71 @@ interface ExploreForm {
 export default function Review() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
 
-  const getMovieKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
-    if (previousPageData && !previousPageData.results.length) return null;
-    if (
-      subscriptions.map((subscription) => subscription.providerId).length === 0
-    )
-      return null;
-    return `https://api.themoviedb.org/3/discover/movie?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&region=KR&with_watch_providers=${subscriptions
-      .map((subscription) => subscription.providerId)
-      .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
-      pageIndex + 1
-    }`;
-  };
+  const getMovieKey: SWRInfiniteKeyLoader = useCallback(
+    (pageIndex) => {
+      if (subscriptions.map((sub) => sub.providerId).length === 0) return null;
+      return `https://api.themoviedb.org/3/discover/movie?api_key=${
+        process.env.NEXT_PUBLIC_TMDB_API_KEY
+      }&language=ko-KR&region=KR&with_watch_providers=${subscriptions
+        .map((subscription) => subscription.providerId)
+        .join(
+          "|"
+        )}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
+        pageIndex + 1
+      }`;
+    },
+    [subscriptions]
+  );
 
-  const getTVKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
-    if (previousPageData && !previousPageData.results.length) return null;
-    if (
-      subscriptions.map((subscription) => subscription.providerId).length === 0
-    )
-      return null;
-    return `https://api.themoviedb.org/3/discover/tv?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&with_watch_providers=${subscriptions
-      .map((subscription) => subscription.providerId)
-      .join("|")}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
-      pageIndex + 1
-    }`;
-  };
+  const getTVKey: SWRInfiniteKeyLoader = useCallback(
+    (pageIndex) => {
+      if (subscriptions.map((sub) => sub.providerId).length === 0) return null;
+      return `https://api.themoviedb.org/3/discover/tv?api_key=${
+        process.env.NEXT_PUBLIC_TMDB_API_KEY
+      }&language=ko-KR&with_watch_providers=${subscriptions
+        .map((subscription) => subscription.providerId)
+        .join(
+          "|"
+        )}&watch_region=KR&with_watch_monetization_types=flatrate&page=${
+        pageIndex + 1
+      }`;
+    },
+    [subscriptions]
+  );
 
-  const getTVNetworkKey: SWRInfiniteKeyLoader = (
-    pageIndex,
-    previousPageData
-  ) => {
-    if (previousPageData && !previousPageData.results.length) return null;
-    if (
-      subscriptions.map((subscription) => subscription.networkId).length === 0
-    )
-      return null;
-    return `https://api.themoviedb.org/3/discover/tv?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&with_networks=${subscriptions
-      .map((subscription) => subscription.networkId)
-      .join("|")}&page=${pageIndex + 1}`;
-  };
+  const getTVNetworkKey: SWRInfiniteKeyLoader = useCallback(
+    (pageIndex) => {
+      if (subscriptions.map((sub) => sub.networkId).length === 0) return null;
+      return `https://api.themoviedb.org/3/discover/tv?api_key=${
+        process.env.NEXT_PUBLIC_TMDB_API_KEY
+      }&language=ko-KR&with_networks=${subscriptions
+        .map((subscription) => subscription.networkId)
+        .join("|")}&page=${pageIndex + 1}`;
+    },
+    [subscriptions]
+  );
 
   const { data: movie, setSize: setMovieSize } = useSWRInfinite<MovieDiscover>(
     getMovieKey,
     {
+      parallel: true,
       revalidateFirstPage: false,
+      initialSize: 2,
     }
   );
   const { data: tv, setSize: setTVSize } = useSWRInfinite<TVDiscover>(
     getTVKey,
     {
+      parallel: true,
       revalidateFirstPage: false,
+      initialSize: 2,
     }
   );
   const { data: tvNetwork, setSize: setTVNetworkSize } =
     useSWRInfinite<TVDiscover>(getTVNetworkKey, {
+      parallel: true,
       revalidateFirstPage: false,
+      initialSize: 2,
     });
   const { register, watch } = useForm<ExploreForm>({
     defaultValues: {
@@ -133,28 +123,35 @@ export default function Review() {
 
   // Load more when the loader is visible
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        console.log("scroll");
-        switch (watch("type")) {
-          case ContentType.MOVIE:
-            setMovieSize((prev) => prev + 1);
-            break;
-          case ContentType.TV:
-            setTVSize((prev) => prev + 1);
-            break;
-          case "TVNETWORK":
-            setTVNetworkSize((prev) => prev + 1);
-            break;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          switch (watch("type")) {
+            case ContentType.MOVIE:
+              setMovieSize((prev) => prev + 1);
+              break;
+            case ContentType.TV:
+              setTVSize((prev) => prev + 1);
+              break;
+            case "TVNETWORK":
+              setTVNetworkSize((prev) => prev + 1);
+              break;
+          }
         }
-      }
-    });
+      },
+      { rootMargin: "800px" }
+    );
+
     const ref = loader.current;
 
-    if (ref) observer.observe(ref);
+    if (ref) {
+      observer.observe(ref);
+    }
 
     return () => {
-      if (ref) observer.unobserve(ref);
+      if (ref) {
+        observer.unobserve(ref);
+      }
     };
   }, [setMovieSize, setTVNetworkSize, setTVSize, watch]);
 
@@ -177,23 +174,26 @@ export default function Review() {
         <Grid>
           {watch("type") === ContentType.MOVIE
             ? movie?.map((page) => {
-                return page.results.map((movie) => (
-                  <ExplorePoster key={movie.id} content={movie} />
-                ));
+                return page.results.map((movie) => {
+                  movie.type = ContentType.MOVIE;
+                  return <ExplorePoster key={movie.id} content={movie} />;
+                });
               })
             : watch("type") === ContentType.TV
             ? tv?.map((page) => {
-                return page.results.map((tv) => (
-                  <ExplorePoster key={tv.id} content={tv} />
-                ));
+                return page.results.map((tv) => {
+                  tv.type = ContentType.TV;
+                  return <ExplorePoster key={tv.id} content={tv} />;
+                });
               })
             : tvNetwork?.map((page) => {
-                return page.results.map((tv) => (
-                  <ExplorePoster key={tv.id} content={tv} />
-                ));
+                return page.results.map((tv) => {
+                  tv.type = ContentType.TV;
+                  return <ExplorePoster key={tv.id} content={tv} />;
+                });
               })}
         </Grid>
-        <Loader ref={loader} />
+        <div ref={loader} />
       </Wrapper>
     </Layout>
   );

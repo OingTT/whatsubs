@@ -103,11 +103,6 @@ export default React.memo(function ExplorePoster({
     e.stopPropagation();
   };
 
-  useEffect(() => {
-    content.type = "title" in content ? ContentType.MOVIE : ContentType.TV;
-    console.log(content.type);
-  }, [content]);
-
   return (
     <Wrapper
       variants={wrapperVariants}
