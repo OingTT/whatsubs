@@ -53,7 +53,7 @@ export default function Review() {
       if (subscriptions.map((sub) => sub.providerId).length === 0) return null;
       return `https://api.themoviedb.org/3/discover/movie?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
-      }&language=ko-KR&region=KR&with_watch_providers=${subscriptions
+      }&language=ko-KR&with_watch_providers=${subscriptions
         .map((subscription) => subscription.providerId)
         .join(
           "|"
