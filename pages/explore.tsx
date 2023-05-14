@@ -1,3 +1,4 @@
+import Alert from "@/components/alert";
 import Radio from "@/components/input/radio";
 import Layout from "@/components/layout";
 import ExplorePoster from "@/components/poster/explore-poster";
@@ -162,6 +163,7 @@ export default function Review() {
   return (
     <Layout title="탐색">
       <Wrapper>
+        <Alert>티빙 / 쿠팡플레이는 현재 일부 TV 콘텐츠만 지원해요.</Alert>
         <ProviderSelector onChange={handleChange} />
         <Radio
           register={register("type", { required: true })}

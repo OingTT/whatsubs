@@ -2,6 +2,7 @@ import axios from "axios";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import Layout from "@/components/layout";
+import Alert from "@/components/alert";
 
 interface Movie {
   id: number;
@@ -168,6 +169,7 @@ export default function Search() {
   return (
     <Layout>
       <Wrapper>
+        <Alert>검색 기능은 아직 개발중이에요.</Alert>
         <SearchBox>
           <Input
             type="text"
