@@ -16,6 +16,7 @@ const Selector = styled.div`
   background-color: #eee;
   overflow: auto;
   border-radius: 16px;
+  user-select: none;
 `;
 
 const Providers = styled.div`

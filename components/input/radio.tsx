@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   background-color: #ffffff;
   gap: 8px;
   border-radius: 16px;
+  user-select: none;
 `;
 
 const Input = styled.input`

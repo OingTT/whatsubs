@@ -13,6 +13,7 @@ const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
   position: relative;
   perspective: 800px;
+  user-select: none;
 `;
 
 const Front = styled(motion.div)`
