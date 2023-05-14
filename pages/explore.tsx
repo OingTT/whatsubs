@@ -5,9 +5,8 @@ import ProviderSelector from "@/components/provider-selector";
 import { MovieDiscover, TVDiscover } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { ContentType, Subscription } from "@prisma/client";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import useSWR from "swr";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 
 const Wrapper = styled.div`
@@ -56,13 +55,18 @@ const Loader = styled.div`
 `;
 
 interface ExploreForm {
-  type: ContentType;
+  type: ContentType | "TVNETWORK";
 }
 
 export default function Review() {
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+
   const getMovieKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.results.length) return null;
-    if (!subscriptions) return null;
+    if (
+      subscriptions.map((subscription) => subscription.providerId).length === 0
+    )
+      return null;
     return `https://api.themoviedb.org/3/discover/movie?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
     }&language=ko-KR&region=KR&with_watch_providers=${subscriptions
@@ -74,7 +78,10 @@ export default function Review() {
 
   const getTVKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     if (previousPageData && !previousPageData.results.length) return null;
-    if (!subscriptions) return null;
+    if (
+      subscriptions.map((subscription) => subscription.providerId).length === 0
+    )
+      return null;
     return `https://api.themoviedb.org/3/discover/tv?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
     }&language=ko-KR&with_watch_providers=${subscriptions
@@ -84,7 +91,22 @@ export default function Review() {
     }`;
   };
 
-  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const getTVNetworkKey: SWRInfiniteKeyLoader = (
+    pageIndex,
+    previousPageData
+  ) => {
+    if (previousPageData && !previousPageData.results.length) return null;
+    if (
+      subscriptions.map((subscription) => subscription.networkId).length === 0
+    )
+      return null;
+    return `https://api.themoviedb.org/3/discover/tv?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&with_networks=${subscriptions
+      .map((subscription) => subscription.networkId)
+      .join("|")}&page=${pageIndex + 1}`;
+  };
+
   const { data: movie, setSize: setMovieSize } = useSWRInfinite<MovieDiscover>(
     getMovieKey,
     {
@@ -97,6 +119,10 @@ export default function Review() {
       revalidateFirstPage: false,
     }
   );
+  const { data: tvNetwork, setSize: setTVNetworkSize } =
+    useSWRInfinite<TVDiscover>(getTVNetworkKey, {
+      revalidateFirstPage: false,
+    });
   const { register, watch } = useForm<ExploreForm>({
     defaultValues: {
       type: ContentType.MOVIE,
@@ -110,9 +136,17 @@ export default function Review() {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         console.log("scroll");
-        watch("type") === ContentType.MOVIE
-          ? setMovieSize((prev) => prev + 1)
-          : setTVSize((prev) => prev + 1);
+        switch (watch("type")) {
+          case ContentType.MOVIE:
+            setMovieSize((prev) => prev + 1);
+            break;
+          case ContentType.TV:
+            setTVSize((prev) => prev + 1);
+            break;
+          case "TVNETWORK":
+            setTVNetworkSize((prev) => prev + 1);
+            break;
+        }
       }
     });
     const ref = loader.current;
@@ -122,16 +156,20 @@ export default function Review() {
     return () => {
       if (ref) observer.unobserve(ref);
     };
-  }, [setMovieSize, setTVSize, watch]);
+  }, [setMovieSize, setTVNetworkSize, setTVSize, watch]);
+
+  const handleChange = useCallback((subscriptions: Subscription[]) => {
+    setSubscriptions(subscriptions);
+  }, []);
 
   return (
     <Layout title="탐색">
       <Wrapper>
-        <ProviderSelector />
+        <ProviderSelector onChange={handleChange} />
         <Radio
           register={register("type", { required: true })}
-          ids={[ContentType.MOVIE, ContentType.TV]}
-          labels={["영화", "TV 프로그램"]}
+          ids={[ContentType.MOVIE, ContentType.TV, "TVNETWORK"]}
+          labels={["영화", "TV 프로그램", "TV(티빙/쿠플)"]}
           required
         />
       </Wrapper>
@@ -143,7 +181,13 @@ export default function Review() {
                   <ExplorePoster key={movie.id} content={movie} />
                 ));
               })
-            : tv?.map((page) => {
+            : watch("type") === ContentType.TV
+            ? tv?.map((page) => {
+                return page.results.map((tv) => (
+                  <ExplorePoster key={tv.id} content={tv} />
+                ));
+              })
+            : tvNetwork?.map((page) => {
                 return page.results.map((tv) => (
                   <ExplorePoster key={tv.id} content={tv} />
                 ));

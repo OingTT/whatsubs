@@ -21,7 +21,7 @@ export default async function session(
 
     return res
       .status(200)
-      .json(subscriptions.map((subscription) => subscription.id.toString()));
+      .json(subscriptions.map((subscription) => subscription.id));
   }
 
   if (req.method === "POST") {
