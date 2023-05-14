@@ -57,18 +57,18 @@ interface SubscriptionsForm {
 
 export default function Subscriptions() {
   const router = useRouter();
-  const { data: userSubscription, mutate } = useSWR<string[]>(
+  const { data: userSubscription, mutate } = useSWR<number[]>(
     "/api/user/subscriptions"
   );
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { register, handleSubmit, setValue } = useForm<SubscriptionsForm>();
-  const [updateSubscriptions, { loading, data }] = useMutation<string[]>(
+  const [updateSubscriptions, { loading, data }] = useMutation<number[]>(
     "/api/user/subscriptions"
   );
 
   useEffect(() => {
     if (userSubscription) {
-      setValue("subscriptions", userSubscription);
+      setValue("subscriptions", userSubscription.map(String));
     }
   }, [setValue, userSubscription]);
 
