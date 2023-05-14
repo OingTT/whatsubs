@@ -1,3 +1,4 @@
+import Alert from "@/components/alert";
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
@@ -203,6 +204,7 @@ export default function TV() {
         )}
       </Backdrop>
       <Wrapper>
+        <Alert>재생 기능은 아직 준비 중이에요.</Alert>
         <Header>
           <TitleBar>
             <Title>{data ? data.name : "제목"}</Title>

@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import * as cheerio from "cheerio";
+import Alert from "@/components/alert";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -251,6 +252,7 @@ export default function Movie() {
         )}
       </Backdrop>
       <Wrapper>
+        <Alert>재생 기능은 아직 준비 중이에요.</Alert>
         <Header>
           <TitleBar>
             <Title>{data ? data.title : "제목"}</Title>
