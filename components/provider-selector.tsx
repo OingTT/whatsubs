@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
 import { Subscription } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
+import VerticalBar from "./vertical-bar";
+import { useRouter } from "next/router";
 
 const Selector = styled.div`
   width: 100%;
@@ -13,7 +14,9 @@ const Selector = styled.div`
   align-items: center;
   padding: 16px;
   background-color: #eee;
+  overflow: auto;
   border-radius: 16px;
+  user-select: none;
 `;
 
 const Providers = styled.div`
@@ -47,15 +50,20 @@ const Input = styled.input`
   }
 `;
 
-const Line = styled.div`
-  width: 2px;
-  height: 20px;
-  background-color: #999;
+const TextButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-left: 16px;
+  gap: 8px;
 `;
 
-const SuggestionLink = styled(Link)`
+const TextButton = styled.div`
   color: #333;
-  font-weight: bold;
+  font-weight: 600;
+  white-space: pre;
+  cursor: pointer;
 `;
 
 interface SubsForm {
@@ -67,6 +75,7 @@ interface SubsSelectorProps {
 }
 
 export default function SubsSelector({ onChange }: SubsSelectorProps) {
+  const router = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data: userSubscriptions } = useSWR<number[]>(
     "/api/user/subscriptions"
@@ -89,6 +98,17 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
         (id) => subscriptions?.find((s) => s.id === Number(id))!
       )
     );
+  };
+
+  const handleSelectAll = () => {
+    if (subscriptions) {
+      setValue(
+        "subscriptions",
+        subscriptions.map((subscription) => subscription.id.toString())
+      );
+
+      onChange?.(subscriptions);
+    }
   };
 
   return (
@@ -116,7 +136,7 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
               </SubsWrapper>
             )
         )}
-        <Line />
+        <VerticalBar size={20} />
         {subscriptions?.map(
           (subscription) =>
             !userSubscriptions?.includes(subscription.id) && (
@@ -141,7 +161,11 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
         )}
       </Providers>
 
-      <SuggestionLink href="/">조합 추천받기</SuggestionLink>
+      <TextButtons>
+        <TextButton onClick={handleSelectAll}>전체 선택</TextButton>
+        <VerticalBar size={12} />
+        <TextButton onClick={() => router.push("/")}>조합 추천받기</TextButton>
+      </TextButtons>
     </Selector>
   );
 }

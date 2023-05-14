@@ -109,6 +109,13 @@ export default function Home() {
         </Group>
 
         <Group>
+          <Tab onClick={() => router.push("/policy/terms")}>이용약관</Tab>
+          <Tab onClick={() => router.push("/policy/privacy")}>
+            개인정보처리방침
+          </Tab>
+        </Group>
+
+        <Group>
           <Tab onClick={() => signOut()}>로그아웃</Tab>
         </Group>
       </Wrapper>

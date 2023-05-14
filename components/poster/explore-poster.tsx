@@ -13,6 +13,7 @@ const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
   position: relative;
   perspective: 800px;
+  user-select: none;
 `;
 
 const Front = styled(motion.div)`
@@ -102,11 +103,6 @@ export default React.memo(function ExplorePoster({
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
-
-  useEffect(() => {
-    content.type = "title" in content ? ContentType.MOVIE : ContentType.TV;
-    console.log(content.type);
-  }, [content]);
 
   return (
     <Wrapper
