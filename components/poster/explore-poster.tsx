@@ -14,6 +14,7 @@ const Wrapper = styled(motion.div)`
   position: relative;
   perspective: 800px;
   user-select: none;
+  will-change: transform;
 `;
 
 const Front = styled(motion.div)`
@@ -67,11 +68,11 @@ const backVariants: Variants = {
 const wrapperVariants: Variants = {
   visible: {
     opacity: 1,
-    scale: 1,
+    transform: "scale(1)",
   },
   hidden: {
     opacity: 0,
-    scale: 0.5,
+    transform: "scale(0.5)",
   },
 };
 
@@ -126,7 +127,7 @@ export default React.memo(function ExplorePoster({
               alt="Poster"
               priority
               unoptimized
-              onLoad={() => setIsLoaded(true)}
+              onLoadingComplete={() => setIsLoaded(true)}
             />
           </Front>
           <Back
