@@ -44,10 +44,23 @@ const Avatar = styled(Image)`
   border-radius: 100%;
 `;
 
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+`;
+
 const Name = styled.div`
   font-weight: 600;
   color: #333333;
   font-size: 16px;
+`;
+
+const Email = styled.div`
+  color: #999999;
+  font-size: 12px;
 `;
 
 const Group = styled.div`
@@ -101,7 +114,10 @@ export default function Home() {
             height={64}
             alt="profile"
           />
-          <Name>{user.name}</Name>
+          <Info>
+            <Name>{user.name}</Name>
+            <Email>{user.email}</Email>
+          </Info>
         </Profile>
 
         <Group>
