@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import ProviderSelector from "@/components/provider-selector";
+import SubsSelector from "@/components/subs-selector";
 import Slider from "@/components/slider";
 import styled from "@emotion/styled";
 
@@ -26,7 +26,7 @@ export default function Chart() {
   return (
     <Layout>
       <Wrapper>
-        <ProviderSelector />
+        <SubsSelector />
       </Wrapper>
 
       <Slider title="통합 차트" disabled />

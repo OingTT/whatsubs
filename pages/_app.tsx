@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
 import Head from "next/head";
+import { RecoilRoot } from "recoil";
 
 export default function App({
   Component,
@@ -15,10 +16,12 @@ export default function App({
       }}
     >
       <SessionProvider session={session}>
-        <Head>
-          <title>Whatsubs</title>
-        </Head>
-        <Component {...pageProps} />
+        <RecoilRoot>
+          <Head>
+            <title>Whatsubs</title>
+          </Head>
+          <Component {...pageProps} />
+        </RecoilRoot>
       </SessionProvider>
     </SWRConfig>
   );
