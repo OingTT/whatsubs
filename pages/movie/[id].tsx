@@ -156,7 +156,17 @@ const Details = styled.div`
   }
 `;
 
-const DetailsTitle = styled.div`
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 809px) {
+    gap: 8px;
+  }
+`;
+
+const GroupTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: #333;
@@ -174,6 +184,67 @@ const DetailsBody = styled.div`
   @media (max-width: 809px) {
     font-size: 12px;
   }
+`;
+
+const Grid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-auto-rows: min-content;
+  gap: 24px;
+
+  @media (max-width: 809px) {
+    gap: 16px;
+  }
+`;
+
+const Cast = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  aspect-ratio: 2/1;
+  cursor: pointer;
+`;
+
+const CastLeft = styled.div`
+  flex: 1;
+  height: 100%;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+`;
+
+const CastRight = styled.div`
+  flex: 2;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CastInfo = styled.div`
+  flex: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 8px 0px 8px 12px;
+  gap: 4px;
+`;
+
+const CastName = styled.div`
+  white-space: pre-wrap;
+  font-weight: 600;
+  color: #333333;
+  font-size: 14px;
+`;
+
+const CastCharacter = styled.div`
+  white-space: pre-wrap;
+  font-weight: 500;
+  color: #999999;
+  font-size: 12px;
 `;
 
 export default function Movie() {
@@ -306,13 +377,41 @@ export default function Movie() {
             <Genre key={genre.id}>{genre.name}</Genre>
           ))}
         </Genres>
+
+        <Group>
+          <GroupTitle>출연진</GroupTitle>
+          <Grid>
+            {data?.credits?.cast.slice(0, 10).map((cast) => (
+              <Cast key={cast.id}>
+                <CastLeft>
+                  <Image
+                    src={
+                      cast.profile_path
+                        ? `https://image.tmdb.org/t/p/w92${cast.profile_path}`
+                        : "/images/avatar.png"
+                    }
+                    fill
+                    alt="Cast"
+                    unoptimized
+                  />
+                </CastLeft>
+                <CastRight>
+                  <CastInfo>
+                    <CastName>{cast.name}</CastName>
+                    <CastCharacter>{cast.character}</CastCharacter>
+                  </CastInfo>
+                </CastRight>
+              </Cast>
+            ))}
+          </Grid>
+        </Group>
       </Wrapper>
 
       <Slider title="추천 콘텐츠" disabled />
       <Slider title="비슷한 콘텐츠" disabled />
 
       <Details>
-        <DetailsTitle>상세 정보</DetailsTitle>
+        <GroupTitle>상세 정보</GroupTitle>
         <DetailsBody>
           감독: {director || "정보 없음"}
           <br />

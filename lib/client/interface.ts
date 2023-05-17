@@ -34,7 +34,12 @@ export interface MovieDetail {
   title: string;
   vote_average: number;
   credits: {
-    cast: Array<{ id: number; name: string; profile_path: string }>;
+    cast: Array<{
+      id: number;
+      name: string;
+      profile_path: string;
+      character: string;
+    }>;
     crew: Array<{
       id: number;
       name: string;
@@ -139,6 +144,18 @@ export interface TVDetail {
       };
     };
   };
+}
+
+export interface Person {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: string;
+  known_for: Array<Movie | TV>;
 }
 
 export interface Content {
