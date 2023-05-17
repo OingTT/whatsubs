@@ -1,6 +1,6 @@
 import Alert from "@/components/alert";
 import Layout from "@/components/layout";
-import ProviderSelector from "@/components/provider-selector";
+import SubsSelector from "@/components/subs-selector";
 import Slider from "@/components/slider";
 import { Content } from "@/lib/client/interface";
 import styled from "@emotion/styled";
@@ -49,7 +49,7 @@ export default function Home() {
           평점을 남겨주세요. 탐색 → 포스터 클릭 → 체크(봤어요) 클릭 → 평점
           남기기
         </Alert>
-        <ProviderSelector />
+        <SubsSelector />
       </Wrapper>
 
       <Slider title="오늘의 인기 콘텐츠" disabled />

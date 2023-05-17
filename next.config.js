@@ -9,6 +9,9 @@ const nextConfig = {
       "image.tmdb.org",
     ],
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 };
 
 module.exports = nextConfig;

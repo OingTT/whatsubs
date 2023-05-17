@@ -2,12 +2,14 @@ import Alert from "@/components/alert";
 import Radio from "@/components/input/radio";
 import Layout from "@/components/layout";
 import ExplorePoster from "@/components/poster/explore-poster";
-import ProviderSelector from "@/components/provider-selector";
+import SubsSelector from "@/components/subs-selector";
 import { MovieDiscover, TVDiscover } from "@/lib/client/interface";
+import { checkedSubsState, exploreTypeState } from "@/lib/client/state";
 import styled from "@emotion/styled";
-import { ContentType, Subscription } from "@prisma/client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ContentType } from "@prisma/client";
+import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState, useRecoilValue } from "recoil";
 import useSWRInfinite, { SWRInfiniteKeyLoader } from "swr/infinite";
 
 const Wrapper = styled.div`
@@ -46,11 +48,13 @@ interface ExploreForm {
 }
 
 export default function Review() {
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [exploreType, setExploreType] = useRecoilState(exploreTypeState);
+  const subscriptions = useRecoilValue(checkedSubsState);
 
   const getMovieKey: SWRInfiniteKeyLoader = useCallback(
     (pageIndex) => {
-      if (subscriptions.map((sub) => sub.providerId).length === 0) return null;
+      if (subscriptions.filter((sub) => sub.providerId).length === 0)
+        return null;
       return `https://api.themoviedb.org/3/discover/movie?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_watch_providers=${subscriptions
@@ -66,7 +70,8 @@ export default function Review() {
 
   const getTVKey: SWRInfiniteKeyLoader = useCallback(
     (pageIndex) => {
-      if (subscriptions.map((sub) => sub.providerId).length === 0) return null;
+      if (subscriptions.filter((sub) => sub.providerId).length === 0)
+        return null;
       return `https://api.themoviedb.org/3/discover/tv?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_watch_providers=${subscriptions
@@ -82,7 +87,8 @@ export default function Review() {
 
   const getTVNetworkKey: SWRInfiniteKeyLoader = useCallback(
     (pageIndex) => {
-      if (subscriptions.map((sub) => sub.networkId).length === 0) return null;
+      if (subscriptions.filter((sub) => sub.networkId).length === 0)
+        return null;
       return `https://api.themoviedb.org/3/discover/tv?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_networks=${subscriptions
@@ -116,7 +122,7 @@ export default function Review() {
     });
   const { register, watch } = useForm<ExploreForm>({
     defaultValues: {
-      type: ContentType.MOVIE,
+      type: exploreType,
     },
   });
 
@@ -156,10 +162,6 @@ export default function Review() {
     };
   }, [setMovieSize, setTVNetworkSize, setTVSize, watch]);
 
-  const handleChange = useCallback((subscriptions: Subscription[]) => {
-    setSubscriptions(subscriptions);
-  }, []);
-
   return (
     <Layout title="탐색">
       <Wrapper>
@@ -167,9 +169,12 @@ export default function Review() {
         <Alert>
           평점을 남겨주세요. 포스터 클릭 → 체크(봤어요) 클릭 → 평점 남기기
         </Alert>
-        <ProviderSelector onChange={handleChange} />
+        <SubsSelector />
         <Radio
-          register={register("type", { required: true })}
+          register={register("type", {
+            required: true,
+            onChange: () => setExploreType(watch("type")),
+          })}
           ids={[ContentType.MOVIE, ContentType.TV, "TVNETWORK"]}
           labels={["영화", "TV 프로그램", "TV(티빙/쿠플)"]}
           required

@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import useSWR from "swr";
 import VerticalBar from "./vertical-bar";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { checkedSubsState, selectedSubsState } from "@/lib/client/state";
 
 const Selector = styled.div`
   width: 100%;
@@ -70,44 +72,74 @@ interface SubsForm {
   subscriptions: string[];
 }
 
-interface SubsSelectorProps {
-  onChange?: (value: Subscription[]) => void;
-}
-
-export default function SubsSelector({ onChange }: SubsSelectorProps) {
+export default function SubsSelector() {
+  const [selectedSubs, setSelectedSubs] = useRecoilState(selectedSubsState);
+  const [checkedSubs, setCheckedSubs] = useRecoilState(checkedSubsState);
   const router = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data: userSubscriptions } = useSWR<number[]>(
     "/api/user/subscriptions"
   );
-  const { register, setValue, watch } = useForm<SubsForm>();
+  const { register, setValue, watch } = useForm<SubsForm>({
+    defaultValues: {
+      subscriptions: checkedSubs.map((sub) => sub.id.toString()),
+    },
+  });
 
+  // If selectedSubs is empty, set checkedSubs to userSubscriptions
   useEffect(() => {
-    if (userSubscriptions) {
+    if (subscriptions && userSubscriptions && selectedSubs.length === 0) {
       setValue("subscriptions", userSubscriptions.map(String));
-
-      onChange?.(
-        userSubscriptions.map((id) => subscriptions?.find((s) => s.id === id)!)
+      setCheckedSubs(
+        userSubscriptions.map((id) => subscriptions.find((s) => s.id === id)!)
       );
     }
-  }, [onChange, setValue, subscriptions, userSubscriptions]);
+  }, [
+    selectedSubs.length,
+    setCheckedSubs,
+    setValue,
+    subscriptions,
+    userSubscriptions,
+  ]);
 
-  const handleChange = () => {
-    onChange?.(
-      watch("subscriptions").map(
-        (id) => subscriptions?.find((s) => s.id === Number(id))!
-      )
-    );
+  // If selectedSubs is empty, set checkedSubs to target subscription
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (selectedSubs.length === 0) {
+      setValue("subscriptions", [e.target.value]);
+      setCheckedSubs([
+        subscriptions?.find((s) => s.id === Number(e.target.value))!,
+      ]);
+      setSelectedSubs([
+        subscriptions?.find((s) => s.id === Number(e.target.value))!,
+      ]);
+    } else {
+      setSelectedSubs(
+        subscriptions?.filter((sub) =>
+          watch("subscriptions").includes(sub.id.toString())
+        )!
+      );
+      setCheckedSubs(
+        subscriptions?.filter((sub) =>
+          watch("subscriptions").includes(sub.id.toString())
+        )!
+      );
+    }
   };
 
   const handleSelectAll = () => {
     if (subscriptions) {
-      setValue(
-        "subscriptions",
-        subscriptions.map((subscription) => subscription.id.toString())
-      );
-
-      onChange?.(subscriptions);
+      if (selectedSubs.length === subscriptions.length) {
+        setValue("subscriptions", []);
+        setSelectedSubs([]);
+        setCheckedSubs([]);
+      } else {
+        setValue(
+          "subscriptions",
+          subscriptions.map((subscription) => subscription.id.toString())
+        );
+        setSelectedSubs(subscriptions);
+        setCheckedSubs(subscriptions);
+      }
     }
   };
 
@@ -132,6 +164,7 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
                   width="40"
                   height="40"
                   alt={subscription.name}
+                  priority
                 />
               </SubsWrapper>
             )
@@ -155,6 +188,7 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
                   width="40"
                   height="40"
                   alt={subscription.name}
+                  priority
                 />
               </SubsWrapper>
             )
@@ -162,7 +196,11 @@ export default function SubsSelector({ onChange }: SubsSelectorProps) {
       </Providers>
 
       <TextButtons>
-        <TextButton onClick={handleSelectAll}>전체 선택</TextButton>
+        <TextButton onClick={handleSelectAll}>{`${
+          selectedSubs.length === subscriptions?.length
+            ? "전체 해제"
+            : "전체 선택"
+        }`}</TextButton>
         <VerticalBar size={12} />
         <TextButton onClick={() => router.push("/")}>조합 추천받기</TextButton>
       </TextButtons>
