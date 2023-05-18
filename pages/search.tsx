@@ -1,24 +1,20 @@
-import axios from "axios";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/layout";
-import Alert from "@/components/alert";
+import { useForm } from "react-hook-form";
+import { MagnifyingGlass } from "@phosphor-icons/react";
+import Slider from "@/components/slider";
+import { ContentType } from "@prisma/client";
+import { Grid } from "@/lib/client/style";
+import Person from "@/components/person";
+import useSWR from "swr";
+import { Movie, TV } from "@/lib/client/interface";
 
-interface Movie {
-  id: number;
-  title: string;
-  poster_path: string;
-}
-
-interface Actor {
-  id: number;
-  name: string;
-}
-
-interface TVShow {
+interface Person {
   id: number;
   name: string;
-  poster_path: string;
+  profile_path: string;
+  known_for_department: string;
 }
 
 const Wrapper = styled.div`
@@ -42,166 +38,187 @@ const Wrapper = styled.div`
 `;
 
 const SearchBox = styled.div`
-  display: flex;
-  align-items: center;
+  width: 100%;
+  position: relative;
 `;
+
 const Input = styled.input`
-  box-sizing: border-box;
-  flex-shrink: 0;
-  width: 640px;
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 16px 16px 16px;
+  appearance: none;
+  width: 100%;
+  height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   overflow: hidden;
-  flex: 1 0 0px;
-  position: relative;
-  align-content: center;
-  flex-wrap: nowrap;
+  border-radius: 16px;
+  border: none;
+  padding: 16px;
+  padding-right: 56px;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+`;
 
-  &:focus {
-    border-color: #007bff;
+const SearchIcon = styled.label`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+`;
+
+const People = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 24px 24px 24px;
+  gap: 16px;
+
+  @media (min-width: 1200px) {
+    width: 984px;
+  }
+
+  @media (max-width: 809px) {
+    padding: 0px 16px 16px 16px;
+    gap: 8px;
   }
 `;
 
-const Button = styled.button`
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-const MovieList = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 1rem;
-  list-style: none;
-  margin: 2rem 0;
-  padding: 0;
-`;
-
-const MovieItem = styled.li`
+const Group = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 16px;
+
+  @media (max-width: 809px) {
+    gap: 8px;
+  }
 `;
 
-const Poster = styled.img`
-  width: 100%;
-  height: auto;
-  margin-bottom: 0.5rem;
+const GroupTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+
+  @media (max-width: 809px) {
+    font-size: 16px;
+  }
 `;
 
-const Title = styled.h2`
-  font-size: 1rem;
-  text-align: center;
-  margin: 0;
-`;
-
-const ActorInfo = styled.div`
-  margin-top: 20px;
-  font-size: 18px;
-`;
+interface SearchForm {
+  searchTerm: string;
+}
 
 export default function Search() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [actor, setActor] = useState<Actor | null>(null);
+  const [person, setPerson] = useState<Person>();
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [tvShows, setTVShows] = useState<TVShow[]>([]);
+  const [tvShows, setTVShows] = useState<TV[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
 
-  const handleSearchTermChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSearchTerm(event.target.value);
-  };
+  const { register, watch } = useForm<SearchForm>();
 
-  const handleSearch = async () => {
-    const searchMovieUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR&query=${searchTerm}`;
-    const searchActorUrl = `https://api.themoviedb.org/3/search/person?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR&query=${searchTerm}`;
-    const searchTVShowUrl = `https://api.themoviedb.org/3/search/tv?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR&query=${searchTerm}`;
+  const { data: moviesData } = useSWR(
+    `https://api.themoviedb.org/3/search/movie?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&query=${watch("searchTerm")}`
+  );
 
-    const [actorResponse, movieResponse, tvShowResponse] = await Promise.all([
-      axios.get(searchActorUrl),
-      axios.get(searchMovieUrl),
-      axios.get(searchTVShowUrl),
-    ]);
+  const { data: tvShowsData } = useSWR(
+    `https://api.themoviedb.org/3/search/tv?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&query=${watch("searchTerm")}`
+  );
 
-    const actorData = actorResponse.data.results[0];
-    if (actorData) {
-      const actorInfo: Actor = {
-        id: actorData.id,
-        name: actorData.name,
-      };
-      setActor(actorInfo);
-      fetchMovies(actorInfo.id);
-      fetchTVShows(actorInfo.id);
-    } else {
-      setActor(null);
-      setMovies([]);
-      setTVShows([]);
+  const { data: peopleData } = useSWR(
+    `https://api.themoviedb.org/3/search/person?api_key=${
+      process.env.NEXT_PUBLIC_TMDB_API_KEY
+    }&language=ko-KR&query=${watch("searchTerm")}`
+  );
+
+  const { data: personMovies } = useSWR(
+    person &&
+      `https://api.themoviedb.org/3/person/${person.id}/movie_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
+  );
+
+  const { data: personTVShows } = useSWR(
+    person &&
+      `https://api.themoviedb.org/3/person/${person.id}/tv_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
+  );
+
+  useEffect(() => {
+    if (moviesData) {
+      setMovies(moviesData.results);
     }
-    const movieData = movieResponse.data.results;
-    setMovies(movieData);
+  }, [moviesData]);
 
-    const tvShowData = tvShowResponse.data.results;
-    setTVShows(tvShowData);
-  };
+  useEffect(() => {
+    if (tvShowsData) {
+      setTVShows(tvShowsData.results);
+    }
+  }, [tvShowsData]);
 
-  const fetchMovies = async (actorId: number) => {
-    const url = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR`;
-    const response = await axios.get(url);
-    setMovies(response.data.cast);
-  };
+  useEffect(() => {
+    if (peopleData) {
+      setPeople(peopleData.results);
+    }
+  }, [peopleData]);
 
-  const fetchTVShows = async (actorId: number) => {
-    const url = `https://api.themoviedb.org/3/person/${actorId}/tv_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&region=KR`;
-    const response = await axios.get(url);
-    setTVShows(response.data.cast);
-  };
+  useEffect(() => {
+    if (people.length === 1) {
+      setPerson(people[0]);
+    } else {
+      setPerson(undefined);
+    }
+  }, [people]);
+
+  useEffect(() => {
+    if (personMovies && movies.length === 0) {
+      setMovies(personMovies.cast);
+    }
+  }, [movies.length, personMovies]);
+
+  useEffect(() => {
+    if (personTVShows && tvShows.length === 0) {
+      setTVShows(personTVShows.cast);
+    }
+  }, [personTVShows, tvShows.length]);
 
   return (
     <Layout>
       <Wrapper>
-        <Alert>검색 기능은 아직 개발중이에요.</Alert>
         <SearchBox>
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchTermChange}
-          />
-          <Button onClick={handleSearch}>검색</Button>
+          <Input id="search" type="text" {...register("searchTerm")} />
+          <SearchIcon htmlFor="search">
+            <MagnifyingGlass size={24} color="#333" />
+          </SearchIcon>
         </SearchBox>
-        {actor && <h3>{actor.name}</h3>}
-        <MovieList>
-          <h2>영화</h2>
-          {movies.map((movie) => (
-            <MovieItem key={movie.id}>
-              <Poster
-                src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-              />
-              <Title>{movie.title}</Title>
-            </MovieItem>
-          ))}
-        </MovieList>
-        <MovieList>
-          <h2>tv</h2>
-          {tvShows.map((tvShow) => (
-            <MovieItem key={tvShow.id}>
-              <Poster
-                src={`https://image.tmdb.org/t/p/w200${tvShow.poster_path}`}
-              />
-              <Title>{tvShow.name}</Title>
-            </MovieItem>
-          ))}
-        </MovieList>
       </Wrapper>
+      <Slider
+        title="영화"
+        contents={movies.map((movie) => ({
+          type: ContentType.MOVIE,
+          id: movie.id,
+        }))}
+      />
+      <Slider
+        title="TV 프로그램"
+        contents={tvShows.map((tvShow) => ({
+          type: ContentType.TV,
+          id: tvShow.id,
+        }))}
+      />
+      <People>
+        <GroupTitle>인물</GroupTitle>
+        <Grid>
+          {people.map((person) => (
+            <Person
+              key={person.id}
+              id={person.id}
+              name={person.name}
+              info={person.known_for_department}
+              profilePath={person.profile_path}
+            />
+          ))}
+        </Grid>
+      </People>
     </Layout>
   );
 }
