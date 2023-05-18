@@ -1,8 +1,10 @@
 import Alert from "@/components/alert";
 import Layout from "@/components/layout";
+import Person from "@/components/person";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
 import { TVDetail } from "@/lib/client/interface";
+import { Grid } from "@/lib/client/style";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
@@ -155,6 +157,26 @@ const Details = styled.div`
   }
 `;
 
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 809px) {
+    gap: 8px;
+  }
+`;
+
+const GroupTitle = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+
+  @media (max-width: 809px) {
+    font-size: 16px;
+  }
+`;
+
 const DetailsTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
@@ -252,6 +274,21 @@ export default function TV() {
             <Genre key={genre.id}>{genre.name}</Genre>
           ))}
         </Genres>
+
+        <Group>
+          <GroupTitle>출연진</GroupTitle>
+          <Grid>
+            {data?.aggregate_credits.cast.slice(0, 10).map((cast) => (
+              <Person
+                key={cast.id}
+                id={cast.id}
+                profilePath={cast.profile_path}
+                name={cast.name}
+                info={cast.roles[0].character}
+              />
+            ))}
+          </Grid>
+        </Group>
       </Wrapper>
 
       <Slider title="추천 콘텐츠" disabled />
