@@ -32,6 +32,17 @@ const Front = styled(motion.div)`
   }
 `;
 
+const Placeholder = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`;
+
 const Back = styled(Front)`
   transform: rotateY(180deg);
   background-color: white;
@@ -109,7 +120,7 @@ export default React.memo(function ExplorePoster({
     <Wrapper
       variants={wrapperVariants}
       initial="hidden"
-      whileInView={isLoaded ? "visible" : "hidden"}
+      whileInView={!content.poster_path || isLoaded ? "visible" : "hidden"}
       onClick={handleFlip}
       onViewportEnter={() => setIsInView(true)}
       onViewportLeave={() => setIsInView(false)}
@@ -121,14 +132,22 @@ export default React.memo(function ExplorePoster({
             initial="visible"
             animate={isFlipped ? "hidden" : "visible"}
           >
-            <Image
-              src={"https://image.tmdb.org/t/p/w342" + content.poster_path}
-              fill
-              alt="Poster"
-              priority
-              unoptimized
-              onLoadingComplete={() => setIsLoaded(true)}
-            />
+            {content.poster_path ? (
+              <Image
+                src={"https://image.tmdb.org/t/p/w342" + content.poster_path}
+                fill
+                alt="Poster"
+                priority
+                unoptimized
+                onLoadingComplete={() => setIsLoaded(true)}
+              />
+            ) : (
+              <Placeholder>
+                {content.type === ContentType.MOVIE
+                  ? content.title
+                  : content.name}
+              </Placeholder>
+            )}
           </Front>
           <Back
             variants={backVariants}
