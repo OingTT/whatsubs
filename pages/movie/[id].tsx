@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import * as cheerio from "cheerio";
 import Alert from "@/components/alert";
+import Person from "@/components/person";
+import { Grid } from "@/lib/client/style";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -156,7 +158,17 @@ const Details = styled.div`
   }
 `;
 
-const DetailsTitle = styled.div`
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 809px) {
+    gap: 8px;
+  }
+`;
+
+const GroupTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: #333;
@@ -306,13 +318,28 @@ export default function Movie() {
             <Genre key={genre.id}>{genre.name}</Genre>
           ))}
         </Genres>
+
+        <Group>
+          <GroupTitle>출연진</GroupTitle>
+          <Grid>
+            {data?.credits?.cast.slice(0, 10).map((cast) => (
+              <Person
+                key={cast.id}
+                id={cast.id}
+                profilePath={cast.profile_path}
+                name={cast.name}
+                info={cast.character}
+              />
+            ))}
+          </Grid>
+        </Group>
       </Wrapper>
 
       <Slider title="추천 콘텐츠" disabled />
       <Slider title="비슷한 콘텐츠" disabled />
 
       <Details>
-        <DetailsTitle>상세 정보</DetailsTitle>
+        <GroupTitle>상세 정보</GroupTitle>
         <DetailsBody>
           감독: {director || "정보 없음"}
           <br />

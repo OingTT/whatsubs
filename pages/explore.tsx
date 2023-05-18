@@ -3,8 +3,9 @@ import Radio from "@/components/input/radio";
 import Layout from "@/components/layout";
 import ExplorePoster from "@/components/poster/explore-poster";
 import SubsSelector from "@/components/subs-selector";
-import { MovieDiscover, TVDiscover } from "@/lib/client/interface";
+import { DiscoverMovie, DiscoverTV } from "@/lib/client/interface";
 import { checkedSubsState, exploreTypeState } from "@/lib/client/state";
+import { Grid } from "@/lib/client/style";
 import styled from "@emotion/styled";
 import { ContentType } from "@prisma/client";
 import { useCallback, useEffect, useRef } from "react";
@@ -27,18 +28,6 @@ const Wrapper = styled.div`
 
   @media (max-width: 809px) {
     padding: 16px;
-    gap: 16px;
-  }
-`;
-
-const Grid = styled.div`
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  grid-auto-rows: min-content;
-  gap: 24px;
-
-  @media (max-width: 809px) {
     gap: 16px;
   }
 `;
@@ -98,7 +87,7 @@ export default function Review() {
     [subscriptions]
   );
 
-  const { data: movie, setSize: setMovieSize } = useSWRInfinite<MovieDiscover>(
+  const { data: movie, setSize: setMovieSize } = useSWRInfinite<DiscoverMovie>(
     getMovieKey,
     {
       parallel: true,
@@ -106,7 +95,7 @@ export default function Review() {
       initialSize: 2,
     }
   );
-  const { data: tv, setSize: setTVSize } = useSWRInfinite<TVDiscover>(
+  const { data: tv, setSize: setTVSize } = useSWRInfinite<DiscoverTV>(
     getTVKey,
     {
       parallel: true,
@@ -115,7 +104,7 @@ export default function Review() {
     }
   );
   const { data: tvNetwork, setSize: setTVNetworkSize } =
-    useSWRInfinite<TVDiscover>(getTVNetworkKey, {
+    useSWRInfinite<DiscoverTV>(getTVNetworkKey, {
       parallel: true,
       revalidateFirstPage: false,
       initialSize: 2,

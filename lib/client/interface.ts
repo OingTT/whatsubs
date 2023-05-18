@@ -1,5 +1,19 @@
 import { ContentType } from "@prisma/client";
 
+export interface DiscoverMovie {
+  page: number;
+  results: Movie[];
+  total_results: number;
+  total_pages: number;
+}
+
+export interface DiscoverTV {
+  page: number;
+  results: TV[];
+  total_results: number;
+  total_pages: number;
+}
+
 export interface Movie {
   type: "MOVIE";
   poster_path: string;
@@ -18,13 +32,6 @@ export interface Movie {
   vote_average: number;
 }
 
-export interface MovieDiscover {
-  page: number;
-  results: Movie[];
-  total_results: number;
-  total_pages: number;
-}
-
 export interface MovieDetail {
   backdrop_path: string;
   genres: Array<{ id: number; name: string }>;
@@ -34,7 +41,12 @@ export interface MovieDetail {
   title: string;
   vote_average: number;
   credits: {
-    cast: Array<{ id: number; name: string; profile_path: string }>;
+    cast: Array<{
+      id: number;
+      name: string;
+      profile_path: string;
+      character: string;
+    }>;
     crew: Array<{
       id: number;
       name: string;
@@ -86,13 +98,6 @@ export interface TV {
   original_name: string;
 }
 
-export interface TVDiscover {
-  page: number;
-  results: TV[];
-  total_results: number;
-  total_pages: number;
-}
-
 export interface TVDetail {
   backdrop_path: string;
   created_by: Array<{ id: number; name: string; profile_path: string }>;
@@ -109,7 +114,16 @@ export interface TVDetail {
     }>;
   };
   aggregate_credits: {
-    cast: Array<{ id: number; name: string; profile_path: string }>;
+    cast: Array<{
+      id: number;
+      name: string;
+      profile_path: string;
+      roles: Array<{
+        credit_id: string;
+        character: string;
+        episode_count: number;
+      }>;
+    }>;
     crew: Array<{
       id: number;
       name: string;
@@ -139,6 +153,18 @@ export interface TVDetail {
       };
     };
   };
+}
+
+export interface Person {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: string;
+  known_for: Array<Movie | TV>;
 }
 
 export interface Content {

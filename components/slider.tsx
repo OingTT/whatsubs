@@ -141,11 +141,18 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
   const [isLast, setIsLast] = useState(true);
   const [isGoingBack, setIsGoingBack] = useState(false);
 
+  // Reset index when contents changed
+  useEffect(() => {
+    setIndex(0);
+  }, [contents]);
+
+  // Set isLast when index changed
   useEffect(() => {
     if (!contents) return;
     setIsLast(contents.length <= index * offset + offset);
   }, [contents, index]);
 
+  // Set isGoingBack when index changed
   const handlePrev = async () => {
     if (index === 0) return;
 
@@ -153,6 +160,7 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
     setIndex(index - 1);
   };
 
+  // Set isGoingBack when index changed
   const handleNext = async () => {
     if (!contents || isLast) return;
 
@@ -182,6 +190,7 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
                 initial="initial"
                 animate="visible"
                 exit="exit"
+                key={index}
               >
                 {isDesktop
                   ? contents
