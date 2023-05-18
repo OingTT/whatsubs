@@ -1,4 +1,4 @@
-import { MovieDetail } from "@/lib/client/interface";
+import { MovieDetail, TVDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { ContentType } from "@prisma/client";
 import Image from "next/image";
@@ -19,13 +19,24 @@ const Wrapper = styled.div`
   }
 `;
 
+const Placeholder = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+`;
+
 interface PosterProps {
   type: ContentType;
   id: number;
 }
 
 export default function Poster({ type, id }: PosterProps) {
-  const { data } = useSWR<MovieDetail>(
+  const { data } = useSWR<MovieDetail | TVDetail>(
     `https://api.themoviedb.org/3/${type.toLowerCase()}/${id}?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
     }&language=ko-KR`
@@ -34,15 +45,20 @@ export default function Poster({ type, id }: PosterProps) {
   return (
     <Link href={`/${type.toLowerCase()}/${id}`}>
       <Wrapper>
-        {data && (
-          <Image
-            src={"https://image.tmdb.org/t/p/w342" + data?.poster_path}
-            fill
-            alt="Poster"
-            priority
-            unoptimized
-          />
-        )}
+        {data &&
+          (data.poster_path ? (
+            <Image
+              src={"https://image.tmdb.org/t/p/w342" + data?.poster_path}
+              fill
+              alt="Poster"
+              priority
+              unoptimized
+            />
+          ) : (
+            <Placeholder>
+              {"title" in data ? data.title : data.name}
+            </Placeholder>
+          ))}
       </Wrapper>
     </Link>
   );
