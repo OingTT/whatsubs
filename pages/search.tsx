@@ -9,6 +9,8 @@ import { Grid } from "@/lib/client/style";
 import Person from "@/components/person";
 import useSWR from "swr";
 import { Movie, TV } from "@/lib/client/interface";
+import { useRecoilState } from "recoil";
+import { searchQueryState } from "@/lib/client/state";
 
 interface Person {
   id: number;
@@ -104,33 +106,38 @@ const GroupTitle = styled.div`
 `;
 
 interface SearchForm {
-  searchTerm: string;
+  query: string;
 }
 
 export default function Search() {
+  const [query, setQuery] = useRecoilState(searchQueryState);
   const [person, setPerson] = useState<Person>();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TV[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
 
-  const { register, watch } = useForm<SearchForm>();
+  const { register, watch } = useForm<SearchForm>({
+    defaultValues: {
+      query: query,
+    },
+  });
 
   const { data: moviesData } = useSWR(
     `https://api.themoviedb.org/3/search/movie?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("searchTerm")}`
+    }&language=ko-KR&query=${watch("query")}`
   );
 
   const { data: tvShowsData } = useSWR(
     `https://api.themoviedb.org/3/search/tv?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("searchTerm")}`
+    }&language=ko-KR&query=${watch("query")}`
   );
 
   const { data: peopleData } = useSWR(
     `https://api.themoviedb.org/3/search/person?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("searchTerm")}`
+    }&language=ko-KR&query=${watch("query")}`
   );
 
   const { data: personMovies } = useSWR(
@@ -185,8 +192,16 @@ export default function Search() {
     <Layout>
       <Wrapper>
         <SearchBox>
-          <Input id="search" type="text" {...register("searchTerm")} />
-          <SearchIcon htmlFor="search">
+          <Input
+            id="query"
+            type="text"
+            {...register("query", {
+              onChange: (e) => {
+                setQuery(e.target.value);
+              },
+            })}
+          />
+          <SearchIcon htmlFor="query">
             <MagnifyingGlass size={24} color="#333" />
           </SearchIcon>
         </SearchBox>

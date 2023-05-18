@@ -15,3 +15,8 @@ export const exploreTypeState = atom<ContentType | "TVNETWORK">({
   key: "exploreTypeState",
   default: ContentType.MOVIE,
 });
+
+export const searchQueryState = atom<string>({
+  key: "searchQueryState",
+  default: "",
+});
