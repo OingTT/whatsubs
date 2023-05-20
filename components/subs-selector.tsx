@@ -202,7 +202,9 @@ export default function SubsSelector() {
             : "전체 선택"
         }`}</TextButton>
         <VerticalBar size={12} />
-        <TextButton onClick={() => router.push("/")}>조합 추천받기</TextButton>
+        <TextButton onClick={() => router.push("/suggestion")}>
+          조합 추천받기
+        </TextButton>
       </TextButtons>
     </Selector>
   );
