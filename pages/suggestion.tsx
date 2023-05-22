@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { ArrowDown } from "@phosphor-icons/react";
 import Button from "@/components/button";
 import { useRouter } from "next/router";
+import { Subscription } from "@prisma/client";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -183,6 +185,10 @@ const ContentColumn = ({
 
 export default function Suggestion() {
   const router = useRouter();
+  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: userSubscriptions } = useSWR<number[]>(
+    "/api/user/subscriptions"
+  );
 
   return (
     <Layout>
@@ -190,8 +196,13 @@ export default function Suggestion() {
         <ProviderSelector>
           <OttColumn>
             <Providers>
-              <Ott imageUrl="/images/netflix.png" />
-              <Ott imageUrl="/images/tving.png" />
+              {subscriptions?.map(
+                (subscription) =>
+                  userSubscriptions?.includes(subscription.id) && (
+                    <Ott imageUrl={`/images/${subscription.key}.png`} />
+                  )
+              )}
+              {/* 구독중인 Ott 이미지 출력할때마다 sum에 가격정보 추가 시켜서 현재 조합 가격*/}
             </Providers>
             <Spacer />
             <Right weight={600}>현재 조합</Right>
@@ -224,9 +235,12 @@ export default function Suggestion() {
         <ProviderSelector>
           <OttColumn>
             <Providers>
-              <Ott imageUrl="/images/netflix.png" />
-              <Ott imageUrl="/images/wavve.png" />
-              <Ott imageUrl="/images/appletvplus.png" />
+              {subscriptions?.map(
+                (subscription) =>
+                  !userSubscriptions?.includes(subscription.id) && (
+                    <Ott imageUrl={`/images/${subscription.key}.png`} />
+                  )
+              )}
             </Providers>
             <Spacer />
             <Right weight={600}>추천 조합1</Right>
@@ -267,8 +281,9 @@ export default function Suggestion() {
         <ProviderSelector>
           <OttColumn>
             <Providers>
-              <Ott imageUrl="/images/netflix.png" />
-              <Ott imageUrl="/images/tving.png" />
+              {subscriptions?.map((subscription) => (
+                <Ott imageUrl={`/images/${subscription.key}.png`} />
+              ))}
             </Providers>
             <Spacer />
             <Right weight={600}>추천 조합2</Right>
