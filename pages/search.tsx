@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import Layout from "@/components/layout";
 import { useForm } from "react-hook-form";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass, XCircle } from "@phosphor-icons/react";
 import Slider from "@/components/slider";
 import { ContentType } from "@prisma/client";
 import { Grid } from "@/lib/client/style";
@@ -53,8 +53,7 @@ const Input = styled.input`
   overflow: hidden;
   border-radius: 16px;
   border: none;
-  padding: 16px;
-  padding-right: 56px;
+  padding: 16px 56px 16px 56px;
   color: #333;
   font-size: 16px;
   font-weight: bold;
@@ -64,7 +63,14 @@ const Input = styled.input`
 const SearchIcon = styled.label`
   position: absolute;
   top: 16px;
+  left: 16px;
+`;
+
+const ClearIcon = styled.label`
+  position: absolute;
+  top: 16px;
   right: 16px;
+  cursor: pointer;
 `;
 
 const People = styled.div`
@@ -116,7 +122,7 @@ export default function Search() {
   const [tvShows, setTVShows] = useState<TV[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
 
-  const { register, watch } = useForm<SearchForm>({
+  const { register, watch, setValue } = useForm<SearchForm>({
     defaultValues: {
       query: query,
     },
@@ -192,6 +198,9 @@ export default function Search() {
     <Layout>
       <Wrapper>
         <SearchBox>
+          <SearchIcon htmlFor="query">
+            <MagnifyingGlass size={24} color="#333" />
+          </SearchIcon>
           <Input
             id="query"
             type="text"
@@ -201,9 +210,10 @@ export default function Search() {
               },
             })}
           />
-          <SearchIcon htmlFor="query">
-            <MagnifyingGlass size={24} color="#333" />
-          </SearchIcon>
+
+          <ClearIcon htmlFor="query" onClick={() => setValue("query", "")}>
+            {watch("query") && <XCircle size={24} weight="fill" color="#bbb" />}
+          </ClearIcon>
         </SearchBox>
       </Wrapper>
       <Slider
