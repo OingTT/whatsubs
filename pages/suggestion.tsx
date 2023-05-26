@@ -151,10 +151,19 @@ const CostColumn = ({
       {comparison !== undefined && (
         <Comparison comparison={comparison}>
           {comparisonSymbol}
-          {Math.abs(comparison)}
+          {Math.abs(comparison).toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}
         </Comparison>
       )}
-      <Right>{cost.toLocaleString()}원</Right>
+      <Right>
+        {cost.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        })}
+        원
+      </Right>
     </Columns>
   );
 };
@@ -190,6 +199,50 @@ export default function Suggestion() {
     "/api/user/subscriptions"
   );
 
+  let myPrice = 0;
+  let mySharing = 0;
+  if (userSubscriptions && subscriptions) {
+    myPrice = subscriptions.reduce((sum, subscription) => {
+      if (userSubscriptions.includes(subscription.id)) {
+        return sum + subscription.price;
+      }
+      return sum;
+    }, 0);
+    mySharing = subscriptions.reduce((sum, subscription) => {
+      if (userSubscriptions.includes(subscription.id)) {
+        return sum + subscription.price / subscription.sharing;
+      }
+      return sum;
+    }, 0);
+  }
+
+  let recommendPrice = 0;
+  let recommendSharing = 0;
+  let recommendPrice2 = 0;
+  let recommendSharing2 = 0;
+  if (userSubscriptions && subscriptions) {
+    recommendPrice = subscriptions.reduce((sum, subscription) => {
+      if (!userSubscriptions.includes(subscription.id)) {
+        return sum + subscription.price;
+      }
+      return sum;
+    }, 0);
+    recommendSharing = subscriptions.reduce((sum, subscription) => {
+      if (!userSubscriptions.includes(subscription.id)) {
+        return sum + subscription.price / subscription.sharing;
+      }
+      return sum;
+    }, 0);
+  }
+  if (subscriptions) {
+    recommendPrice2 = subscriptions.reduce((sum, subscription) => {
+      return sum + subscription.price;
+    }, 0);
+    recommendSharing2 = subscriptions.reduce((sum, subscription) => {
+      return sum + subscription.price / subscription.sharing;
+    }, 0);
+  }
+
   return (
     <Layout>
       <Wrapper>
@@ -202,30 +255,22 @@ export default function Suggestion() {
                     <Ott imageUrl={`/images/${subscription.key}.png`} />
                   )
               )}
-              {/* 구독중인 Ott 이미지 출력할때마다 sum에 가격정보 추가 시켜서 현재 조합 가격*/}
             </Providers>
             <Spacer />
             <Right weight={600}>현재 조합</Right>
           </OttColumn>
-          <CostColumn title="정가" cost={34500} fontSize={16} />
+          <CostColumn title="정가" cost={myPrice} fontSize={16} />
           <CostColumn
             title="계정 공유 시 예상 가격"
-            cost={12300}
+            cost={mySharing}
             fontSize={16}
-            comparison={-1000}
-          />
-          <CostColumn
-            title="결합 공유 시 예상 가격"
-            cost={8900}
-            fontSize={16}
-            comparison={2500}
+            comparison={undefined}
           />
           <Buttons>
-            <Button onClick={() => router.push("/suggestion")}>
+            <Button
+              onClick={() => window.open("https://pickle.plus/", "_blank")}
+            >
               계정 공유 알아보기
-            </Button>
-            <Button onClick={() => router.push("/suggestion")}>
-              결합 할인 알아보기
             </Button>
           </Buttons>
         </ProviderSelector>
@@ -247,21 +292,15 @@ export default function Suggestion() {
           </OttColumn>
           <CostColumn
             title="정가"
-            cost={33300}
+            cost={recommendPrice}
             fontSize={16}
-            comparison={-1200}
+            comparison={recommendPrice - myPrice}
           />
           <CostColumn
             title="계정 공유 시 예상 가격"
-            cost={12000}
+            cost={recommendSharing}
             fontSize={16}
-            comparison={-300}
-          />
-          <CostColumn
-            title="결합 공유 시 예상 가격"
-            cost={9000}
-            fontSize={16}
-            comparison={100}
+            comparison={recommendSharing - mySharing}
           />
 
           <br />
@@ -269,11 +308,10 @@ export default function Suggestion() {
           <ContentColumn title="중복 콘텐츠" difference={-12}></ContentColumn>
           <ContentColumn title="볼 만한 콘텐츠" difference={3}></ContentColumn>
           <Buttons>
-            <Button onClick={() => router.push("/suggestion")}>
+            <Button
+              onClick={() => window.open("https://pickle.plus/", "_blank")}
+            >
               계정 공유 알아보기
-            </Button>
-            <Button onClick={() => router.push("/suggestion")}>
-              결합 할인 알아보기
             </Button>
           </Buttons>
         </ProviderSelector>
@@ -290,21 +328,15 @@ export default function Suggestion() {
           </OttColumn>
           <CostColumn
             title="정가"
-            cost={23400}
+            cost={recommendPrice2}
             fontSize={16}
-            comparison={-11100}
+            comparison={recommendPrice2 - myPrice}
           />
           <CostColumn
             title="계정 공유 시 예상 가격"
-            cost={8000}
+            cost={recommendSharing2}
             fontSize={16}
-            comparison={-4300}
-          />
-          <CostColumn
-            title="결합 공유 시 예상 가격"
-            cost={5900}
-            fontSize={16}
-            comparison={-3000}
+            comparison={recommendSharing2 - mySharing}
           />
 
           <br />
@@ -312,11 +344,10 @@ export default function Suggestion() {
           <ContentColumn title="중복 콘텐츠" difference={-12}></ContentColumn>
           <ContentColumn title="볼 만한 콘텐츠" difference={-9}></ContentColumn>
           <Buttons>
-            <Button onClick={() => router.push("/suggestion")}>
+            <Button
+              onClick={() => window.open("https://pickle.plus/", "_blank")}
+            >
               계정 공유 알아보기
-            </Button>
-            <Button onClick={() => router.push("/suggestion")}>
-              결합 할인 알아보기
             </Button>
           </Buttons>
         </ProviderSelector>
