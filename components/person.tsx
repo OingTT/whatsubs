@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   display: flex;
@@ -57,7 +58,17 @@ interface PersonProps {
   info: string;
 }
 
+const fetchTranslation = async (name: string) => {
+  const response = await fetch(`/api/translate/${encodeURIComponent(name)}`);
+  const data = await response.json();
+  return data.translatedText || "";
+};
+
 export default function Person({ id, name, profilePath, info }: PersonProps) {
+  const { data: translatedName } = useSWR(name, fetchTranslation);
+
+  const result_name = translatedName || name;
+
   return (
     <Wrapper>
       <Left>
@@ -74,7 +85,7 @@ export default function Person({ id, name, profilePath, info }: PersonProps) {
       </Left>
       <Right>
         <Texts>
-          <Name>{name}</Name>
+          <Name>{result_name}</Name>
           <Info>{info}</Info>
         </Texts>
       </Right>

@@ -11,6 +11,7 @@ import { ContentType, Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import React from "react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -207,7 +208,14 @@ export default function TV() {
       `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,watch/providers`
   );
 
-  const creator = data?.created_by.map((creator) => creator.name).join(", ");
+  const creatorNames = data?.created_by.map((creator) => creator.name);
+  const { data: translatedCreators } = useSWR(
+    creatorNames &&
+      `/api/translate/${encodeURIComponent(creatorNames.join(","))}`
+  );
+
+  const creator =
+    translatedCreators?.translatedText || creatorNames?.join(", ");
   const rating = data?.content_ratings?.results?.find(
     (result) => result.iso_3166_1 === "KR"
   )?.rating;
