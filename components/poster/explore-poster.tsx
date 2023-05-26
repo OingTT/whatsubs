@@ -41,6 +41,11 @@ const Placeholder = styled.div`
   justify-content: center;
   align-items: center;
   color: #fff;
+  padding: 16px;
+  text-align: center;
+  line-height: 1.4;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 const Back = styled(Front)`
