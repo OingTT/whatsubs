@@ -20,3 +20,23 @@ export const searchQueryState = atom<string>({
   key: "searchQueryState",
   default: "",
 });
+
+export const genreState = atom<string[]>({
+  key: "genreState",
+  default: [],
+});
+
+export const tvGenreState = atom<string[]>({
+  key: "tvGenreState",
+  default: [],
+});
+
+export const certificationState = atom<string[]>({
+  key: "certificationState",
+  default: [],
+});
+
+export const tvCertificationState = atom<string[]>({
+  key: "tvCertificationState",
+  default: [],
+});
