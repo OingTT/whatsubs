@@ -3,7 +3,7 @@ import Layout from "@/components/layout";
 import Person from "@/components/person";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { TVDetail } from "@/lib/client/interface";
+import { Content, TVDetail } from "@/lib/client/interface";
 import { Grid } from "@/lib/client/style";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
@@ -204,7 +204,20 @@ export default function TV() {
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data } = useSWR<TVDetail>(
     id &&
-      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,watch/providers`
+      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
+  );
+
+  const recommendations = data?.recommendations?.results.map(
+    (result): Content => ({
+      type: ContentType.TV,
+      id: result.id,
+    })
+  );
+  const similar = data?.similar?.results.map(
+    (result): Content => ({
+      type: ContentType.TV,
+      id: result.id,
+    })
   );
 
   const creator = data?.created_by.map((creator) => creator.name).join(", ");
@@ -291,8 +304,8 @@ export default function TV() {
         </Group>
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" disabled />
-      <Slider title="비슷한 콘텐츠" disabled />
+      <Slider title="추천 콘텐츠" contents={recommendations} />
+      <Slider title="비슷한 콘텐츠" contents={similar} />
 
       <Details>
         <DetailsTitle>상세 정보</DetailsTitle>

@@ -54,6 +54,9 @@ export interface MovieDetail {
       job: string;
     }>;
   };
+  recommendations: {
+    results: Movie[];
+  };
   release_dates: {
     results: Array<{
       iso_3166_1: string;
@@ -65,6 +68,9 @@ export interface MovieDetail {
         note: string;
       }>;
     }>;
+  };
+  similar: {
+    results: Movie[];
   };
   "watch/providers": {
     results: {
@@ -140,6 +146,12 @@ export interface TVDetail {
     poster_path: string;
     season_number: number;
   }>;
+  recommendations: {
+    results: TV[];
+  };
+  similar: {
+    results: TV[];
+  };
   "watch/providers": {
     results: {
       KR?: {

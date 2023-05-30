@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail } from "@/lib/client/interface";
+import { Content, MovieDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
@@ -195,7 +195,20 @@ export default function Movie() {
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data } = useSWR<MovieDetail>(
     id &&
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
+  );
+
+  const recommendations = data?.recommendations?.results.map(
+    (result): Content => ({
+      type: ContentType.MOVIE,
+      id: result.id,
+    })
+  );
+  const similar = data?.similar?.results.map(
+    (result): Content => ({
+      type: ContentType.MOVIE,
+      id: result.id,
+    })
   );
 
   const director = data?.credits?.crew
@@ -335,8 +348,8 @@ export default function Movie() {
         </Group>
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" disabled />
-      <Slider title="비슷한 콘텐츠" disabled />
+      <Slider title="추천 콘텐츠" contents={recommendations} />
+      <Slider title="비슷한 콘텐츠" contents={similar} />
 
       <Details>
         <GroupTitle>상세 정보</GroupTitle>
