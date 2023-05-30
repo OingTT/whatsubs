@@ -211,7 +211,13 @@ export default function Search() {
             })}
           />
 
-          <ClearIcon htmlFor="query" onClick={() => setValue("query", "")}>
+          <ClearIcon
+            htmlFor="query"
+            onClick={() => {
+              setValue("query", "");
+              setQuery("");
+            }}
+          >
             {watch("query") && <XCircle size={24} weight="fill" color="#bbb" />}
           </ClearIcon>
         </SearchBox>
