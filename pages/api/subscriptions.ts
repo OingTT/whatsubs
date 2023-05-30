@@ -18,6 +18,8 @@ export default async function session(
       name: true,
       providerId: true,
       networkId: true,
+      price: true,
+      sharing: true,      
     },
   });
 

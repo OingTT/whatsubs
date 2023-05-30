@@ -109,6 +109,8 @@ model Subscription {
   name       String @unique
   providerId Int?
   networkId  Int?
+  price      Int    @default(0)
+  sharing    Int    @default(0)
   users      User[]
 }
 
