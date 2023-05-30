@@ -1,5 +1,14 @@
 import { ContentType } from "@prisma/client";
 
+export interface Collection {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  parts: Array<Movie>;
+}
+
 export interface DiscoverMovie {
   page: number;
   results: Movie[];
@@ -34,6 +43,12 @@ export interface Movie {
 
 export interface MovieDetail {
   backdrop_path: string;
+  belongs_to_collection?: {
+    id: number;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+  };
   genres: Array<{ id: number; name: string }>;
   overview: string;
   poster_path: string;
