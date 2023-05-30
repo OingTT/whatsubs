@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import { useRouter } from "next/router";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
+import Alert from "@/components/alert";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -246,6 +247,7 @@ export default function Suggestion() {
   return (
     <Layout>
       <Wrapper>
+        <Alert>만들고 있어요.</Alert>
         <ProviderSelector>
           <OttColumn>
             <Providers>
