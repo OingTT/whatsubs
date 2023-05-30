@@ -252,7 +252,10 @@ export default function Suggestion() {
               {subscriptions?.map(
                 (subscription) =>
                   userSubscriptions?.includes(subscription.id) && (
-                    <Ott imageUrl={`/images/${subscription.key}.png`} />
+                    <Ott
+                      key={subscription.id}
+                      imageUrl={`/images/${subscription.key}.png`}
+                    />
                   )
               )}
             </Providers>
@@ -283,7 +286,10 @@ export default function Suggestion() {
               {subscriptions?.map(
                 (subscription) =>
                   !userSubscriptions?.includes(subscription.id) && (
-                    <Ott imageUrl={`/images/${subscription.key}.png`} />
+                    <Ott
+                      key={subscription.id}
+                      imageUrl={`/images/${subscription.key}.png`}
+                    />
                   )
               )}
             </Providers>
@@ -320,7 +326,10 @@ export default function Suggestion() {
           <OttColumn>
             <Providers>
               {subscriptions?.map((subscription) => (
-                <Ott imageUrl={`/images/${subscription.key}.png`} />
+                <Ott
+                  key={subscription.id}
+                  imageUrl={`/images/${subscription.key}.png`}
+                />
               ))}
             </Providers>
             <Spacer />
