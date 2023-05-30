@@ -113,6 +113,8 @@ export default function Home() {
             width={64}
             height={64}
             alt="profile"
+            priority
+            unoptimized
           />
           <Info>
             <Name>{user.name}</Name>

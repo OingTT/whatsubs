@@ -1,7 +1,10 @@
 import Layout from "@/components/layout";
 import SubsSelector from "@/components/subs-selector";
-import Slider from "@/components/slider";
 import styled from "@emotion/styled";
+import { useRecoilValue } from "recoil";
+import { checkedSubsState } from "@/lib/client/state";
+import IntegrateChart from "@/components/chart/integrate-chart";
+import SubChart from "@/components/chart/sub-chart";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,13 +26,19 @@ const Wrapper = styled.div`
 `;
 
 export default function Chart() {
+  const subscriptions = useRecoilValue(checkedSubsState);
+
   return (
     <Layout>
       <Wrapper>
         <SubsSelector />
       </Wrapper>
 
-      <Slider title="통합 차트" disabled />
+      <IntegrateChart />
+
+      {subscriptions.map((sub) => (
+        <SubChart key={sub.id} sub={sub} />
+      ))}
     </Layout>
   );
 }

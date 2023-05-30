@@ -61,6 +61,8 @@ export default function Topbar() {
           width="32"
           height="32"
           alt="User"
+          priority
+          unoptimized
         />
       </Link>
     </Wrapper>
