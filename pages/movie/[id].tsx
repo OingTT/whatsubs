@@ -223,24 +223,34 @@ export default function Movie() {
     })
   );
 
-  const director = data?.credits?.crew
+  const directorNames = data?.credits?.crew
     .filter((crew) => crew.job === "Director")
-    .map((crew) => crew.name)
-    .join(", ");
-  const writer = data?.credits?.crew
+    .map((crew) => crew.name);
+  const writerNames = data?.credits?.crew
     .filter((crew) => crew.job === "Writer" || crew.job === "Screenplay")
-    .map((crew) => crew.name)
-    .join(", ");
+    .map((crew) => crew.name);
+  const { data: translatedDirectors } = useSWR(
+    directorNames &&
+      `/api/translate/${encodeURIComponent(directorNames.join(","))}`
+  );
+  const { data: translatedWriters } = useSWR(
+    writerNames && `/api/translate/${encodeURIComponent(writerNames.join(","))}`
+  );
+
+  const director =
+    translatedDirectors?.translatedText || directorNames?.join(", ");
+  const writer = translatedWriters?.translatedText || writerNames?.join(", ");
+
   const rating = data?.release_dates?.results
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
   const origin_url = data?.["watch/providers"]?.results.KR?.link;
   const result_url =
-    "https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/" +
+    "https://whatsubs.herokuapp.com/https://www.themoviedb.org/" +
     origin_url?.replace("https://www.themoviedb.org/", "");
 
-  console.log({ result_url });
+  //console.log({ result_url });
 
   // link
   const { data: playLink } = useSWR(result_url, async (url) => {
@@ -273,7 +283,7 @@ export default function Movie() {
     return { providers, urls };
   });
 
-  console.log({ playLink });
+  //console.log({ playLink });
 
   return (
     <Layout title={data?.title} fit>
