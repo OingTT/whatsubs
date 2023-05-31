@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
-import { MovieDetail } from "@/lib/client/interface";
+import { Collection, Content, MovieDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Play } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
@@ -195,27 +195,62 @@ export default function Movie() {
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data } = useSWR<MovieDetail>(
     id &&
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,release_dates,watch/providers`
+      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
   );
 
-  const director = data?.credits?.crew
+  const { data: collection } = useSWR<Collection>(
+    data?.belongs_to_collection &&
+      `https://api.themoviedb.org/3/collection/${data?.belongs_to_collection?.id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
+  );
+
+  const collections = collection?.parts.map(
+    (part): Content => ({
+      type: ContentType.MOVIE,
+      id: part.id,
+    })
+  );
+
+  const recommendations = data?.recommendations?.results.map(
+    (result): Content => ({
+      type: ContentType.MOVIE,
+      id: result.id,
+    })
+  );
+  const similar = data?.similar?.results.map(
+    (result): Content => ({
+      type: ContentType.MOVIE,
+      id: result.id,
+    })
+  );
+
+  const directorNames = data?.credits?.crew
     .filter((crew) => crew.job === "Director")
-    .map((crew) => crew.name)
-    .join(", ");
-  const writer = data?.credits?.crew
+    .map((crew) => crew.name);
+  const writerNames = data?.credits?.crew
     .filter((crew) => crew.job === "Writer" || crew.job === "Screenplay")
-    .map((crew) => crew.name)
-    .join(", ");
+    .map((crew) => crew.name);
+  const { data: translatedDirectors } = useSWR(
+    directorNames &&
+      `/api/translate/${encodeURIComponent(directorNames.join(","))}`
+  );
+  const { data: translatedWriters } = useSWR(
+    writerNames && `/api/translate/${encodeURIComponent(writerNames.join(","))}`
+  );
+
+  const director =
+    translatedDirectors?.translatedText || directorNames?.join(", ");
+  const writer = translatedWriters?.translatedText || writerNames?.join(", ");
+
   const rating = data?.release_dates?.results
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
   const origin_url = data?.["watch/providers"]?.results.KR?.link;
   const result_url =
-    "https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/" +
+    "https://whatsubs.herokuapp.com/https://www.themoviedb.org/" +
     origin_url?.replace("https://www.themoviedb.org/", "");
 
-  console.log({ result_url });
+  //console.log({ result_url });
 
   // link
   const { data: playLink } = useSWR(result_url, async (url) => {
@@ -248,7 +283,7 @@ export default function Movie() {
     return { providers, urls };
   });
 
-  console.log({ playLink });
+  //console.log({ playLink });
 
   return (
     <Layout title={data?.title} fit>
@@ -335,8 +370,9 @@ export default function Movie() {
         </Group>
       </Wrapper>
 
-      <Slider title="추천 콘텐츠" disabled />
-      <Slider title="비슷한 콘텐츠" disabled />
+      {collections && <Slider title="시리즈" contents={collections} />}
+      <Slider title="추천 콘텐츠" contents={recommendations} />
+      <Slider title="비슷한 콘텐츠" contents={similar} />
 
       <Details>
         <GroupTitle>상세 정보</GroupTitle>

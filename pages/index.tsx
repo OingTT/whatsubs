@@ -6,6 +6,7 @@ import { Content } from "@/lib/client/interface";
 import styled from "@emotion/styled";
 import { Review, Watch } from "@prisma/client";
 import useSWR from "swr";
+import IntegrateChart from "@/components/chart/integrate-chart";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -52,7 +53,7 @@ export default function Home() {
         <SubsSelector />
       </Wrapper>
 
-      <Slider title="오늘의 인기 콘텐츠" disabled />
+      <IntegrateChart />
       <Slider title="맞춤 추천 콘텐츠" disabled />
       <Slider title="시청 중인 콘텐츠" contents={watching} />
       <Slider title="찜한 콘텐츠" contents={wantToWatch} />

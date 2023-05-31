@@ -10,6 +10,15 @@ export interface Certifications {
   };
 }
 
+export interface Collection {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string;
+  backdrop_path: string;
+  parts: Array<Movie>;
+}
+
 export interface DiscoverMovie {
   page: number;
   results: Movie[];
@@ -48,6 +57,12 @@ export interface Movie {
 
 export interface MovieDetail {
   backdrop_path: string;
+  belongs_to_collection?: {
+    id: number;
+    name: string;
+    poster_path: string;
+    backdrop_path: string;
+  };
   genres: Array<{ id: number; name: string }>;
   overview: string;
   poster_path: string;
@@ -68,6 +83,9 @@ export interface MovieDetail {
       job: string;
     }>;
   };
+  recommendations: {
+    results: Movie[];
+  };
   release_dates: {
     results: Array<{
       iso_3166_1: string;
@@ -79,6 +97,9 @@ export interface MovieDetail {
         note: string;
       }>;
     }>;
+  };
+  similar: {
+    results: Movie[];
   };
   "watch/providers": {
     results: {
@@ -154,6 +175,12 @@ export interface TVDetail {
     poster_path: string;
     season_number: number;
   }>;
+  recommendations: {
+    results: TV[];
+  };
+  similar: {
+    results: TV[];
+  };
   "watch/providers": {
     results: {
       KR?: {

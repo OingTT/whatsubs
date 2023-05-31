@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
+import useSWRImmutable from "swr/immutable";
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,6 +42,7 @@ const Name = styled.div`
   font-weight: 600;
   color: #333333;
   font-size: 14px;
+  word-break: keep-all;
 `;
 
 const Info = styled.div`
@@ -57,14 +59,22 @@ interface PersonProps {
   info: string;
 }
 
+const fetchTranslation = async (name: string) => {
+  const response = await fetch(`/api/translate/${encodeURIComponent(name)}`);
+  const data = await response.json();
+  return data.translatedText || "";
+};
+
 export default function Person({ id, name, profilePath, info }: PersonProps) {
+  const { data: translatedName } = useSWRImmutable(name, fetchTranslation);
+
   return (
     <Wrapper>
       <Left>
         <Image
           src={
             profilePath
-              ? `https://image.tmdb.org/t/p/w92${profilePath}`
+              ? `https://image.tmdb.org/t/p/w154${profilePath}`
               : "/images/profile.png"
           }
           fill
@@ -74,7 +84,7 @@ export default function Person({ id, name, profilePath, info }: PersonProps) {
       </Left>
       <Right>
         <Texts>
-          <Name>{name}</Name>
+          <Name>{translatedName || name}</Name>
           <Info>{info}</Info>
         </Texts>
       </Right>
