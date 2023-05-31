@@ -1,3 +1,4 @@
+import CheckButton from "@/components/input/check-button";
 import SignupLayout from "@/components/signup-layout";
 import useMutation from "@/lib/client/useMutation";
 import styled from "@emotion/styled";
@@ -15,19 +16,6 @@ const Wrapper = styled.div`
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-`;
-
-const Label = styled.label`
-  cursor: pointer;
-`;
-
-const Input = styled.input`
-  display: none;
-
-  &:checked ~ div {
-    background-color: #000;
-    color: #fff;
-  }
 `;
 
 const Genre = styled.div`
@@ -87,15 +75,13 @@ export default function Genres() {
     >
       <Wrapper>
         {genres?.map((genre) => (
-          <Label key={genre.id} htmlFor={genre.id.toString()}>
-            <Input
-              type="checkbox"
-              id={genre.id.toString()}
-              {...register("genres")}
-              value={genre.id}
-            />
-            <Genre>{genre.name}</Genre>
-          </Label>
+          <CheckButton
+            key={genre.id}
+            register={register("genres")}
+            id={genre.id}
+          >
+            {genre.name}
+          </CheckButton>
         ))}
       </Wrapper>
     </SignupLayout>
