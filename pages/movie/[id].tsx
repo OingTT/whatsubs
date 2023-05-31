@@ -250,7 +250,7 @@ export default function Movie() {
     "https://whatsubs.herokuapp.com/https://www.themoviedb.org/" +
     origin_url?.replace("https://www.themoviedb.org/", "");
 
-  //console.log({ result_url });
+  console.log({ result_url });
 
   // link
   const { data: playLink } = useSWR(result_url, async (url) => {

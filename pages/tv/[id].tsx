@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import React from "react";
+import * as cheerio from "cheerio";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -233,6 +234,48 @@ export default function TV() {
     (result) => result.iso_3166_1 === "KR"
   )?.rating;
 
+  const origin_url = data?.["watch/providers"]?.results.KR?.link;
+  const result_url =
+    "https://whatsubs.herokuapp.com/https://www.themoviedb.org/" +
+    origin_url?.replace("https://www.themoviedb.org/", "");
+
+  //console.log({ data });
+  //console.log({ origin_url });
+  console.log({ result_url });
+
+  // link
+  const { data: playLink } = useSWR(result_url, async (url) => {
+    const response = await fetch(url);
+    const html = await response.text();
+
+    const $ = cheerio.load(html);
+
+    const providers: string[] = [];
+    const urls: string[] = [];
+
+    $("ul.providers li a").each((index, element) => {
+      const provider = $(element).attr("title");
+
+      if (
+        typeof provider === "string" &&
+        provider[0] === "W" &&
+        !providers.includes(provider)
+      ) {
+        providers.push(provider);
+
+        const url = $(element).attr("href");
+
+        console.log({ url });
+
+        if (typeof url === "string") {
+          urls.push(url);
+        }
+      }
+    });
+
+    return { providers, urls };
+  });
+
   return (
     <Layout title={data?.name} fit>
       <Backdrop>
@@ -262,9 +305,12 @@ export default function TV() {
         </Header>
 
         <Selector>
-          <PlayButton>
-            <Play color="white" weight="fill" />
-          </PlayButton>
+          <a href={playLink?.urls[0]} target="_blank" rel="noopener">
+            <PlayButton>
+              <Play color="white" weight="fill" />
+            </PlayButton>
+          </a>
+
           <Providers>
             {data?.["watch/providers"]?.results?.KR?.flatrate?.map(
               (provider) => {
