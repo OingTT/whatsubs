@@ -1,7 +1,7 @@
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import styled from "@emotion/styled";
 import { ArrowDown } from "@phosphor-icons/react";
-import Button from "@/components/button";
+import Button from "@/components/button/button";
 import { useRouter } from "next/router";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";

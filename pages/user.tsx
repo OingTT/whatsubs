@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import useUser from "@/lib/client/useUser";
 import styled from "@emotion/styled";
 import { signOut } from "next-auth/react";

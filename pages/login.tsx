@@ -1,4 +1,4 @@
-import LoginButton from "@/components/login-button";
+import LoginButton from "@/components/button/login-button";
 import styled from "@emotion/styled";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { GetServerSidePropsContext } from "next";
 import { authOptions } from "./api/auth/[...nextauth]";
-import WelcomeLayout from "@/components/welcome-layout";
+import WelcomeLayout from "@/components/layout/welcome-layout";
 import Image from "next/image";
 
 const Wrapper = styled.div`

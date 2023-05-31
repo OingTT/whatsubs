@@ -11,3 +11,10 @@ export const Grid = styled.div`
     gap: 16px;
   }
 `;
+
+export const VerticalBar = styled.div<{ size: number }>`
+  width: 2px;
+  border-radius: 1px;
+  height: ${(props) => props.size}px;
+  background-color: #999;
+`;

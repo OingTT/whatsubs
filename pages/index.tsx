@@ -1,5 +1,5 @@
 import Alert from "@/components/alert";
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import SubsSelector from "@/components/subs-selector";
 import Slider from "@/components/slider";
 import { Content } from "@/lib/client/interface";

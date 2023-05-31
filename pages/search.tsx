@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import { useForm } from "react-hook-form";
 import { MagnifyingGlass, XCircle } from "@phosphor-icons/react";
 import Slider from "@/components/slider";

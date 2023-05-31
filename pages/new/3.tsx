@@ -1,5 +1,5 @@
 import CheckButton from "@/components/input/check-button";
-import SignupLayout from "@/components/signup-layout";
+import SignupLayout from "@/components/layout/signup-layout";
 import useMutation from "@/lib/client/useMutation";
 import styled from "@emotion/styled";
 import { Genre } from "@prisma/client";

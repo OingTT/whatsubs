@@ -1,4 +1,4 @@
-import SignupLayout from "@/components/signup-layout";
+import SignupLayout from "@/components/layout/signup-layout";
 import styled from "@emotion/styled";
 import { Category, Subscription } from "@prisma/client";
 import { useRouter } from "next/router";

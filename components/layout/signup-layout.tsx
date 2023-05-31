@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import WelcomeLayout from "./welcome-layout";
-import Button from "./button";
+import Button from "../button/button";
 import { useRouter } from "next/router";
-import ProgressBar from "./progress-bar";
+import ProgressBar from "../progress-bar";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 

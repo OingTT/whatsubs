@@ -1,4 +1,4 @@
-import SignupLayout from "@/components/signup-layout";
+import SignupLayout from "@/components/layout/signup-layout";
 import styled from "@emotion/styled";
 
 const Wrapper = styled.div`

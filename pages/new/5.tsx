@@ -1,5 +1,5 @@
 import TextInput from "@/components/input/text-input";
-import SignupLayout from "@/components/signup-layout";
+import SignupLayout from "@/components/layout/signup-layout";
 import styled from "@emotion/styled";
 import { PencilSimple } from "@phosphor-icons/react";
 import { GetServerSidePropsContext } from "next";

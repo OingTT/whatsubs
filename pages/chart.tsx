@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import SubsSelector from "@/components/subs-selector";
 import styled from "@emotion/styled";
 import { useRecoilValue } from "recoil";

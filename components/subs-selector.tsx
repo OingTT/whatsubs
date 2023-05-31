@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
-import VerticalBar from "./vertical-bar";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { checkedSubsState, selectedSubsState } from "@/lib/client/state";
+import { VerticalBar } from "@/lib/client/style";
 
 const Selector = styled.div`
   width: 100%;

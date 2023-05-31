@@ -1,4 +1,4 @@
-import SignupLayout from "@/components/signup-layout";
+import SignupLayout from "@/components/layout/signup-layout";
 import useMutation from "@/lib/client/useMutation";
 import styled from "@emotion/styled";
 import { Subscription } from "@prisma/client";

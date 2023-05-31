@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
 import { Collection, Content, MovieDetail } from "@/lib/client/interface";

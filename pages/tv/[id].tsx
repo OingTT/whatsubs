@@ -1,5 +1,5 @@
 import Alert from "@/components/alert";
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import Person from "@/components/person";
 import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";

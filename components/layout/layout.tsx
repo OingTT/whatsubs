@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import Topbar from "./topbar";
+import Topbar from "../topbar";
 import Head from "next/head";
 
 const Wrapper = styled.div<{ fit?: boolean }>`

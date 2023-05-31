@@ -1,6 +1,6 @@
 import Alert from "@/components/alert";
 import Radio from "@/components/input/radio";
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 import ExplorePoster from "@/components/poster/explore-poster";
 import SubsSelector from "@/components/subs-selector";
 import {
