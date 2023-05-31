@@ -1,5 +1,15 @@
 import { ContentType } from "@prisma/client";
 
+export interface Certifications {
+  certifications: {
+    KR?: Array<{
+      certification: string;
+      meaning: string;
+      order: number;
+    }>;
+  };
+}
+
 export interface DiscoverMovie {
   page: number;
   results: Movie[];
@@ -12,6 +22,10 @@ export interface DiscoverTV {
   results: TV[];
   total_results: number;
   total_pages: number;
+}
+
+export interface Genres {
+  genres: Array<{ id: number; name: string }>;
 }
 
 export interface Movie {
@@ -176,4 +190,12 @@ export interface Country {
   iso_3166_1: string;
   english_name: string;
   native_name: string;
+}
+
+export interface ExploreForm {
+  type: ContentType | "TVNETWORK";
+  filters: string[];
+  movieGenres: string[];
+  tvGenres: string[];
+  movieCertifications: string[];
 }

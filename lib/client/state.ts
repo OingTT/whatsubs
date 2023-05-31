@@ -1,5 +1,6 @@
 import { ContentType, Subscription } from "@prisma/client";
 import { atom } from "recoil";
+import { ExploreForm } from "./interface";
 
 export const selectedSubsState = atom<Subscription[]>({
   key: "selectedSubsState",
@@ -11,32 +12,18 @@ export const checkedSubsState = atom<Subscription[]>({
   default: [],
 });
 
-export const exploreTypeState = atom<ContentType | "TVNETWORK">({
-  key: "exploreTypeState",
-  default: ContentType.MOVIE,
+export const expolreFormState = atom<ExploreForm>({
+  key: "expolreFormState",
+  default: {
+    type: ContentType.MOVIE,
+    filters: [],
+    movieGenres: [],
+    tvGenres: [],
+    movieCertifications: [],
+  },
 });
 
 export const searchQueryState = atom<string>({
   key: "searchQueryState",
   default: "",
-});
-
-export const genreState = atom<string[]>({
-  key: "genreState",
-  default: [],
-});
-
-export const tvGenreState = atom<string[]>({
-  key: "tvGenreState",
-  default: [],
-});
-
-export const certificationState = atom<string[]>({
-  key: "certificationState",
-  default: [],
-});
-
-export const tvCertificationState = atom<string[]>({
-  key: "tvCertificationState",
-  default: [],
 });
