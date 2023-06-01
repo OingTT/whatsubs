@@ -31,8 +31,6 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
   background-color: ${(props) => (props.selected ? "black" : "#eee")};
   color: ${(props) => (props.selected ? "white" : "black")};
   border-radius: 100%;
-  font-size: 10px;
-  font-weight: 500;
   cursor: pointer;
 
   @media (min-width: 810px) {
@@ -46,6 +44,11 @@ const Icon = styled.div<{ small?: boolean }>`
     width: ${(props) => (props.small ? "16px" : "20px")};
     height: ${(props) => (props.small ? "16px" : "20px")};
   }
+`;
+
+const Count = styled.div`
+  font-size: 10px;
+  font-weight: 500;
 `;
 
 const StarsWrapper = styled.div<{ absolute?: boolean }>`
@@ -120,7 +123,9 @@ export default function WatchSelector({
           small={small}
         >
           <Icon as={BookmarkSimple} small={small} />
-          {count && (reviewCounts ? reviewCounts.WANT_TO_WATCH : "-")}
+          {count && (
+            <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : "-"}</Count>
+          )}
         </Button>
         <Button
           selected={watch === "WATCHING"}
@@ -128,7 +133,7 @@ export default function WatchSelector({
           small={small}
         >
           <Icon as={Eye} small={small} />
-          {count && (reviewCounts ? reviewCounts.WATCHING : "-")}
+          {count && <Count>{reviewCounts ? reviewCounts.WATCHING : "-"}</Count>}
         </Button>
         <Button
           selected={watch === "WATCHED"}
@@ -136,7 +141,7 @@ export default function WatchSelector({
           small={small}
         >
           <Icon as={Check} small={small} />
-          {count && (reviewCounts ? reviewCounts.WATCHED : "-")}
+          {count && <Count>{reviewCounts ? reviewCounts.WATCHED : "-"}</Count>}
         </Button>
       </Buttons>
 
