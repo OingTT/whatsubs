@@ -11,7 +11,7 @@ import {
   Genres,
 } from "@/lib/client/interface";
 import { checkedSubsState, expolreFormState } from "@/lib/client/state";
-import { Grid } from "@/lib/client/style";
+import { Grid, Spacer } from "@/lib/client/style";
 import styled from "@emotion/styled";
 import { ContentType } from "@prisma/client";
 import { useCallback, useEffect, useRef } from "react";
@@ -70,13 +70,32 @@ const Options = styled.div`
   flex-wrap: wrap;
 `;
 
+const ResetButton = styled.div`
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: #eeeeee;
+  border-radius: 8px;
+  color: #333;
+  gap: 8px;
+  cursor: pointer;
+
+  @media (max-width: 809px) {
+    height: 32px;
+    padding: 12px;
+    font-size: 12px;
+  }
+`;
+
 const swrInfiniteConfig: SWRInfiniteConfiguration = {
   parallel: true,
   revalidateFirstPage: false,
   initialSize: 2,
 };
 
-export default function Review() {
+export default function Explore() {
   const { data: movieGenres } = useSWR<Genres>(
     `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
   );
@@ -87,10 +106,7 @@ export default function Review() {
     `https://api.themoviedb.org/3/certification/movie/list?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
   );
 
-  const krMovieCertifications = movieCertifications?.certifications.KR?.slice(
-    0,
-    -1
-  );
+  const movieCertKR = movieCertifications?.certifications.KR?.slice(0, -1);
 
   const subscriptions = useRecoilValue(checkedSubsState);
   const [state, setState] = useRecoilState(expolreFormState);
@@ -226,7 +242,7 @@ export default function Review() {
             onChange: () => setState({ ...state, type: watch("type") }),
           })}
           ids={[ContentType.MOVIE, ContentType.TV, "TVNETWORK"]}
-          labels={["영화", "TV 프로그램", "TV(티빙 ・ 쿠플)"]}
+          labels={["영화", "TV 프로그램", "TV(티빙・쿠플)"]}
           required
         />
       </Wrapper>
@@ -275,14 +291,18 @@ export default function Review() {
             {watch("movieCertifications")
               .map(
                 (certification) =>
-                  krMovieCertifications?.find(
+                  movieCertKR?.find(
                     (cert) => cert.certification === certification
                   )?.certification
               )
               .join(" ・ ") || "관람등급"}
           </CheckButton>
         )}
-        <ArrowCounterClockwise size={32} onClick={handleResetFilters} />
+        <Spacer />
+        <ResetButton>
+          <ArrowCounterClockwise onClick={handleResetFilters} weight="bold" />
+          초기화
+        </ResetButton>
       </Filters>
 
       <Wrapper>
@@ -318,7 +338,7 @@ export default function Review() {
                 )))}
           {watch("filters")?.includes("1") &&
             watch("type") === ContentType.MOVIE &&
-            krMovieCertifications?.map((certification) => (
+            movieCertKR?.map((certification) => (
               <CheckButton
                 key={certification.certification}
                 register={register("movieCertifications", {

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
 import Alert from "@/components/alert";
+import { Spacer } from "@/lib/client/style";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -73,10 +74,6 @@ const Providers = styled.div`
   gap: 16px;
 `;
 
-const Spacer = styled.div`
-  flex: 1;
-`;
-
 const Comparison = styled.div<{ comparison: number | undefined }>`
   color: ${({ comparison }) =>
     comparison && comparison > 0 ? "#ee4444" : "#1199ee"};
@@ -134,7 +131,6 @@ const Ott = styled.div<{ imageUrl: string }>`
 const CostColumn = ({
   title,
   cost,
-  fontSize,
   comparison,
 }: {
   title: string;
