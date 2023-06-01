@@ -5,6 +5,8 @@ import Button from "@/components/button/button";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
 import { Spacer } from "@/lib/client/style";
+import useUser from "@/lib/client/useUser";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -25,11 +27,17 @@ const Wrapper = styled.div`
   }
 `;
 
+const Costs = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
 const Buttons = styled.div`
   width: 100%;
   display: flex;
   gap: 16px;
-  margin-top: 32px;
 `;
 
 const ProviderSelector = styled.div`
@@ -42,34 +50,21 @@ const ProviderSelector = styled.div`
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   border-radius: 16px;
+  gap: 24px;
+
+  @media (max-width: 809px) {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Columns = styled.div`
-  flex-shrink: 0;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  overflow: visible;
-  position: relative;
-  align-content: center;
-  flex-wrap: nowrap;
 `;
 
 const Providers = styled.div`
-  flex-shrink: 0;
-  width: min-content;
-  height: min-content;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-  position: relative;
-  align-content: center;
-  flex-wrap: nowrap;
-  gap: 16px;
+  gap: 12px;
 `;
 
 const Comparison = styled.div<{ comparison: number | undefined }>`
@@ -83,41 +78,23 @@ interface fontWeight {
 
 const Right = styled.div<fontWeight>`
   width: 80px;
-  margin-right: 5px;
   text-align: right;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 5px;
   ${({ weight }) => weight && `font-weight: ${weight};`}
 `;
 
 const OttColumn = styled.div`
-  flex-shrink: 0;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  overflow: visible;
-  position: relative;
-  margin-bottom: 32px;
 `;
 
-const Ott = styled.div<{ imageUrl: string }>`
-  flex-shrink: 0;
+const Ott = styled(Image)`
   width: 40px;
   height: 40px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  position: relative;
   border-radius: 10px;
-  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
 `;
 
 const CostColumn = ({
@@ -205,7 +182,10 @@ const Recommender = ({
               ottData?.includes(subscription.id) && (
                 <Ott
                   key={subscription.id}
-                  imageUrl={`/images/${subscription.key}.png`}
+                  src={`/images/${subscription.key}.png`}
+                  width={40}
+                  height={40}
+                  alt={subscription.name}
                 />
               )
           )}
@@ -213,16 +193,18 @@ const Recommender = ({
         <Spacer />
         <Right weight={600}>{title}</Right>
       </OttColumn>
-      <CostColumn
-        title="정가"
-        cost={ottPrice}
-        comparison={ottPriceComparison}
-      ></CostColumn>
-      <CostColumn
-        title="계정 공유 시 예상 가격"
-        cost={ottSharing}
-        comparison={ottSharingComparison}
-      ></CostColumn>
+      <Costs>
+        <CostColumn
+          title="정가"
+          cost={ottPrice}
+          comparison={ottPriceComparison}
+        />
+        <CostColumn
+          title="계정 공유 시 예상 가격"
+          cost={ottSharing}
+          comparison={ottSharingComparison}
+        />
+      </Costs>
       <Buttons>
         <Button onClick={() => window.open("https://pickle.plus/", "_blank")}>
           계정 공유 알아보기
@@ -233,9 +215,14 @@ const Recommender = ({
 };
 
 export default function Suggestion() {
+  const user = useUser();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data: userSubscriptions } = useSWR<number[]>(
     "/api/user/subscriptions"
+  );
+  const { data: recommenderData } = useSWR<number[][]>(
+    user &&
+      `${process.env.NEXT_PUBLIC_API_URL}/recommendation/ottcomb/${user.id}`
   );
 
   let myPrice = 0;
@@ -256,15 +243,13 @@ export default function Suggestion() {
     }, 0);
   }
 
-  const recommenderData = [[1], [2, 4, 5], [1, 3]];
-
   return (
     <Layout>
       <Wrapper>
         <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
         <ArrowDown color="#333" size={24} />
-        {recommenderData.map((ottData, index) => (
+        {recommenderData?.map((ottData, index) => (
           <Recommender
             key={index}
             title={"추천 조합" + (index + 1)}

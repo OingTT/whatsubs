@@ -4,9 +4,10 @@ import SubsSelector from "@/components/subs-selector";
 import Slider from "@/components/slider";
 import { Content } from "@/lib/client/interface";
 import styled from "@emotion/styled";
-import { Review, Watch } from "@prisma/client";
+import { ContentType, Review, Watch } from "@prisma/client";
 import useSWR from "swr";
 import IntegrateChart from "@/components/chart/integrate-chart";
+import useUser from "@/lib/client/useUser";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -27,8 +28,35 @@ const Wrapper = styled.div`
   }
 `;
 
+interface Recommendation {
+  ContentType: ContentType;
+  ContentID: number;
+  Rating: number;
+}
+
 export default function Home() {
+  const user = useUser();
   const { data: reviewData } = useSWR<Review[]>("/api/review");
+  const { data: recommendMovieData } = useSWR<Recommendation[]>(
+    user &&
+      `${process.env.NEXT_PUBLIC_API_URL}/recommendation/movie/${user?.id}`
+  );
+  const recommendMovie = recommendMovieData?.map(
+    (recommendation): Content => ({
+      type: recommendation.ContentType,
+      id: recommendation.ContentID,
+    })
+  );
+  const { data: recommendTVData } = useSWR<Recommendation[]>(
+    user && `${process.env.NEXT_PUBLIC_API_URL}/recommendation/tv/${user?.id}`
+  );
+  const recommendTV = recommendTVData?.map(
+    (recommendation): Content => ({
+      type: recommendation.ContentType,
+      id: recommendation.ContentID,
+    })
+  );
+
   const wantToWatch = reviewData
     ?.filter((review) => review.watch === Watch.WANT_TO_WATCH)
     .map(
@@ -53,8 +81,9 @@ export default function Home() {
         <SubsSelector />
       </Wrapper>
 
+      <Slider title="맞춤 추천 영화" contents={recommendMovie} />
+      <Slider title="맞춤 추천 TV 프로그램" contents={recommendTV} />
       <IntegrateChart />
-      <Slider title="맞춤 추천 콘텐츠" disabled />
       <Slider title="시청 중인 콘텐츠" contents={watching} />
       <Slider title="찜한 콘텐츠" contents={wantToWatch} />
     </Layout>
