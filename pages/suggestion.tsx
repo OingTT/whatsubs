@@ -264,19 +264,17 @@ export default function Suggestion() {
   return (
     <Layout>
       <Wrapper>
-        <Recommender
-          title="현재 조합"
-          ottData={userSubscriptions}
-        ></Recommender>
+        <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
         <ArrowDown color="#333" size={24} />
         {recommenderData.map((ottData, index) => (
           <Recommender
+            key={index}
             title={"추천 조합" + (index + 1)}
             ottData={ottData}
             myPrice={myPrice}
             mySharing={mySharing}
-          ></Recommender>
+          />
         ))}
       </Wrapper>
     </Layout>
