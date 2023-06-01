@@ -71,14 +71,11 @@ export default function Home() {
   return (
     <Layout>
       <Wrapper>
-        <Alert>
-          Whatsubs는 테스트 중! 일부 기능이 작동하지 않을 수 있어요.
-        </Alert>
-        <Alert>
-          평점을 남겨주세요. 탐색 → 포스터 클릭 → 체크(봤어요) 클릭 → 평점
+        <SubsSelector />
+        <Alert type="info">
+          평점을 남겨보세요. 탐색 → 포스터 클릭 → 체크(봤어요) 클릭 → 평점
           남기기
         </Alert>
-        <SubsSelector />
       </Wrapper>
 
       <Slider title="맞춤 추천 영화" contents={recommendMovie} />
