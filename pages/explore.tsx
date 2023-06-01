@@ -23,6 +23,7 @@ import useSWRInfinite, {
 } from "swr/infinite";
 import useSWR from "swr";
 import CheckButton from "@/components/input/check-button";
+import { ArrowCounterClockwise } from "@phosphor-icons/react";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -93,6 +94,20 @@ export default function Review() {
 
   const subscriptions = useRecoilValue(checkedSubsState);
   const [state, setState] = useRecoilState(expolreFormState);
+
+  const handleResetFilters = () => {
+    setValue("filters", []);
+    setValue("movieGenres", []);
+    setValue("tvGenres", []);
+    setValue("movieCertifications", []);
+    setState({
+      ...state,
+      filters: [],
+      movieGenres: [],
+      tvGenres: [],
+      movieCertifications: [],
+    });
+  };
 
   const getMovieKey: SWRInfiniteKeyLoader = useCallback(
     (pageIndex) => {
@@ -267,6 +282,7 @@ export default function Review() {
               .join(" ・ ") || "관람등급"}
           </CheckButton>
         )}
+        <ArrowCounterClockwise size={32} onClick={handleResetFilters} />
       </Filters>
 
       <Wrapper>
