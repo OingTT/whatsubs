@@ -2,10 +2,8 @@ import Layout from "@/components/layout/layout";
 import styled from "@emotion/styled";
 import { ArrowDown } from "@phosphor-icons/react";
 import Button from "@/components/button/button";
-import { useRouter } from "next/router";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
-import Alert from "@/components/alert";
 import { Spacer } from "@/lib/client/style";
 
 const Wrapper = styled.div`
@@ -79,12 +77,6 @@ const Comparison = styled.div<{ comparison: number | undefined }>`
     comparison && comparison > 0 ? "#ee4444" : "#1199ee"};
 `;
 
-const Difference = styled.div<{ difference: number | undefined }>`
-  color: ${({ difference }) =>
-    difference && difference > 0 ? "#ee4444" : "#1199ee"};
-  margin-left: 5px;
-`;
-
 interface fontWeight {
   weight?: number;
 }
@@ -135,11 +127,12 @@ const CostColumn = ({
 }: {
   title: string;
   cost: number;
-  fontSize: number;
   comparison?: number;
 }) => {
   const comparisonSymbol =
     comparison !== undefined && comparison > 0 ? "+" : "-";
+
+  if (comparison == 0) comparison = undefined;
 
   return (
     <Columns>
@@ -165,32 +158,81 @@ const CostColumn = ({
   );
 };
 
-const ContentColumn = ({
+const Recommender = ({
   title,
-  difference,
+  ottData,
+  myPrice,
+  mySharing,
 }: {
   title: string;
-  difference?: number;
+  ottData: number[];
+  myPrice?: number;
+  mySharing?: number;
 }) => {
-  const differenceSymbol =
-    difference !== undefined && difference > 0 ? "증가" : "감소";
+  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+
+  let ottPrice = 0;
+  let ottSharing = 0;
+  let ottPriceComparison = 0;
+  let ottSharingComparison = 0;
+
+  if (ottData && subscriptions) {
+    ottPrice = subscriptions.reduce((sum, subscription) => {
+      if (ottData.includes(subscription.id)) {
+        return sum + subscription.price;
+      }
+      return sum;
+    }, 0);
+    ottSharing = subscriptions.reduce((sum, subscription) => {
+      if (ottData.includes(subscription.id)) {
+        return sum + subscription.price / subscription.sharing;
+      }
+      return sum;
+    }, 0);
+  }
+
+  if (myPrice !== undefined && mySharing !== undefined) {
+    ottPriceComparison = ottPrice - myPrice;
+    ottSharingComparison = ottSharing - mySharing;
+  }
 
   return (
-    <Columns>
-      {title}
-      <Spacer />
-      {difference !== undefined && (
-        <Right>
-          {Math.abs(difference)}%
-          <Difference difference={difference}>{differenceSymbol}</Difference>
-        </Right>
-      )}
-    </Columns>
+    <ProviderSelector>
+      <OttColumn>
+        <Providers>
+          {subscriptions?.map(
+            (subscription) =>
+              ottData?.includes(subscription.id) && (
+                <Ott
+                  key={subscription.id}
+                  imageUrl={`/images/${subscription.key}.png`}
+                />
+              )
+          )}
+        </Providers>
+        <Spacer />
+        <Right weight={600}>{title}</Right>
+      </OttColumn>
+      <CostColumn
+        title="정가"
+        cost={ottPrice}
+        comparison={ottPriceComparison}
+      ></CostColumn>
+      <CostColumn
+        title="계정 공유 시 예상 가격"
+        cost={ottSharing}
+        comparison={ottSharingComparison}
+      ></CostColumn>
+      <Buttons>
+        <Button onClick={() => window.open("https://pickle.plus/", "_blank")}>
+          계정 공유 알아보기
+        </Button>
+      </Buttons>
+    </ProviderSelector>
   );
 };
 
 export default function Suggestion() {
-  const router = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
   const { data: userSubscriptions } = useSWR<number[]>(
     "/api/user/subscriptions"
@@ -198,6 +240,7 @@ export default function Suggestion() {
 
   let myPrice = 0;
   let mySharing = 0;
+
   if (userSubscriptions && subscriptions) {
     myPrice = subscriptions.reduce((sum, subscription) => {
       if (userSubscriptions.includes(subscription.id)) {
@@ -213,151 +256,23 @@ export default function Suggestion() {
     }, 0);
   }
 
-  let recommendPrice = 0;
-  let recommendSharing = 0;
-  let recommendPrice2 = 0;
-  let recommendSharing2 = 0;
-  if (userSubscriptions && subscriptions) {
-    recommendPrice = subscriptions.reduce((sum, subscription) => {
-      if (!userSubscriptions.includes(subscription.id)) {
-        return sum + subscription.price;
-      }
-      return sum;
-    }, 0);
-    recommendSharing = subscriptions.reduce((sum, subscription) => {
-      if (!userSubscriptions.includes(subscription.id)) {
-        return sum + subscription.price / subscription.sharing;
-      }
-      return sum;
-    }, 0);
-  }
-  if (subscriptions) {
-    recommendPrice2 = subscriptions.reduce((sum, subscription) => {
-      return sum + subscription.price;
-    }, 0);
-    recommendSharing2 = subscriptions.reduce((sum, subscription) => {
-      return sum + subscription.price / subscription.sharing;
-    }, 0);
-  }
+  const recommenderData = [[1], [2, 4, 5], [1, 3]];
 
   return (
     <Layout>
       <Wrapper>
-        <Alert>만들고 있어요.</Alert>
-        <ProviderSelector>
-          <OttColumn>
-            <Providers>
-              {subscriptions?.map(
-                (subscription) =>
-                  userSubscriptions?.includes(subscription.id) && (
-                    <Ott
-                      key={subscription.id}
-                      imageUrl={`/images/${subscription.key}.png`}
-                    />
-                  )
-              )}
-            </Providers>
-            <Spacer />
-            <Right weight={600}>현재 조합</Right>
-          </OttColumn>
-          <CostColumn title="정가" cost={myPrice} fontSize={16} />
-          <CostColumn
-            title="계정 공유 시 예상 가격"
-            cost={mySharing}
-            fontSize={16}
-            comparison={undefined}
-          />
-          <Buttons>
-            <Button
-              onClick={() => window.open("https://pickle.plus/", "_blank")}
-            >
-              계정 공유 알아보기
-            </Button>
-          </Buttons>
-        </ProviderSelector>
+        <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
         <ArrowDown color="#333" size={24} />
-
-        <ProviderSelector>
-          <OttColumn>
-            <Providers>
-              {subscriptions?.map(
-                (subscription) =>
-                  !userSubscriptions?.includes(subscription.id) && (
-                    <Ott
-                      key={subscription.id}
-                      imageUrl={`/images/${subscription.key}.png`}
-                    />
-                  )
-              )}
-            </Providers>
-            <Spacer />
-            <Right weight={600}>추천 조합1</Right>
-          </OttColumn>
-          <CostColumn
-            title="정가"
-            cost={recommendPrice}
-            fontSize={16}
-            comparison={recommendPrice - myPrice}
+        {recommenderData.map((ottData, index) => (
+          <Recommender
+            key={index}
+            title={"추천 조합" + (index + 1)}
+            ottData={ottData}
+            myPrice={myPrice}
+            mySharing={mySharing}
           />
-          <CostColumn
-            title="계정 공유 시 예상 가격"
-            cost={recommendSharing}
-            fontSize={16}
-            comparison={recommendSharing - mySharing}
-          />
-
-          <br />
-
-          <ContentColumn title="중복 콘텐츠" difference={-12}></ContentColumn>
-          <ContentColumn title="볼 만한 콘텐츠" difference={3}></ContentColumn>
-          <Buttons>
-            <Button
-              onClick={() => window.open("https://pickle.plus/", "_blank")}
-            >
-              계정 공유 알아보기
-            </Button>
-          </Buttons>
-        </ProviderSelector>
-
-        <ProviderSelector>
-          <OttColumn>
-            <Providers>
-              {subscriptions?.map((subscription) => (
-                <Ott
-                  key={subscription.id}
-                  imageUrl={`/images/${subscription.key}.png`}
-                />
-              ))}
-            </Providers>
-            <Spacer />
-            <Right weight={600}>추천 조합2</Right>
-          </OttColumn>
-          <CostColumn
-            title="정가"
-            cost={recommendPrice2}
-            fontSize={16}
-            comparison={recommendPrice2 - myPrice}
-          />
-          <CostColumn
-            title="계정 공유 시 예상 가격"
-            cost={recommendSharing2}
-            fontSize={16}
-            comparison={recommendSharing2 - mySharing}
-          />
-
-          <br />
-
-          <ContentColumn title="중복 콘텐츠" difference={-12}></ContentColumn>
-          <ContentColumn title="볼 만한 콘텐츠" difference={-9}></ContentColumn>
-          <Buttons>
-            <Button
-              onClick={() => window.open("https://pickle.plus/", "_blank")}
-            >
-              계정 공유 알아보기
-            </Button>
-          </Buttons>
-        </ProviderSelector>
+        ))}
       </Wrapper>
     </Layout>
   );
