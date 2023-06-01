@@ -167,15 +167,15 @@ export default function User() {
 
         <Counts>
           <Count>
-            <CountNumber>{data?.wantToWatch || "-"}</CountNumber>
+            <CountNumber>{data ? data.wantToWatch : "-"}</CountNumber>
             <CountName>찜하기</CountName>
           </Count>
           <Count>
-            <CountNumber>{data?.watching || "-"}</CountNumber>
+            <CountNumber>{data ? data.watching : "-"}</CountNumber>
             <CountName>보는중</CountName>
           </Count>
           <Count>
-            <CountNumber>{data?.watched || "-"}</CountNumber>
+            <CountNumber>{data ? data.watched : "-"}</CountNumber>
             <CountName>봤어요</CountName>
           </Count>
         </Counts>

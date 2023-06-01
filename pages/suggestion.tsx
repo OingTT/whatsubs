@@ -186,6 +186,7 @@ const Recommender = ({
                   width={40}
                   height={40}
                   alt={subscription.name}
+                  priority
                 />
               )
           )}
