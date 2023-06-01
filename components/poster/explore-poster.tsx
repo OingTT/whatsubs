@@ -15,6 +15,7 @@ const Wrapper = styled(motion.div)`
   perspective: 800px;
   user-select: none;
   will-change: transform;
+  word-break: keep-all;
 `;
 
 const Front = styled(motion.div)`
