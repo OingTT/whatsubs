@@ -4,8 +4,6 @@ import { ArrowDown } from "@phosphor-icons/react";
 import Button from "@/components/button/button";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
-import Alert from "@/components/alert";
-import { timeLog } from "console";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -266,7 +264,6 @@ export default function Suggestion() {
   return (
     <Layout>
       <Wrapper>
-        <Alert>만들고 있어요.</Alert>
         <Recommender
           title="현재 조합"
           ottData={userSubscriptions}
