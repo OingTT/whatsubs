@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -63,6 +64,41 @@ const Email = styled.div`
   font-size: 12px;
 `;
 
+const Counts = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px;
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+
+  @media (max-width: 809px) {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const Count = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+`;
+
+const CountNumber = styled.div`
+  font-weight: 300;
+  color: #999999;
+  font-size: 20px;
+`;
+
+const CountName = styled.div`
+  font-weight: 600;
+  color: #333333;
+  font-size: 12px;
+`;
+
 const Group = styled.div`
   width: 100%;
   display: flex;
@@ -98,9 +134,16 @@ const Tab = styled.div`
   }
 `;
 
-export default function Home() {
+interface reviewCountResponse {
+  wantToWatch: number;
+  watching: number;
+  watched: number;
+}
+
+export default function User() {
   const user = useUser();
   const router = useRouter();
+  const { data } = useSWR<reviewCountResponse>("/api/review/count");
 
   if (!user) return null;
 
@@ -121,6 +164,21 @@ export default function Home() {
             <Email>{user.email}</Email>
           </Info>
         </Profile>
+
+        <Counts>
+          <Count>
+            <CountNumber>{data?.wantToWatch || "-"}</CountNumber>
+            <CountName>찜하기</CountName>
+          </Count>
+          <Count>
+            <CountNumber>{data?.watching || "-"}</CountNumber>
+            <CountName>보는중</CountName>
+          </Count>
+          <Count>
+            <CountNumber>{data?.watched || "-"}</CountNumber>
+            <CountName>봤어요</CountName>
+          </Count>
+        </Counts>
 
         <Group>
           <Tab onClick={() => router.push("/new/1")}>초기설정 수정</Tab>
