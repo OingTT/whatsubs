@@ -18,3 +18,7 @@ export const VerticalBar = styled.div<{ size: number }>`
   height: ${(props) => props.size}px;
   background-color: #999;
 `;
+
+export const Spacer = styled.div`
+  flex: 1;
+`;

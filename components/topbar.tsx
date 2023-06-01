@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import useUser from "@/lib/client/useUser";
 import Nav from "./nav";
+import { Spacer } from "@/lib/client/style";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -22,10 +23,6 @@ const Wrapper = styled.div`
     padding: 24px;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
   }
-`;
-
-const Spacer = styled.div`
-  flex: 1;
 `;
 
 const User = styled(Image)`

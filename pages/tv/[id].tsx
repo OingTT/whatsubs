@@ -1,4 +1,3 @@
-import Alert from "@/components/alert";
 import Layout from "@/components/layout/layout";
 import Person from "@/components/person";
 import Slider from "@/components/slider";
@@ -92,14 +91,15 @@ const Selector = styled.div`
   width: 100%;
 `;
 
-const PlayButton = styled.div`
+const PlayButton = styled.div<{ disabled?: boolean }>`
   width: 96px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
-  background-color: #000000;
+  box-shadow: ${(props) =>
+    props.disabled ? "none" : "0px 2px 8px rgba(0, 0, 0, 0.25)"};
+  background-color: ${(props) => (props.disabled ? "#eeeeee" : "#000000")};
   border-radius: 8px;
 `;
 
@@ -290,7 +290,6 @@ export default function TV() {
         )}
       </Backdrop>
       <Wrapper>
-        <Alert>재생 기능은 아직 준비 중이에요.</Alert>
         <Header>
           <TitleBar>
             <Title>{data ? data.name : "제목"}</Title>
@@ -301,12 +300,17 @@ export default function TV() {
             </SubTitle>
           </TitleBar>
 
-          <WatchSelector type={ContentType.TV} id={Number(id)} absoluteStars />
+          <WatchSelector
+            type={ContentType.TV}
+            id={Number(id)}
+            absoluteStars
+            count
+          />
         </Header>
 
         <Selector>
           <a href={playLink?.urls[0]} target="_blank" rel="noopener">
-            <PlayButton>
+            <PlayButton disabled={playLink?.urls.length === 0}>
               <Play color="white" weight="fill" />
             </PlayButton>
           </a>

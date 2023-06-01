@@ -4,6 +4,7 @@ import { ArrowDown } from "@phosphor-icons/react";
 import Button from "@/components/button/button";
 import { Subscription } from "@prisma/client";
 import useSWR from "swr";
+import { Spacer } from "@/lib/client/style";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -69,10 +70,6 @@ const Providers = styled.div`
   align-content: center;
   flex-wrap: nowrap;
   gap: 16px;
-`;
-
-const Spacer = styled.div`
-  flex: 1;
 `;
 
 const Comparison = styled.div<{ comparison: number | undefined }>`
