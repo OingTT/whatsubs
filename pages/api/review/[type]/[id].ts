@@ -46,7 +46,25 @@ export default async function session(
       },
     });
 
-    return res.status(200).json({ WANT_TO_WATCH, WATCHING, WATCHED });
+    const rating = await prisma.review.aggregate({
+      where: {
+        contentId: Number(id),
+        contentType,
+        watch: Watch.WATCHED,
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({
+        WANT_TO_WATCH,
+        WATCHING,
+        WATCHED,
+        rating: rating._avg.rating || 0,
+      });
   }
 
   if (req.method === "POST") {

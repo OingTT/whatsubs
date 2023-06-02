@@ -5,7 +5,7 @@ import WatchSelector from "@/components/watch-selector";
 import { Content, TVDetail } from "@/lib/client/interface";
 import { Grid } from "@/lib/client/style";
 import styled from "@emotion/styled";
-import { Play } from "@phosphor-icons/react";
+import { Play, Star } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -53,6 +53,7 @@ const Header = styled.div`
 const TitleBar = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 8px;
 `;
 
 const Title = styled.span`
@@ -71,16 +72,30 @@ const Title = styled.span`
   }
 `;
 
-const SubTitle = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.4;
-  letter-spacing: -0.5px;
+const SubTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: #bbb;
+`;
 
-  @media (max-width: 809px) {
-    font-size: 16px;
-  }
+const Rating = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+`;
+
+const Certification = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 const Selector = styled.div`
@@ -204,6 +219,9 @@ export default function TV() {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: rating } = useSWR<{ rating: number }>(
+    `/api/review/movie/${id}`
+  );
   const { data } = useSWR<TVDetail>(
     id &&
       `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
@@ -230,7 +248,7 @@ export default function TV() {
 
   const creator =
     translatedCreators?.translatedText || creatorNames?.join(", ");
-  const rating = data?.content_ratings?.results?.find(
+  const certification = data?.content_ratings?.results?.find(
     (result) => result.iso_3166_1 === "KR"
   )?.rating;
 
@@ -294,9 +312,12 @@ export default function TV() {
           <TitleBar>
             <Title>{data ? data.name : "제목"}</Title>
             <SubTitle>
-              평점 {data?.vote_average.toFixed(1)} 개봉연도{" "}
-              {data?.first_air_date.slice(0, 4)} 관람등급{" "}
-              {rating || "정보 없음"}
+              <Rating>
+                <Star weight="fill" />
+                {rating?.rating.toFixed(1) || "-.-"}
+              </Rating>
+              {data?.first_air_date.slice(0, 4)}
+              <Certification>{certification || "정보 없음"}</Certification>
             </SubTitle>
           </TitleBar>
 

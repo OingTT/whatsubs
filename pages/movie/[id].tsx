@@ -3,7 +3,7 @@ import Slider from "@/components/slider";
 import WatchSelector from "@/components/watch-selector";
 import { Collection, Content, MovieDetail } from "@/lib/client/interface";
 import styled from "@emotion/styled";
-import { Play } from "@phosphor-icons/react";
+import { Play, Star } from "@phosphor-icons/react";
 import { ContentType, Subscription } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -52,6 +52,7 @@ const Header = styled.div`
 const TitleBar = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 8px;
 `;
 
 const Title = styled.span`
@@ -70,16 +71,30 @@ const Title = styled.span`
   }
 `;
 
-const SubTitle = styled.span`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.4;
-  letter-spacing: -0.5px;
+const SubTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: #bbb;
+`;
 
-  @media (max-width: 809px) {
-    font-size: 16px;
-  }
+const Rating = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+`;
+
+const Certification = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 4px 0px 4px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
 `;
 
 const Selector = styled.div`
@@ -193,6 +208,9 @@ export default function Movie() {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: rating } = useSWR<{ rating: number }>(
+    `/api/review/movie/${id}`
+  );
   const { data } = useSWR<MovieDetail>(
     id &&
       `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
@@ -241,7 +259,7 @@ export default function Movie() {
     translatedDirectors?.translatedText || directorNames?.join(", ");
   const writer = translatedWriters?.translatedText || writerNames?.join(", ");
 
-  const rating = data?.release_dates?.results
+  const certification = data?.release_dates?.results
     ?.find((result) => result.iso_3166_1 === "KR")
     ?.release_dates?.find((date) => date.certification !== "")?.certification;
 
@@ -303,8 +321,12 @@ export default function Movie() {
           <TitleBar>
             <Title>{data ? data.title : "제목"}</Title>
             <SubTitle>
-              평점 {data?.vote_average.toFixed(1)} 개봉연도{" "}
-              {data?.release_date.slice(0, 4)} 관람등급 {rating || "정보 없음"}
+              <Rating>
+                <Star weight="fill" />
+                {rating?.rating.toFixed(1) || "-.-"}
+              </Rating>
+              {data?.release_date.slice(0, 4)}
+              <Certification>{certification || "정보 없음"}</Certification>
             </SubTitle>
           </TitleBar>
 
