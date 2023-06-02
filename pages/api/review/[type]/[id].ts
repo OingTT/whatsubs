@@ -51,20 +51,21 @@ export default async function session(
         contentId: Number(id),
         contentType,
         watch: Watch.WATCHED,
+        rating: {
+          not: 0,
+        },
       },
       _avg: {
         rating: true,
       },
     });
 
-    return res
-      .status(200)
-      .json({
-        WANT_TO_WATCH,
-        WATCHING,
-        WATCHED,
-        rating: rating._avg.rating || 0,
-      });
+    return res.status(200).json({
+      WANT_TO_WATCH,
+      WATCHING,
+      WATCHED,
+      rating: rating._avg.rating || 0,
+    });
   }
 
   if (req.method === "POST") {

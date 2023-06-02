@@ -219,9 +219,7 @@ export default function TV() {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
-  const { data: rating } = useSWR<{ rating: number }>(
-    `/api/review/movie/${id}`
-  );
+  const { data: rating } = useSWR<{ rating: number }>(`/api/review/tv/${id}`);
   const { data } = useSWR<TVDetail>(
     id &&
       `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
