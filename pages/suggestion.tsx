@@ -7,6 +7,7 @@ import useSWR from "swr";
 import { Spacer } from "@/lib/client/style";
 import useUser from "@/lib/client/useUser";
 import Image from "next/image";
+import Alert from "@/components/alert";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -221,7 +222,7 @@ export default function Suggestion() {
   const { data: userSubscriptions } = useSWR<number[]>(
     "/api/user/subscriptions"
   );
-  const { data: recommenderData } = useSWR<number[][]>(
+  const { data: recommenderData, error } = useSWR<number[][]>(
     user &&
       `${process.env.NEXT_PUBLIC_API_URL}/recommendation/ottcomb/${user.id}`
   );
@@ -247,9 +248,12 @@ export default function Suggestion() {
   return (
     <Layout>
       <Wrapper>
+        {error && <Alert type="error">추천 시스템을 점검하고 있어요.</Alert>}
+
         <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
-        <ArrowDown color="#333" size={24} />
+        {recommenderData && <ArrowDown color="#333" size={24} />}
+
         {recommenderData?.map((ottData, index) => (
           <Recommender
             key={index}

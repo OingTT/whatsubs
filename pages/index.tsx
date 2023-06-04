@@ -37,7 +37,7 @@ interface Recommendation {
 export default function Home() {
   const user = useUser();
   const { data: reviewData } = useSWR<Review[]>("/api/review");
-  const { data: recommendMovieData } = useSWR<Recommendation[]>(
+  const { data: recommendMovieData, error } = useSWR<Recommendation[]>(
     user &&
       `${process.env.NEXT_PUBLIC_API_URL}/recommendation/movie/${user?.id}`
   );
@@ -72,6 +72,7 @@ export default function Home() {
     <Layout>
       <Wrapper>
         <SubsSelector />
+        {error && <Alert type="error">추천 시스템을 점검하고 있어요.</Alert>}
         <Alert type="info">
           평점을 남겨보세요. 탐색 → 포스터 클릭 → 체크(봤어요) 클릭 → 평점
           남기기
