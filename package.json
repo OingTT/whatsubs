@@ -39,6 +39,6 @@
     "unified": "^10.1.2"
   },
   "devDependencies": {
-    "prisma": "^4.15.0"
+    "prisma": "^5.0.0"
   }
 }
