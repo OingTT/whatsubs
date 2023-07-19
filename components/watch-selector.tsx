@@ -1,10 +1,10 @@
-import styled from "@emotion/styled";
-import { BookmarkSimple, Check, Eye } from "@phosphor-icons/react";
-import Stars from "./stars";
-import React, { useEffect, useState } from "react";
-import { ContentType, Review, Watch } from "@prisma/client";
-import useSWR from "swr";
-import useMutation from "@/lib/client/useMutation";
+import styled from '@emotion/styled';
+import { BookmarkSimple, Check, Eye } from '@phosphor-icons/react';
+import Stars from './stars';
+import React, { useEffect, useState } from 'react';
+import { ContentType, Review, Watch } from '@prisma/client';
+import useSWR from 'swr';
+import useMutation from '@/lib/client/useMutation';
 
 const Selector = styled.div`
   position: relative;
@@ -28,21 +28,21 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => (props.selected ? "black" : "#eee")};
-  color: ${(props) => (props.selected ? "white" : "black")};
+  background-color: ${props => (props.selected ? 'black' : '#eee')};
+  color: ${props => (props.selected ? 'white' : 'black')};
   border-radius: 100%;
   cursor: pointer;
 
   @media (min-width: 810px) {
-    width: ${(props) => (props.small ? "40px" : "48px")};
-    height: ${(props) => (props.small ? "40px" : "48px")};
+    width: ${props => (props.small ? '40px' : '48px')};
+    height: ${props => (props.small ? '40px' : '48px')};
   }
 `;
 
 const Icon = styled.div<{ small?: boolean }>`
   @media (min-width: 810px) {
-    width: ${(props) => (props.small ? "16px" : "20px")};
-    height: ${(props) => (props.small ? "16px" : "20px")};
+    width: ${props => (props.small ? '16px' : '20px')};
+    height: ${props => (props.small ? '16px' : '20px')};
   }
 `;
 
@@ -52,8 +52,8 @@ const Count = styled.div`
 `;
 
 const StarsWrapper = styled.div<{ absolute?: boolean }>`
-  position: ${(props) => (props.absolute ? "absolute" : "static")};
-  bottom: ${(props) => (props.absolute ? "-40px" : "0")};
+  position: ${props => (props.absolute ? 'absolute' : 'static')};
+  bottom: ${props => (props.absolute ? '-40px' : '0')};
 `;
 
 interface ReviewCountsResponse {
@@ -81,7 +81,7 @@ export default function WatchSelector({
   const { data: reviewCounts, mutate } = useSWR<ReviewCountsResponse>(
     count && `/api/review/${type.toLowerCase()}/${id}`
   );
-  const { data } = useSWR<Review[]>("/api/review");
+  const { data } = useSWR<Review[]>('/api/review');
   const [watch, setWatch] = useState<Watch>();
   const [review, setReview] = useState<Review>();
 
@@ -107,7 +107,7 @@ export default function WatchSelector({
   };
 
   useEffect(() => {
-    setReview(data?.find((review) => review.contentId === id));
+    setReview(data?.find(review => review.contentId === id));
   }, [data, id]);
 
   useEffect(() => {
@@ -118,35 +118,35 @@ export default function WatchSelector({
     <Selector>
       <Buttons>
         <Button
-          selected={watch === "WANT_TO_WATCH"}
-          onClick={() => handleWatch("WANT_TO_WATCH")}
+          selected={watch === 'WANT_TO_WATCH'}
+          onClick={() => handleWatch('WANT_TO_WATCH')}
           small={small}
         >
           <Icon as={BookmarkSimple} small={small} />
           {count && (
-            <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : "-"}</Count>
+            <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : '-'}</Count>
           )}
         </Button>
         <Button
-          selected={watch === "WATCHING"}
-          onClick={() => handleWatch("WATCHING")}
+          selected={watch === 'WATCHING'}
+          onClick={() => handleWatch('WATCHING')}
           small={small}
         >
           <Icon as={Eye} small={small} />
-          {count && <Count>{reviewCounts ? reviewCounts.WATCHING : "-"}</Count>}
+          {count && <Count>{reviewCounts ? reviewCounts.WATCHING : '-'}</Count>}
         </Button>
         <Button
-          selected={watch === "WATCHED"}
-          onClick={() => handleWatch("WATCHED")}
+          selected={watch === 'WATCHED'}
+          onClick={() => handleWatch('WATCHED')}
           small={small}
         >
           <Icon as={Check} small={small} />
-          {count && <Count>{reviewCounts ? reviewCounts.WATCHED : "-"}</Count>}
+          {count && <Count>{reviewCounts ? reviewCounts.WATCHED : '-'}</Count>}
         </Button>
       </Buttons>
 
       <StarsWrapper absolute={absoluteStars}>
-        {watch === "WATCHED" && (
+        {watch === 'WATCHED' && (
           <Stars rating={review?.rating} onChange={handleStars} />
         )}
       </StarsWrapper>

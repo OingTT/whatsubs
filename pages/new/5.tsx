@@ -1,16 +1,16 @@
-import TextInput from "@/components/input/text-input";
-import SignupLayout from "@/components/layout/signup-layout";
-import styled from "@emotion/styled";
-import { PencilSimple } from "@phosphor-icons/react";
-import { GetServerSidePropsContext } from "next";
-import { Session, getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
-import { authOptions } from "../api/auth/[...nextauth]";
-import useMutation from "@/lib/client/useMutation";
-import { useEffect } from "react";
+import TextInput from '@/components/input/text-input';
+import SignupLayout from '@/components/layout/signup-layout';
+import styled from '@emotion/styled';
+import { PencilSimple } from '@phosphor-icons/react';
+import { GetServerSidePropsContext } from 'next';
+import { Session, getServerSession } from 'next-auth';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { authOptions } from '../api/auth/[...nextauth]';
+import useMutation from '@/lib/client/useMutation';
+import { useEffect } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -84,11 +84,11 @@ export default function Profile() {
     },
   });
   const [updateProfile, { loading, data }] =
-    useMutation<ProfileForm>("/api/user/profile");
+    useMutation<ProfileForm>('/api/user/profile');
 
   useEffect(() => {
     if (data) {
-      router.push("/new/6");
+      router.push('/new/6');
     }
   }, [data, router]);
 
@@ -103,19 +103,19 @@ export default function Profile() {
       title="프로필을 설정해주세요."
       subtitle="다른 사용자가 볼 수 있어요."
       onSubmit={handleSubmit(onSubmit)}
-      nextText={loading ? "저장 중..." : undefined}
+      nextText={loading ? '저장 중...' : undefined}
     >
       <Wrapper>
         <Images>
           <ImageWrapper>
             <Input
               type="radio"
-              {...register("avatar", { required: true })}
+              {...register('avatar', { required: true })}
               value={session?.user.image || undefined}
             />
             <UserImage
               src={
-                session?.user?.image ? session.user.image : "/images/avatar.png"
+                session?.user?.image ? session.user.image : '/images/avatar.png'
               }
               width="80"
               height="80"
@@ -129,11 +129,11 @@ export default function Profile() {
           <ImageWrapper>
             <Input
               type="radio"
-              {...register("avatar", { required: true })}
+              {...register('avatar', { required: true })}
               value=""
             />
             <UserImage
-              src={"/images/avatar.png"}
+              src={'/images/avatar.png'}
               width="80"
               height="80"
               alt="UserImage"
@@ -143,7 +143,7 @@ export default function Profile() {
 
         <TextInput
           type="text"
-          register={register("name", { required: true })}
+          register={register('name', { required: true })}
           label="닉네임"
           required
         />

@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import React from "react";
+import styled from '@emotion/styled';
+import React from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 `;
 
 const Progress = styled.div<{ value: number }>`
-  width: ${(props) => props.value}%;
+  width: ${props => props.value}%;
   height: 100%;
   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
   background-color: #000000;

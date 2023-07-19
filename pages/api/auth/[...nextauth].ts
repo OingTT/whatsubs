@@ -1,10 +1,10 @@
-import { prisma } from "@/lib/server/prisma";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { User } from "@prisma/client";
-import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import KakaoProvider from "next-auth/providers/kakao";
-import NaverProvider from "next-auth/providers/naver";
+import { prisma } from '@/lib/server/prisma';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { User } from '@prisma/client';
+import NextAuth, { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import KakaoProvider from 'next-auth/providers/kakao';
+import NaverProvider from 'next-auth/providers/naver';
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -32,8 +32,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/login",
-    newUser: "/new/1",
+    signIn: '/login',
+    newUser: '/new/1',
   },
 };
 

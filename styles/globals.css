@@ -2,8 +2,20 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
+  color: #333333;
+  word-break: keep-all;
 }
 
 a {
@@ -22,4 +34,83 @@ svg {
 
 input::-webkit-date-and-time-value {
   text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  word-break: keep-all;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+h1,
+h2 {
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 3rem; /* 48px */
+
+  @media (max-width: 1199px) {
+    font-size: 2.5rem; /* 40px */
+  }
+
+  @media (max-width: 809px) {
+    font-size: 2rem; /* 32px */
+  }
+}
+
+h2 {
+  font-size: 2.5rem; /* 40px */
+
+  @media (max-width: 1199px) {
+    font-size: 2rem; /* 32px */
+  }
+
+  @media (max-width: 809px) {
+    font-size: 1.75rem; /* 28px */
+  }
+}
+
+h3 {
+  font-size: 2rem; /* 32px */
+
+  @media (max-width: 1199px) {
+    font-size: 1.75rem; /* 28px */
+  }
+
+  @media (max-width: 809px) {
+    font-size: 1.5rem; /* 24px */
+  }
+}
+
+h4 {
+  font-size: 1.5rem; /* 24px */
+
+  @media (max-width: 1199px) {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+h5 {
+  font-size: 1.25rem; /* 20px */
+
+  @media (max-width: 1199px) {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+h6 {
+  font-size: 1rem; /* 16px */
+}
+
+p {
+  margin: 0;
+  line-height: 1.6;
 }

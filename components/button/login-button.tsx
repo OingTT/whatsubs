@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { BuiltInProviderType } from "next-auth/providers";
-import { LiteralUnion, signIn } from "next-auth/react";
-import Image from "next/image";
+import styled from '@emotion/styled';
+import { BuiltInProviderType } from 'next-auth/providers';
+import { LiteralUnion, signIn } from 'next-auth/react';
+import Image from 'next/image';
 
 const Button = styled.div`
   box-sizing: border-box;
@@ -42,7 +42,7 @@ interface LoginButtonProps {
 
 export default function LoginButton({ provider, text }: LoginButtonProps) {
   return (
-    <Button onClick={() => signIn(provider, { callbackUrl: "/" })}>
+    <Button onClick={() => signIn(provider, { callbackUrl: '/' })}>
       <Logo
         src={`/images/${provider}.png`}
         width="24"

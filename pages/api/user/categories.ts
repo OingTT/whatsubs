@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/server/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]";
+import { prisma } from '@/lib/server/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 export default async function session(
   req: NextApiRequest,
@@ -11,7 +11,7 @@ export default async function session(
 
   if (!session) return res.status(400).end();
 
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     const categories = await prisma.categoriesOnUsers.findMany({
       where: {
         userId: session.user.id,
@@ -20,16 +20,16 @@ export default async function session(
         categoryId: true,
       },
       orderBy: {
-        order: "asc",
+        order: 'asc',
       },
     });
 
     return res
       .status(200)
-      .json(categories.map((category) => category.categoryId));
+      .json(categories.map(category => category.categoryId));
   }
 
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     await prisma.user.update({
       where: { id: session.user.id },
       data: {

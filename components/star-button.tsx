@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import { Star } from "@phosphor-icons/react";
+import styled from '@emotion/styled';
+import { Star } from '@phosphor-icons/react';
 
 const StarIcon = styled(Star)`
   cursor: pointer;
@@ -20,7 +20,7 @@ export default function StarButton({
     <StarIcon
       size={size}
       weight="fill"
-      color={fill ? "#fc6" : "#eee"}
+      color={fill ? '#fc6' : '#eee'}
       onClick={onClick}
     />
   );

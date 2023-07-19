@@ -1,9 +1,9 @@
-import { SessionProvider } from "next-auth/react";
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { SWRConfig } from "swr";
-import Head from "next/head";
-import { RecoilRoot } from "recoil";
+import { SessionProvider } from 'next-auth/react';
+import '@/styles/globals.css';
+import type { AppProps } from 'next/app';
+import { SWRConfig } from 'swr';
+import Head from 'next/head';
+import { RecoilRoot } from 'recoil';
 
 export default function App({
   Component,
@@ -12,7 +12,7 @@ export default function App({
   return (
     <SWRConfig
       value={{
-        fetcher: (url: string) => fetch(url).then((res) => res.json()),
+        fetcher: (url: string) => fetch(url).then(res => res.json()),
       }}
     >
       <SessionProvider session={session}>

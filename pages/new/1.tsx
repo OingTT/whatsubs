@@ -1,13 +1,13 @@
-import SignupLayout from "@/components/layout/signup-layout";
-import useMutation from "@/lib/client/useMutation";
-import styled from "@emotion/styled";
-import { Subscription } from "@prisma/client";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
+import SignupLayout from '@/components/layout/signup-layout';
+import useMutation from '@/lib/client/useMutation';
+import styled from '@emotion/styled';
+import { Subscription } from '@prisma/client';
+import { signOut } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -58,24 +58,24 @@ interface SubscriptionsForm {
 export default function Subscriptions() {
   const router = useRouter();
   const { data: userSubscription, mutate } = useSWR<number[]>(
-    "/api/user/subscriptions"
+    '/api/user/subscriptions'
   );
-  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { register, handleSubmit, setValue } = useForm<SubscriptionsForm>();
   const [updateSubscriptions, { loading, data }] = useMutation<number[]>(
-    "/api/user/subscriptions"
+    '/api/user/subscriptions'
   );
 
   useEffect(() => {
     if (userSubscription) {
-      setValue("subscriptions", userSubscription.map(String));
+      setValue('subscriptions', userSubscription.map(String));
     }
   }, [setValue, userSubscription]);
 
   useEffect(() => {
     if (data) {
       mutate(data);
-      router.push("/new/2");
+      router.push('/new/2');
     }
   }, [data, mutate, router]);
 
@@ -90,11 +90,11 @@ export default function Subscriptions() {
       title="무엇을 구독하고 계신가요?"
       subtitle="구독 중인 서비스를 선택해주세요."
       onSubmit={handleSubmit(onSubmit)}
-      onBack={() => signOut({ callbackUrl: "/login" })}
-      nextText={loading ? "저장 중..." : undefined}
+      onBack={() => signOut({ callbackUrl: '/login' })}
+      nextText={loading ? '저장 중...' : undefined}
     >
       <Wrapper>
-        {subscriptions?.map((subscription) => (
+        {subscriptions?.map(subscription => (
           <SubsWrapper
             key={subscription.id}
             htmlFor={subscription.id.toString()}
@@ -102,7 +102,7 @@ export default function Subscriptions() {
             <Input
               id={subscription.id.toString()}
               type="checkbox"
-              {...register("subscriptions")}
+              {...register('subscriptions')}
               value={subscription.id}
             />
             <SubsImage

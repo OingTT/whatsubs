@@ -1,29 +1,11 @@
-import Layout from "@/components/layout/layout";
-import useUser from "@/lib/client/useUser";
-import styled from "@emotion/styled";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import useSWR from "swr";
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  gap: 24px;
-
-  @media (min-width: 1200px) {
-    width: 984px;
-  }
-
-  @media (max-width: 809px) {
-    padding: 16px;
-    gap: 16px;
-  }
-`;
+import Layout from '@/components/layout/layout';
+import { Container } from '@/lib/client/style';
+import useUser from '@/lib/client/useUser';
+import styled from '@emotion/styled';
+import { signOut } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 const Profile = styled.div`
   width: 100%;
@@ -143,16 +125,16 @@ interface reviewCountResponse {
 export default function User() {
   const user = useUser();
   const router = useRouter();
-  const { data } = useSWR<reviewCountResponse>("/api/review/count");
+  const { data } = useSWR<reviewCountResponse>('/api/review/count');
 
   if (!user) return null;
 
   return (
     <Layout title="사용자 정보">
-      <Wrapper>
+      <Container compact>
         <Profile>
           <Avatar
-            src={user.avatar || "/images/avatar.png"}
+            src={user.avatar || '/images/avatar.png'}
             width={64}
             height={64}
             alt="profile"
@@ -167,26 +149,27 @@ export default function User() {
 
         <Counts>
           <Count>
-            <CountNumber>{data ? data.wantToWatch : "-"}</CountNumber>
+            <CountNumber>{data ? data.wantToWatch : '-'}</CountNumber>
             <CountName>찜하기</CountName>
           </Count>
           <Count>
-            <CountNumber>{data ? data.watching : "-"}</CountNumber>
+            <CountNumber>{data ? data.watching : '-'}</CountNumber>
             <CountName>보는중</CountName>
           </Count>
           <Count>
-            <CountNumber>{data ? data.watched : "-"}</CountNumber>
+            <CountNumber>{data ? data.watched : '-'}</CountNumber>
             <CountName>봤어요</CountName>
           </Count>
         </Counts>
-
+      </Container>
+      <Container compact>
         <Group>
-          <Tab onClick={() => router.push("/new/1")}>초기설정 수정</Tab>
+          <Tab onClick={() => router.push('/new/1')}>초기설정 수정</Tab>
         </Group>
 
         <Group>
-          <Tab onClick={() => router.push("/policy/terms")}>이용약관</Tab>
-          <Tab onClick={() => router.push("/policy/privacy")}>
+          <Tab onClick={() => router.push('/policy/terms')}>이용약관</Tab>
+          <Tab onClick={() => router.push('/policy/privacy')}>
             개인정보처리방침
           </Tab>
         </Group>
@@ -194,7 +177,7 @@ export default function User() {
         <Group>
           <Tab onClick={() => signOut()}>로그아웃</Tab>
         </Group>
-      </Wrapper>
+      </Container>
     </Layout>
   );
 }

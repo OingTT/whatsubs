@@ -1,16 +1,16 @@
-import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
-import Layout from "@/components/layout/layout";
-import { useForm } from "react-hook-form";
-import { MagnifyingGlass, XCircle } from "@phosphor-icons/react";
-import Slider from "@/components/slider";
-import { ContentType } from "@prisma/client";
-import { Grid } from "@/lib/client/style";
-import Person from "@/components/person";
-import useSWR from "swr";
-import { Movie, TV } from "@/lib/client/interface";
-import { useRecoilState } from "recoil";
-import { searchQueryState } from "@/lib/client/state";
+import styled from '@emotion/styled';
+import { useEffect, useState } from 'react';
+import Layout from '@/components/layout/layout';
+import { useForm } from 'react-hook-form';
+import { MagnifyingGlass, XCircle } from '@phosphor-icons/react';
+import Slider from '@/components/slider';
+import { ContentType } from '@prisma/client';
+import { Grid, Section, Container } from '@/lib/client/style';
+import Person from '@/components/person';
+import useSWR from 'swr';
+import { Movie, TV } from '@/lib/client/interface';
+import { useRecoilState } from 'recoil';
+import { searchQueryState } from '@/lib/client/state';
 
 interface Person {
   id: number;
@@ -18,26 +18,6 @@ interface Person {
   profile_path: string;
   known_for_department: string;
 }
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  gap: 24px;
-  position: relative;
-
-  @media (min-width: 1200px) {
-    width: 984px;
-  }
-
-  @media (max-width: 809px) {
-    padding: 16px;
-    gap: 16px;
-  }
-`;
 
 const SearchBox = styled.div`
   width: 100%;
@@ -53,7 +33,7 @@ const Input = styled.input`
   overflow: hidden;
   border-radius: 16px;
   border: none;
-  padding: 16px 56px 16px 56px;
+  padding: 16px 56px;
   color: #333;
   font-size: 16px;
   font-weight: bold;
@@ -71,44 +51,6 @@ const ClearIcon = styled.label`
   top: 16px;
   right: 16px;
   cursor: pointer;
-`;
-
-const People = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0px 24px 24px 24px;
-  gap: 16px;
-
-  @media (min-width: 1200px) {
-    width: 984px;
-  }
-
-  @media (max-width: 809px) {
-    padding: 0px 16px 16px 16px;
-    gap: 8px;
-  }
-`;
-
-const Group = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  @media (max-width: 809px) {
-    gap: 8px;
-  }
-`;
-
-const GroupTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-
-  @media (max-width: 809px) {
-    font-size: 16px;
-  }
 `;
 
 interface SearchForm {
@@ -131,19 +73,19 @@ export default function Search() {
   const { data: moviesData } = useSWR(
     `https://api.themoviedb.org/3/search/movie?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("query")}`
+    }&language=ko-KR&query=${watch('query')}`
   );
 
   const { data: tvShowsData } = useSWR(
     `https://api.themoviedb.org/3/search/tv?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("query")}`
+    }&language=ko-KR&query=${watch('query')}`
   );
 
   const { data: peopleData } = useSWR(
     `https://api.themoviedb.org/3/search/person?api_key=${
       process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch("query")}`
+    }&language=ko-KR&query=${watch('query')}`
   );
 
   const { data: personMovies } = useSWR(
@@ -196,7 +138,7 @@ export default function Search() {
 
   return (
     <Layout>
-      <Wrapper>
+      <Container>
         <SearchBox>
           <SearchIcon htmlFor="query">
             <MagnifyingGlass size={24} color="#333" />
@@ -204,8 +146,8 @@ export default function Search() {
           <Input
             id="query"
             type="text"
-            {...register("query", {
-              onChange: (e) => {
+            {...register('query', {
+              onChange: e => {
                 setQuery(e.target.value);
               },
             })}
@@ -214,42 +156,46 @@ export default function Search() {
           <ClearIcon
             htmlFor="query"
             onClick={() => {
-              setValue("query", "");
-              setQuery("");
+              setValue('query', '');
+              setQuery('');
             }}
           >
-            {watch("query") && <XCircle size={24} weight="fill" color="#bbb" />}
+            {watch('query') && <XCircle size={24} weight="fill" color="#bbb" />}
           </ClearIcon>
         </SearchBox>
-      </Wrapper>
-      <Slider
-        title="영화"
-        contents={movies.map((movie) => ({
-          type: ContentType.MOVIE,
-          id: movie.id,
-        }))}
-      />
-      <Slider
-        title="TV 프로그램"
-        contents={tvShows.map((tvShow) => ({
-          type: ContentType.TV,
-          id: tvShow.id,
-        }))}
-      />
-      <People>
-        <GroupTitle>인물</GroupTitle>
-        <Grid>
-          {people.map((person) => (
-            <Person
-              key={person.id}
-              id={person.id}
-              name={person.name}
-              info={person.known_for_department}
-              profilePath={person.profile_path}
-            />
-          ))}
-        </Grid>
-      </People>
+      </Container>
+      <Container fill>
+        <Slider
+          title="영화"
+          contents={movies.map(movie => ({
+            type: ContentType.MOVIE,
+            id: movie.id,
+          }))}
+        />
+        <Slider
+          title="TV 프로그램"
+          contents={tvShows.map(tvShow => ({
+            type: ContentType.TV,
+            id: tvShow.id,
+          }))}
+        />
+      </Container>
+      <Container fit>
+        <Section>
+          <h5>인물</h5>
+          <Grid>
+            {people.map(person => (
+              <Person
+                key={person.id}
+                id={person.id}
+                name={person.name}
+                info={person.known_for_department}
+                profilePath={person.profile_path}
+              />
+            ))}
+          </Grid>
+        </Section>
+      </Container>
     </Layout>
   );
 }

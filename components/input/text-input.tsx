@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import React from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
+import styled from '@emotion/styled';
+import React from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -55,7 +55,7 @@ export default function TextInput({
         onKeyDown={(
           e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
         ) => {
-          e.key === "Enter" && e.preventDefault();
+          e.key === 'Enter' && e.preventDefault();
         }}
       />
       <Label htmlFor={label}>{label}</Label>

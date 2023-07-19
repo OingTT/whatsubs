@@ -1,10 +1,10 @@
-import styled from "@emotion/styled";
-import Image from "next/image";
-import Link from "next/link";
-import { MagnifyingGlass } from "@phosphor-icons/react";
-import useUser from "@/lib/client/useUser";
-import Nav from "./nav";
-import { Spacer } from "@/lib/client/style";
+import styled from '@emotion/styled';
+import Image from 'next/image';
+import Link from 'next/link';
+import { MagnifyingGlass } from '@phosphor-icons/react';
+import useUser from '@/lib/client/useUser';
+import Nav from './nav';
+import { Spacer } from '@/lib/client/style';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -54,7 +54,7 @@ export default function Topbar() {
       </Link>
       <Link href="/user">
         <User
-          src={user?.avatar || "/images/avatar.png"}
+          src={user?.avatar || '/images/avatar.png'}
           width="32"
           height="32"
           alt="User"

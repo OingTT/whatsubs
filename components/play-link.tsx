@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import useSWR from "swr";
-import * as cheerio from "cheerio";
+import styled from '@emotion/styled';
+import useSWR from 'swr';
+import * as cheerio from 'cheerio';
 
 interface PlayLinks {
   providers: string[];
@@ -9,15 +9,15 @@ interface PlayLinks {
 
 export default function PlayLink() {
   const origin_url =
-    "https://www.themoviedb.org/movie/550-fight-club/watch?locale=KR";
-  const tail_url = origin_url.replace("https://www.themoviedb.org/", "");
+    'https://www.themoviedb.org/movie/550-fight-club/watch?locale=KR';
+  const tail_url = origin_url.replace('https://www.themoviedb.org/', '');
   const proxy_url =
-    "https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/";
+    'https://cors-anywhere.herokuapp.com/https://www.themoviedb.org/';
   const result_url = proxy_url + tail_url;
 
   //console.log({ result_url });
 
-  const { data, error } = useSWR(result_url, async (url) => {
+  const { data, error } = useSWR(result_url, async url => {
     const response = await fetch(url);
     const html = await response.text();
 
@@ -26,19 +26,19 @@ export default function PlayLink() {
     const providers: string[] = [];
     const urls: string[] = [];
 
-    $("ul.providers li a").each((index, element) => {
-      const provider = $(element).attr("title");
+    $('ul.providers li a').each((index, element) => {
+      const provider = $(element).attr('title');
 
       if (
-        typeof provider === "string" &&
-        provider[0] === "W" &&
+        typeof provider === 'string' &&
+        provider[0] === 'W' &&
         !providers.includes(provider)
       ) {
         providers.push(provider);
 
-        const url = $(element).attr("href");
+        const url = $(element).attr('href');
 
-        if (typeof url === "string") {
+        if (typeof url === 'string') {
           urls.push(url);
         }
       }

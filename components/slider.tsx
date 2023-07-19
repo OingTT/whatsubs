@@ -1,10 +1,10 @@
-import useIsDesktop from "@/lib/client/useIsDesktop";
-import styled from "@emotion/styled";
-import { CaretLeft, CaretRight } from "@phosphor-icons/react";
-import Poster from "./poster/poster";
-import { useEffect, useState } from "react";
-import { AnimatePresence, Variants, motion } from "framer-motion";
-import { Content } from "@/lib/client/interface";
+import useIsDesktop from '@/lib/client/useIsDesktop';
+import styled from '@emotion/styled';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+import Poster from './poster/poster';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { Content } from '@/lib/client/interface';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -19,12 +19,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 20px;
   padding-left: 24px;
-  font-weight: 600;
-  color: #333;
-  line-height: 1.4;
-  letter-spacing: -0.5px;
 
   @media (min-width: 1200px) {
     padding-left: 120px;
@@ -32,7 +27,6 @@ const Title = styled.div`
 
   @media (max-width: 809px) {
     padding-left: 16px;
-    font-size: 16px;
   }
 `;
 
@@ -43,12 +37,14 @@ const Contents = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 16px 24px 24px 24px;
+  margin-bottom: -24px;
   overflow: auto;
   gap: 24px;
   position: relative;
 
   @media (max-width: 809px) {
-    padding: 8px 16px 16px 16px;
+    padding: 12px 16px 16px 16px;
+    margin-bottom: -16px;
     gap: 16px;
   }
 `;
@@ -102,7 +98,7 @@ const Button = styled.div<{ disabled: boolean }>`
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
-  color: ${(props) => (props.disabled ? "#bbb" : "#333")};
+  color: ${props => (props.disabled ? '#bbb' : '#333')};
 
   @media (max-width: 1199px) {
     display: none;
@@ -170,7 +166,9 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
 
   return (
     <Wrapper>
-      <Title>{title}</Title>
+      <Title>
+        <h5>{title}</h5>
+      </Title>
 
       <Contents>
         <Button onClick={handlePrev} disabled={index === 0}>

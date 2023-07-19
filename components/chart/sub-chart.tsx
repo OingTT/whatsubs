@@ -1,7 +1,7 @@
-import { DiscoverMovie, DiscoverTV, Content } from "@/lib/client/interface";
-import { Subscription, ContentType } from "@prisma/client";
-import useSWR from "swr";
-import Slider from "../slider";
+import { DiscoverMovie, DiscoverTV, Content } from '@/lib/client/interface';
+import { Subscription, ContentType } from '@prisma/client';
+import useSWR from 'swr';
+import Slider from '../slider';
 
 interface SubChartProps {
   sub: Subscription;

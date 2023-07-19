@@ -1,13 +1,13 @@
-import LoginButton from "@/components/button/login-button";
-import styled from "@emotion/styled";
-import { getServerSession } from "next-auth";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { GetServerSidePropsContext } from "next";
-import { authOptions } from "./api/auth/[...nextauth]";
-import WelcomeLayout from "@/components/layout/welcome-layout";
-import Image from "next/image";
+import LoginButton from '@/components/button/login-button';
+import styled from '@emotion/styled';
+import { getServerSession } from 'next-auth';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { GetServerSidePropsContext } from 'next';
+import { authOptions } from './api/auth/[...nextauth]';
+import WelcomeLayout from '@/components/layout/welcome-layout';
+import Image from 'next/image';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -45,7 +45,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: "/",
+        destination: '/',
         permanent: false,
       },
     };
@@ -62,7 +62,7 @@ export default function Login() {
 
   useEffect(() => {
     if (session) {
-      router.replace("/");
+      router.replace('/');
     }
   }, [router, session]);
 

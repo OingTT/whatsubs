@@ -1,11 +1,11 @@
-import { MovieDetail, TVDetail } from "@/lib/client/interface";
-import styled from "@emotion/styled";
-import { ContentType } from "@prisma/client";
-import { Variants, motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import useSWR from "swr";
+import { MovieDetail, TVDetail } from '@/lib/client/interface';
+import styled from '@emotion/styled';
+import { ContentType } from '@prisma/client';
+import { Variants, motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 const Wrapper = styled.div`
   min-width: 168px;
@@ -70,7 +70,7 @@ export default function Poster({ type, id }: PosterProps) {
       <Wrapper>
         {data?.poster_path && (
           <Image
-            src={"https://image.tmdb.org/t/p/w342" + data?.poster_path}
+            src={'https://image.tmdb.org/t/p/w342' + data?.poster_path}
             fill
             alt="Poster"
             priority
@@ -81,11 +81,11 @@ export default function Poster({ type, id }: PosterProps) {
         <Placeholder
           variants={placeholderVariants}
           initial="initial"
-          animate={isLoaded ? "animate" : "initial"}
+          animate={isLoaded ? 'animate' : 'initial'}
         >
           {data &&
             !data.poster_path &&
-            ("title" in data ? data.title : data.name)}
+            ('title' in data ? data.title : data.name)}
         </Placeholder>
       </Wrapper>
     </Link>

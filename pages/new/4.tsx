@@ -1,5 +1,5 @@
-import SignupLayout from "@/components/layout/signup-layout";
-import styled from "@emotion/styled";
+import SignupLayout from '@/components/layout/signup-layout';
+import styled from '@emotion/styled';
 
 const Wrapper = styled.div`
   width: 256px;

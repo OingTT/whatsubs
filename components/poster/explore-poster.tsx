@@ -1,13 +1,13 @@
-import { Movie, TV } from "@/lib/client/interface";
-import styled from "@emotion/styled";
-import Image from "next/image";
-import Link from "next/link";
-import { Variants, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import WatchSelector from "../watch-selector";
-import useSWR from "swr";
-import { ContentType, Review } from "@prisma/client";
-import React from "react";
+import { Movie, TV } from '@/lib/client/interface';
+import styled from '@emotion/styled';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Variants, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import WatchSelector from '../watch-selector';
+import useSWR from 'swr';
+import { ContentType, Review } from '@prisma/client';
+import React from 'react';
 
 const Wrapper = styled(motion.div)`
   aspect-ratio: 2/3;
@@ -85,11 +85,11 @@ const backVariants: Variants = {
 const wrapperVariants: Variants = {
   visible: {
     opacity: 1,
-    transform: "scale(1)",
+    transform: 'scale(1)',
   },
   hidden: {
     opacity: 0,
-    transform: "scale(0.5)",
+    transform: 'scale(0.5)',
   },
 };
 
@@ -100,7 +100,7 @@ interface ExplorePosterProps {
 export default React.memo(function ExplorePoster({
   content,
 }: ExplorePosterProps) {
-  const { data } = useSWR<Review[]>("/api/review");
+  const { data } = useSWR<Review[]>('/api/review');
   const [isFlipped, setIsFlipped] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -108,13 +108,13 @@ export default React.memo(function ExplorePoster({
   // Flip when data is loaded
   useEffect(() => {
     setIsFlipped(
-      data?.find((review) => review.contentId === content.id) ? true : false
+      data?.find(review => review.contentId === content.id) ? true : false
     );
   }, [content.id, data]);
 
   // Flip when clicked
   const handleFlip = () => {
-    setIsFlipped((prev) => !prev);
+    setIsFlipped(prev => !prev);
   };
 
   // Prevent click event from propagating to parent
@@ -126,7 +126,7 @@ export default React.memo(function ExplorePoster({
     <Wrapper
       variants={wrapperVariants}
       initial="hidden"
-      whileInView={!content.poster_path || isLoaded ? "visible" : "hidden"}
+      whileInView={!content.poster_path || isLoaded ? 'visible' : 'hidden'}
       onClick={handleFlip}
       onViewportEnter={() => setIsInView(true)}
       onViewportLeave={() => setIsInView(false)}
@@ -136,11 +136,11 @@ export default React.memo(function ExplorePoster({
           <Front
             variants={frontVariants}
             initial="visible"
-            animate={isFlipped ? "hidden" : "visible"}
+            animate={isFlipped ? 'hidden' : 'visible'}
           >
             {content.poster_path ? (
               <Image
-                src={"https://image.tmdb.org/t/p/w342" + content.poster_path}
+                src={'https://image.tmdb.org/t/p/w342' + content.poster_path}
                 fill
                 alt="Poster"
                 priority
@@ -158,7 +158,7 @@ export default React.memo(function ExplorePoster({
           <Back
             variants={backVariants}
             initial="hidden"
-            animate={isFlipped ? "visible" : "hidden"}
+            animate={isFlipped ? 'visible' : 'hidden'}
           >
             <Content onClick={handleClick}>
               <WatchSelector type={content.type} id={content.id} small />
@@ -167,22 +167,22 @@ export default React.memo(function ExplorePoster({
             <Content onClick={handleClick}>
               <Link href={`/${content.type.toLowerCase()}/${content.id}`}>
                 {content.type === ContentType.MOVIE &&
-                  (content.title.includes(":") ? (
+                  (content.title.includes(':') ? (
                     <>
-                      <div>{content.title.split(": ")[0]}</div>
-                      <div style={{ fontSize: 14, color: "#999" }}>
-                        {content.title.split(": ")[1]}
+                      <div>{content.title.split(': ')[0]}</div>
+                      <div style={{ fontSize: 14, color: '#999' }}>
+                        {content.title.split(': ')[1]}
                       </div>
                     </>
                   ) : (
                     content.title
                   ))}
                 {content.type === ContentType.TV &&
-                  (content.name.includes(":") ? (
+                  (content.name.includes(':') ? (
                     <>
-                      <div>{content.name.split(": ")[0]}</div>
-                      <div style={{ fontSize: 14, color: "#999" }}>
-                        {content.name.split(": ")[1]}
+                      <div>{content.name.split(': ')[0]}</div>
+                      <div style={{ fontSize: 14, color: '#999' }}>
+                        {content.name.split(': ')[1]}
                       </div>
                     </>
                   ) : (

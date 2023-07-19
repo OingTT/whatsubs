@@ -1,10 +1,10 @@
-import styled from "@emotion/styled";
-import WelcomeLayout from "./welcome-layout";
-import Button from "../button/button";
-import { useRouter } from "next/router";
-import ProgressBar from "../progress-bar";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import styled from '@emotion/styled';
+import WelcomeLayout from './welcome-layout';
+import Button from '../button/button';
+import { useRouter } from 'next/router';
+import ProgressBar from '../progress-bar';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 
 const Wrapper = styled.form`
   width: 100%;
@@ -72,9 +72,9 @@ export default function SignupLayout({
   progress,
   title,
   subtitle,
-  nextText = "다음",
+  nextText = '다음',
   nextLink,
-  onSubmit = (e) => {
+  onSubmit = e => {
     e.preventDefault();
   },
   onBack,
@@ -83,8 +83,8 @@ export default function SignupLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
+    if (status === 'unauthenticated') {
+      router.push('/login');
     }
   }, [status, router]);
 

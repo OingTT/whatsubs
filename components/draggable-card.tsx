@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { Draggable } from "@hello-pangea/dnd";
-import { List } from "@phosphor-icons/react";
-import React from "react";
+import styled from '@emotion/styled';
+import { Draggable } from '@hello-pangea/dnd';
+import { List } from '@phosphor-icons/react';
+import React from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -38,7 +38,7 @@ export default React.memo(function DraggableCard({
 }: DraggableCardProps) {
   return (
     <Draggable draggableId={draggableId} index={index}>
-      {(provided) => (
+      {provided => (
         <Wrapper
           ref={provided.innerRef}
           {...provided.draggableProps}

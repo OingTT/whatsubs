@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/server/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]";
-import { ContentType, Watch } from "@prisma/client";
+import { prisma } from '@/lib/server/prisma';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../auth/[...nextauth]';
+import { ContentType, Watch } from '@prisma/client';
 
 export default async function session(
   req: NextApiRequest,
@@ -17,11 +17,11 @@ export default async function session(
     body: { watch, rating },
   } = req;
 
-  if (type !== "movie" && type !== "tv") return res.status(400).end();
+  if (type !== 'movie' && type !== 'tv') return res.status(400).end();
 
-  const contentType = type === "movie" ? ContentType.MOVIE : ContentType.TV;
+  const contentType = type === 'movie' ? ContentType.MOVIE : ContentType.TV;
 
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     const WANT_TO_WATCH = await prisma.review.count({
       where: {
         contentId: Number(id),
@@ -68,7 +68,7 @@ export default async function session(
     });
   }
 
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     if (!watch) {
       // HACK: Delete is not working as expected
       try {

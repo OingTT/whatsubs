@@ -1,13 +1,13 @@
-import SignupLayout from "@/components/layout/signup-layout";
-import styled from "@emotion/styled";
-import { Category, Subscription } from "@prisma/client";
-import { useRouter } from "next/router";
-import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
-import DraggableCard from "@/components/draggable-card";
-import { useEffect } from "react";
-import useMutation from "@/lib/client/useMutation";
+import SignupLayout from '@/components/layout/signup-layout';
+import styled from '@emotion/styled';
+import { Category, Subscription } from '@prisma/client';
+import { useRouter } from 'next/router';
+import { DragDropContext, DropResult, Droppable } from '@hello-pangea/dnd';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
+import DraggableCard from '@/components/draggable-card';
+import { useEffect } from 'react';
+import useMutation from '@/lib/client/useMutation';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -51,22 +51,22 @@ interface CategoriesForm {
 export default function Subscription() {
   const router = useRouter();
   const { data: userCategories, mutate } = useSWR<number[]>(
-    "/api/user/categories"
+    '/api/user/categories'
   );
-  const { data: categories } = useSWR<Category[]>("/api/categories");
+  const { data: categories } = useSWR<Category[]>('/api/categories');
   const { handleSubmit, setValue, watch } = useForm<CategoriesForm>();
   const [updateCategories, { loading, data }] = useMutation<number[]>(
-    "/api/user/categories"
+    '/api/user/categories'
   );
 
   useEffect(() => {
     if (categories) {
       if (userCategories && userCategories.length === categories.length) {
-        setValue("categories", userCategories, { shouldTouch: true });
+        setValue('categories', userCategories, { shouldTouch: true });
       } else {
         setValue(
-          "categories",
-          categories.map((category) => category.id),
+          'categories',
+          categories.map(category => category.id),
           { shouldTouch: true }
         );
       }
@@ -77,7 +77,7 @@ export default function Subscription() {
     if (data) {
       console.log(data);
       mutate(data);
-      router.push("/new/3");
+      router.push('/new/3');
     }
   }, [data, mutate, router]);
 
@@ -89,11 +89,11 @@ export default function Subscription() {
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const newCategories = [...watch("categories")];
+    const newCategories = [...watch('categories')];
     const [removed] = newCategories.splice(result.source.index, 1);
     newCategories.splice(result.destination.index, 0, removed);
 
-    setValue("categories", newCategories, { shouldValidate: true });
+    setValue('categories', newCategories, { shouldValidate: true });
   };
 
   return (
@@ -102,7 +102,7 @@ export default function Subscription() {
       title="방금 고른 조합이 나에게 꼭 맞는지 알아볼까요?"
       subtitle="콘텐츠 종류를 선호하는 순서대로 나열해주세요."
       onSubmit={handleSubmit(onSubmit)}
-      nextText={loading ? "저장 중..." : undefined}
+      nextText={loading ? '저장 중...' : undefined}
     >
       <Wrapper>
         <Numbers>
@@ -113,15 +113,15 @@ export default function Subscription() {
 
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="categories">
-            {(provided) => (
+            {provided => (
               <Buttons {...provided.droppableProps} ref={provided.innerRef}>
-                {watch("categories")?.map((category, index) => (
+                {watch('categories')?.map((category, index) => (
                   <DraggableCard
                     key={category}
                     draggableId={category.toString()}
                     index={index}
                   >
-                    {categories?.find((ct) => ct.id === category)?.name}
+                    {categories?.find(ct => ct.id === category)?.name}
                   </DraggableCard>
                 ))}
                 {provided.placeholder}

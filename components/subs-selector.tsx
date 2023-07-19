@@ -1,13 +1,13 @@
-import styled from "@emotion/styled";
-import { Subscription } from "@prisma/client";
-import Image from "next/image";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
-import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import { checkedSubsState, selectedSubsState } from "@/lib/client/state";
-import { VerticalBar } from "@/lib/client/style";
+import styled from '@emotion/styled';
+import { Subscription } from '@prisma/client';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import { useRecoilState } from 'recoil';
+import { checkedSubsState, selectedSubsState } from '@/lib/client/state';
+import { VerticalBar } from '@/lib/client/style';
 
 const Selector = styled.div`
   width: 100%;
@@ -76,22 +76,22 @@ export default function SubsSelector() {
   const [selectedSubs, setSelectedSubs] = useRecoilState(selectedSubsState);
   const [checkedSubs, setCheckedSubs] = useRecoilState(checkedSubsState);
   const router = useRouter();
-  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: userSubscriptions } = useSWR<number[]>(
-    "/api/user/subscriptions"
+    '/api/user/subscriptions'
   );
   const { register, setValue, watch } = useForm<SubsForm>({
     defaultValues: {
-      subscriptions: checkedSubs.map((sub) => sub.id.toString()),
+      subscriptions: checkedSubs.map(sub => sub.id.toString()),
     },
   });
 
   // If selectedSubs is empty, set checkedSubs to userSubscriptions
   useEffect(() => {
     if (subscriptions && userSubscriptions && selectedSubs.length === 0) {
-      setValue("subscriptions", userSubscriptions.map(String));
+      setValue('subscriptions', userSubscriptions.map(String));
       setCheckedSubs(
-        userSubscriptions.map((id) => subscriptions.find((s) => s.id === id)!)
+        userSubscriptions.map(id => subscriptions.find(s => s.id === id)!)
       );
     }
   }, [
@@ -105,22 +105,22 @@ export default function SubsSelector() {
   // If selectedSubs is empty, set checkedSubs to target subscription
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (selectedSubs.length === 0) {
-      setValue("subscriptions", [e.target.value]);
+      setValue('subscriptions', [e.target.value]);
       setCheckedSubs([
-        subscriptions?.find((s) => s.id === Number(e.target.value))!,
+        subscriptions?.find(s => s.id === Number(e.target.value))!,
       ]);
       setSelectedSubs([
-        subscriptions?.find((s) => s.id === Number(e.target.value))!,
+        subscriptions?.find(s => s.id === Number(e.target.value))!,
       ]);
     } else {
       setSelectedSubs(
-        subscriptions?.filter((sub) =>
-          watch("subscriptions").includes(sub.id.toString())
+        subscriptions?.filter(sub =>
+          watch('subscriptions').includes(sub.id.toString())
         )!
       );
       setCheckedSubs(
-        subscriptions?.filter((sub) =>
-          watch("subscriptions").includes(sub.id.toString())
+        subscriptions?.filter(sub =>
+          watch('subscriptions').includes(sub.id.toString())
         )!
       );
     }
@@ -129,13 +129,13 @@ export default function SubsSelector() {
   const handleSelectAll = () => {
     if (subscriptions) {
       if (selectedSubs.length === subscriptions.length) {
-        setValue("subscriptions", []);
+        setValue('subscriptions', []);
         setSelectedSubs([]);
         setCheckedSubs([]);
       } else {
         setValue(
-          "subscriptions",
-          subscriptions.map((subscription) => subscription.id.toString())
+          'subscriptions',
+          subscriptions.map(subscription => subscription.id.toString())
         );
         setSelectedSubs(subscriptions);
         setCheckedSubs(subscriptions);
@@ -147,7 +147,7 @@ export default function SubsSelector() {
     <Selector>
       <Providers>
         {subscriptions?.map(
-          (subscription) =>
+          subscription =>
             userSubscriptions?.includes(subscription.id) && (
               <SubsWrapper
                 key={subscription.id}
@@ -156,7 +156,7 @@ export default function SubsSelector() {
                 <Input
                   id={subscription.id.toString()}
                   type="checkbox"
-                  {...register("subscriptions", { onChange: handleChange })}
+                  {...register('subscriptions', { onChange: handleChange })}
                   value={subscription.id}
                 />
                 <SubsImage
@@ -171,7 +171,7 @@ export default function SubsSelector() {
         )}
         <VerticalBar size={20} />
         {subscriptions?.map(
-          (subscription) =>
+          subscription =>
             !userSubscriptions?.includes(subscription.id) && (
               <SubsWrapper
                 key={subscription.id}
@@ -180,7 +180,7 @@ export default function SubsSelector() {
                 <Input
                   id={subscription.id.toString()}
                   type="checkbox"
-                  {...register("subscriptions", { onChange: handleChange })}
+                  {...register('subscriptions', { onChange: handleChange })}
                   value={subscription.id}
                 />
                 <SubsImage
@@ -198,11 +198,11 @@ export default function SubsSelector() {
       <TextButtons>
         <TextButton onClick={handleSelectAll}>{`${
           selectedSubs.length === subscriptions?.length
-            ? "전체 해제"
-            : "전체 선택"
+            ? '전체 해제'
+            : '전체 선택'
         }`}</TextButton>
         <VerticalBar size={12} />
-        <TextButton onClick={() => router.push("/suggestion")}>
+        <TextButton onClick={() => router.push('/suggestion')}>
           조합 추천받기
         </TextButton>
       </TextButtons>

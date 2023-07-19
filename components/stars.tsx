@@ -1,6 +1,6 @@
-import styled from "@emotion/styled";
-import Star from "./star-button";
-import { useState } from "react";
+import styled from '@emotion/styled';
+import Star from './star-button';
+import { useState } from 'react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ export default function Stars({ rating = 0, onChange }: StarsProps) {
 
   return (
     <Wrapper>
-      {[1, 2, 3, 4, 5].map((star) => (
+      {[1, 2, 3, 4, 5].map(star => (
         <Star
           key={star}
           fill={star <= stars}

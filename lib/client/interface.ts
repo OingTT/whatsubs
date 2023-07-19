@@ -1,4 +1,4 @@
-import { ContentType } from "@prisma/client";
+import { ContentType } from '@prisma/client';
 
 export interface Certifications {
   certifications: {
@@ -38,7 +38,7 @@ export interface Genres {
 }
 
 export interface Movie {
-  type: "MOVIE";
+  type: 'MOVIE';
   poster_path: string;
   adult: boolean;
   overview: string;
@@ -101,7 +101,7 @@ export interface MovieDetail {
   similar: {
     results: Movie[];
   };
-  "watch/providers": {
+  'watch/providers': {
     results: {
       KR?: {
         link: string;
@@ -117,7 +117,7 @@ export interface MovieDetail {
 }
 
 export interface TV {
-  type: "TV";
+  type: 'TV';
   poster_path: string;
   popularity: number;
   id: number;
@@ -181,7 +181,7 @@ export interface TVDetail {
   similar: {
     results: TV[];
   };
-  "watch/providers": {
+  'watch/providers': {
     results: {
       KR?: {
         link: string;
@@ -220,7 +220,7 @@ export interface Country {
 }
 
 export interface ExploreForm {
-  type: ContentType | "TVNETWORK";
+  type: ContentType | 'TVNETWORK';
   filters: string[];
   movieGenres: string[];
   tvGenres: string[];

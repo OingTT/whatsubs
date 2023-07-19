@@ -1,32 +1,13 @@
-import Layout from "@/components/layout/layout";
-import styled from "@emotion/styled";
-import { ArrowDown } from "@phosphor-icons/react";
-import Button from "@/components/button/button";
-import { Subscription } from "@prisma/client";
-import useSWR from "swr";
-import { Spacer } from "@/lib/client/style";
-import useUser from "@/lib/client/useUser";
-import Image from "next/image";
-import Alert from "@/components/alert";
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  gap: 24px;
-
-  @media (min-width: 1200px) {
-    width: 984px;
-  }
-
-  @media (max-width: 809px) {
-    padding: 16px;
-    gap: 16px;
-  }
-`;
+import Layout from '@/components/layout/layout';
+import styled from '@emotion/styled';
+import { ArrowDown } from '@phosphor-icons/react';
+import Button from '@/components/button/button';
+import { Subscription } from '@prisma/client';
+import useSWR from 'swr';
+import { Spacer, Container } from '@/lib/client/style';
+import useUser from '@/lib/client/useUser';
+import Image from 'next/image';
+import Alert from '@/components/alert';
 
 const Costs = styled.div`
   width: 100%;
@@ -70,7 +51,7 @@ const Providers = styled.div`
 
 const Comparison = styled.div<{ comparison: number | undefined }>`
   color: ${({ comparison }) =>
-    comparison && comparison > 0 ? "#ee4444" : "#1199ee"};
+    comparison && comparison > 0 ? '#ee4444' : '#1199ee'};
 `;
 
 interface fontWeight {
@@ -108,7 +89,7 @@ const CostColumn = ({
   comparison?: number;
 }) => {
   const comparisonSymbol =
-    comparison !== undefined && comparison > 0 ? "+" : "-";
+    comparison !== undefined && comparison > 0 ? '+' : '-';
 
   if (comparison == 0) comparison = undefined;
 
@@ -147,7 +128,7 @@ const Recommender = ({
   myPrice?: number;
   mySharing?: number;
 }) => {
-  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
 
   let ottPrice = 0;
   let ottSharing = 0;
@@ -179,7 +160,7 @@ const Recommender = ({
       <OttColumn>
         <Providers>
           {subscriptions?.map(
-            (subscription) =>
+            subscription =>
               ottData?.includes(subscription.id) && (
                 <Ott
                   key={subscription.id}
@@ -208,7 +189,7 @@ const Recommender = ({
         />
       </Costs>
       <Buttons>
-        <Button onClick={() => window.open("https://pickle.plus/", "_blank")}>
+        <Button onClick={() => window.open('https://pickle.plus/', '_blank')}>
           계정 공유 알아보기
         </Button>
       </Buttons>
@@ -218,9 +199,9 @@ const Recommender = ({
 
 export default function Suggestion() {
   const user = useUser();
-  const { data: subscriptions } = useSWR<Subscription[]>("/api/subscriptions");
+  const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: userSubscriptions } = useSWR<number[]>(
-    "/api/user/subscriptions"
+    '/api/user/subscriptions'
   );
   const { data: recommenderData, error } = useSWR<number[][]>(
     user &&
@@ -247,7 +228,7 @@ export default function Suggestion() {
 
   return (
     <Layout>
-      <Wrapper>
+      <Container>
         {error && <Alert type="error">추천 시스템을 점검하고 있어요.</Alert>}
 
         <Recommender title="현재 조합" ottData={userSubscriptions || []} />
@@ -257,13 +238,13 @@ export default function Suggestion() {
         {recommenderData?.map((ottData, index) => (
           <Recommender
             key={index}
-            title={"추천 조합" + (index + 1)}
+            title={'추천 조합' + (index + 1)}
             ottData={ottData}
             myPrice={myPrice}
             mySharing={mySharing}
           />
         ))}
-      </Wrapper>
+      </Container>
     </Layout>
   );
 }

@@ -1,48 +1,29 @@
-import Alert from "@/components/alert";
-import Radio from "@/components/input/radio";
-import Layout from "@/components/layout/layout";
-import ExplorePoster from "@/components/poster/explore-poster";
-import SubsSelector from "@/components/subs-selector";
+import Alert from '@/components/alert';
+import Radio from '@/components/input/radio';
+import Layout from '@/components/layout/layout';
+import ExplorePoster from '@/components/poster/explore-poster';
+import SubsSelector from '@/components/subs-selector';
 import {
   Certifications,
   DiscoverMovie,
   DiscoverTV,
   ExploreForm,
   Genres,
-} from "@/lib/client/interface";
-import { checkedSubsState, expolreFormState } from "@/lib/client/state";
-import { Grid, Spacer } from "@/lib/client/style";
-import styled from "@emotion/styled";
-import { ContentType } from "@prisma/client";
-import { useCallback, useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { useRecoilState, useRecoilValue } from "recoil";
+} from '@/lib/client/interface';
+import { checkedSubsState, expolreFormState } from '@/lib/client/state';
+import { Grid, Spacer, Container } from '@/lib/client/style';
+import styled from '@emotion/styled';
+import { ContentType } from '@prisma/client';
+import { useCallback, useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteKeyLoader,
-} from "swr/infinite";
-import useSWR from "swr";
-import CheckButton from "@/components/input/check-button";
-import { ArrowCounterClockwise } from "@phosphor-icons/react";
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  gap: 24px;
-
-  @media (min-width: 1200px) {
-    width: 984px;
-  }
-
-  @media (max-width: 809px) {
-    padding: 16px;
-    gap: 16px;
-  }
-`;
+} from 'swr/infinite';
+import useSWR from 'swr';
+import CheckButton from '@/components/input/check-button';
+import { ArrowCounterClockwise } from '@phosphor-icons/react';
 
 const Filters = styled.div`
   width: 100%;
@@ -112,10 +93,10 @@ export default function Explore() {
   const [state, setState] = useRecoilState(expolreFormState);
 
   const handleResetFilters = () => {
-    setValue("filters", []);
-    setValue("movieGenres", []);
-    setValue("tvGenres", []);
-    setValue("movieCertifications", []);
+    setValue('filters', []);
+    setValue('movieGenres', []);
+    setValue('tvGenres', []);
+    setValue('movieCertifications', []);
     setState({
       ...state,
       filters: [],
@@ -126,47 +107,44 @@ export default function Explore() {
   };
 
   const getMovieKey: SWRInfiniteKeyLoader = useCallback(
-    (pageIndex) => {
-      if (subscriptions.filter((sub) => sub.providerId).length === 0)
-        return null;
+    pageIndex => {
+      if (subscriptions.filter(sub => sub.providerId).length === 0) return null;
       return `https://api.themoviedb.org/3/discover/movie?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_watch_providers=${subscriptions
-        .map((subscription) => subscription.providerId)
-        .join("|")}&watch_region=KR&with_genres=${state.movieGenres.join(",")}
+        .map(subscription => subscription.providerId)
+        .join('|')}&watch_region=KR&with_genres=${state.movieGenres.join(',')}
       &certification_country=KR&certification=${state.movieCertifications.join(
-        "|"
+        '|'
       )}&with_watch_monetization_types=flatrate&page=${pageIndex + 1}`;
     },
     [state.movieCertifications, state.movieGenres, subscriptions]
   );
 
   const getTVKey: SWRInfiniteKeyLoader = useCallback(
-    (pageIndex) => {
-      if (subscriptions.filter((sub) => sub.providerId).length === 0)
-        return null;
+    pageIndex => {
+      if (subscriptions.filter(sub => sub.providerId).length === 0) return null;
       return `https://api.themoviedb.org/3/discover/tv?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_watch_providers=${subscriptions
-        .map((subscription) => subscription.providerId)
-        .join("|")}&watch_region=KR&with_genres=${state.tvGenres.join(
-        ","
+        .map(subscription => subscription.providerId)
+        .join('|')}&watch_region=KR&with_genres=${state.tvGenres.join(
+        ','
       )}&with_watch_monetization_types=flatrate&page=${pageIndex + 1}`;
     },
     [state.tvGenres, subscriptions]
   );
 
   const getTVNetworkKey: SWRInfiniteKeyLoader = useCallback(
-    (pageIndex) => {
-      if (subscriptions.filter((sub) => sub.networkId).length === 0)
-        return null;
+    pageIndex => {
+      if (subscriptions.filter(sub => sub.networkId).length === 0) return null;
       return `https://api.themoviedb.org/3/discover/tv?api_key=${
         process.env.NEXT_PUBLIC_TMDB_API_KEY
       }&language=ko-KR&with_genres=${state.tvGenres.join(
-        ","
+        ','
       )}&with_networks=${subscriptions
-        .map((subscription) => subscription.networkId)
-        .join("|")}&page=${pageIndex + 1}`;
+        .map(subscription => subscription.networkId)
+        .join('|')}&page=${pageIndex + 1}`;
     },
     [state.tvGenres, subscriptions]
   );
@@ -197,22 +175,22 @@ export default function Explore() {
   // Load more when the loader is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         if (entries[0].isIntersecting) {
-          switch (watch("type")) {
+          switch (watch('type')) {
             case ContentType.MOVIE:
-              setMovieSize((prev) => prev + 1);
+              setMovieSize(prev => prev + 1);
               break;
             case ContentType.TV:
-              setTVSize((prev) => prev + 1);
+              setTVSize(prev => prev + 1);
               break;
-            case "TVNETWORK":
-              setTVNetworkSize((prev) => prev + 1);
+            case 'TVNETWORK':
+              setTVNetworkSize(prev => prev + 1);
               break;
           }
         }
       },
-      { rootMargin: "800px" }
+      { rootMargin: '800px' }
     );
 
     const ref = loader.current;
@@ -230,7 +208,7 @@ export default function Explore() {
 
   return (
     <Layout title="탐색">
-      <Wrapper>
+      <Container compact>
         <SubsSelector />
 
         <Alert type="info">
@@ -241,65 +219,64 @@ export default function Explore() {
         </Alert>
 
         <Radio
-          register={register("type", {
+          register={register('type', {
             required: true,
-            onChange: () => setState({ ...state, type: watch("type") }),
+            onChange: () => setState({ ...state, type: watch('type') }),
           })}
-          ids={[ContentType.MOVIE, ContentType.TV, "TVNETWORK"]}
-          labels={["영화", "TV 프로그램", "TV(티빙・쿠플)"]}
+          ids={[ContentType.MOVIE, ContentType.TV, 'TVNETWORK']}
+          labels={['영화', 'TV 프로그램', 'TV(티빙・쿠플)']}
           required
         />
-      </Wrapper>
+      </Container>
       <Filters>
         <CheckButton
-          register={register("filters", {
-            onChange: (e) => {
-              if (watch("filters").length === 2) {
-                setValue("filters", [e.target.value]);
+          register={register('filters', {
+            onChange: e => {
+              if (watch('filters').length === 2) {
+                setValue('filters', [e.target.value]);
               }
-              setState({ ...state, filters: watch("filters") });
+              setState({ ...state, filters: watch('filters') });
             },
           })}
           id={0}
         >
-          {watch("type") === ContentType.MOVIE
-            ? watch("movieGenres")
+          {watch('type') === ContentType.MOVIE
+            ? watch('movieGenres')
                 .map(
-                  (genreId) =>
+                  genreId =>
                     movieGenres?.genres.find(
-                      (genre) => genre.id === Number(genreId)
+                      genre => genre.id === Number(genreId)
                     )?.name
                 )
-                .join(" ・ ") || "장르"
-            : watch("tvGenres")
+                .join(' ・ ') || '장르'
+            : watch('tvGenres')
                 .map(
-                  (genreId) =>
-                    tvGenres?.genres.find(
-                      (genre) => genre.id === Number(genreId)
-                    )?.name
+                  genreId =>
+                    tvGenres?.genres.find(genre => genre.id === Number(genreId))
+                      ?.name
                 )
-                .join(" ・ ") || "장르"}
+                .join(' ・ ') || '장르'}
         </CheckButton>
-        {watch("type") === ContentType.MOVIE && (
+        {watch('type') === ContentType.MOVIE && (
           <CheckButton
-            register={register("filters", {
-              onChange: (e) => {
-                if (watch("filters").length === 2) {
-                  setValue("filters", [e.target.value]);
+            register={register('filters', {
+              onChange: e => {
+                if (watch('filters').length === 2) {
+                  setValue('filters', [e.target.value]);
                 }
-                setState({ ...state, filters: watch("filters") });
+                setState({ ...state, filters: watch('filters') });
               },
             })}
             id={1}
           >
-            {watch("movieCertifications")
+            {watch('movieCertifications')
               .map(
-                (certification) =>
+                certification =>
                   movieCertKR?.find(
-                    (cert) => cert.certification === certification
+                    cert => cert.certification === certification
                   )?.certification
               )
-              .join(" ・ ") || "관람등급"}
+              .join(' ・ ') || '관람등급'}
           </CheckButton>
         )}
         <Spacer />
@@ -309,18 +286,18 @@ export default function Explore() {
         </ResetButton>
       </Filters>
 
-      <Wrapper>
+      <Container>
         <Options>
-          {watch("filters")?.includes("0") &&
-            (watch("type") === ContentType.MOVIE
-              ? movieGenres?.genres.map((genre) => (
+          {watch('filters')?.includes('0') &&
+            (watch('type') === ContentType.MOVIE
+              ? movieGenres?.genres.map(genre => (
                   <CheckButton
                     key={genre.id}
-                    register={register("movieGenres", {
+                    register={register('movieGenres', {
                       onChange: () =>
                         setState({
                           ...state,
-                          movieGenres: watch("movieGenres"),
+                          movieGenres: watch('movieGenres'),
                         }),
                     })}
                     id={genre.id}
@@ -328,28 +305,28 @@ export default function Explore() {
                     {genre.name}
                   </CheckButton>
                 ))
-              : tvGenres?.genres.map((tvGenre) => (
+              : tvGenres?.genres.map(tvGenre => (
                   <CheckButton
                     key={tvGenre.id}
-                    register={register("tvGenres", {
+                    register={register('tvGenres', {
                       onChange: () =>
-                        setState({ ...state, tvGenres: watch("tvGenres") }),
+                        setState({ ...state, tvGenres: watch('tvGenres') }),
                     })}
                     id={tvGenre.id}
                   >
                     {tvGenre.name}
                   </CheckButton>
                 )))}
-          {watch("filters")?.includes("1") &&
-            watch("type") === ContentType.MOVIE &&
-            movieCertKR?.map((certification) => (
+          {watch('filters')?.includes('1') &&
+            watch('type') === ContentType.MOVIE &&
+            movieCertKR?.map(certification => (
               <CheckButton
                 key={certification.certification}
-                register={register("movieCertifications", {
+                register={register('movieCertifications', {
                   onChange: () =>
                     setState({
                       ...state,
-                      movieCertifications: watch("movieCertifications"),
+                      movieCertifications: watch('movieCertifications'),
                     }),
                 })}
                 id={certification.certification}
@@ -360,22 +337,22 @@ export default function Explore() {
         </Options>
 
         <Grid>
-          {watch("type") === ContentType.MOVIE
-            ? movie?.map((page) => {
-                return page.results.map((movie) => {
+          {watch('type') === ContentType.MOVIE
+            ? movie?.map(page => {
+                return page.results.map(movie => {
                   movie.type = ContentType.MOVIE;
                   return <ExplorePoster key={movie.id} content={movie} />;
                 });
               })
-            : watch("type") === ContentType.TV
-            ? tv?.map((page) => {
-                return page.results.map((tv) => {
+            : watch('type') === ContentType.TV
+            ? tv?.map(page => {
+                return page.results.map(tv => {
                   tv.type = ContentType.TV;
                   return <ExplorePoster key={tv.id} content={tv} />;
                 });
               })
-            : tvNetwork?.map((page) => {
-                return page.results.map((tv) => {
+            : tvNetwork?.map(page => {
+                return page.results.map(tv => {
                   tv.type = ContentType.TV;
                   return <ExplorePoster key={tv.id} content={tv} />;
                 });
@@ -383,7 +360,7 @@ export default function Explore() {
         </Grid>
 
         <div ref={loader} />
-      </Wrapper>
+      </Container>
     </Layout>
   );
 }

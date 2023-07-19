@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { Check } from "@phosphor-icons/react";
-import React from "react";
-import { UseFormRegisterReturn } from "react-hook-form";
+import styled from '@emotion/styled';
+import { Check } from '@phosphor-icons/react';
+import React from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -54,7 +54,7 @@ export default function Radio({ register, children, required }: RadioProps) {
         onKeyDown={(
           e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
         ) => {
-          e.key === "Enter" && e.preventDefault();
+          e.key === 'Enter' && e.preventDefault();
         }}
       />
       <Label htmlFor={register.name}>

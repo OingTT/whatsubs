@@ -1,8 +1,8 @@
-import styled from "@emotion/styled";
-import Image from "next/image";
+import styled from '@emotion/styled';
+import Image from 'next/image';
 
 const Wrapper = styled.div`
-  width: 100vw;
+  width: 100dvw;
   height: 100dvh;
   display: flex;
   background-image: url(https://images.unsplash.com/photo-1549226024-48875665c1ea);
