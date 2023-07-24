@@ -2,8 +2,8 @@ import TextInput from '@/components/input/text-input';
 import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
 import { PencilSimple } from '@phosphor-icons/react';
-import { GetServerSidePropsContext } from 'next';
-import { Session, getServerSession } from 'next-auth';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -66,13 +66,13 @@ interface ProfileForm {
   name: string;
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps = async context => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   return {
     props: { session: JSON.parse(JSON.stringify(session)) },
   };
-}
+};
 
 export default function Profile() {
   const router = useRouter();
@@ -83,8 +83,9 @@ export default function Profile() {
       name: session?.user.name || undefined,
     },
   });
-  const [updateProfile, { loading, data }] =
-    useMutation<ProfileForm>('/api/user/profile');
+  const [updateProfile, { loading, data }] = useMutation<ProfileForm>(
+    '/api/users/me/profile'
+  );
 
   useEffect(() => {
     if (data) {

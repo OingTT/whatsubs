@@ -2,6 +2,7 @@ import Layout from '@/components/layout/layout';
 import { Container } from '@/lib/client/style';
 import useUser from '@/lib/client/useUser';
 import styled from '@emotion/styled';
+import { Watch } from '@prisma/client';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -117,15 +118,15 @@ const Tab = styled.div`
 `;
 
 interface reviewCountResponse {
-  wantToWatch: number;
-  watching: number;
-  watched: number;
+  [Watch.WANT_TO_WATCH]: number;
+  [Watch.WATCHING]: number;
+  [Watch.WATCHED]: number;
 }
 
 export default function User() {
   const user = useUser();
   const router = useRouter();
-  const { data } = useSWR<reviewCountResponse>('/api/review/count');
+  const { data } = useSWR<reviewCountResponse>('/api/users/me/reviews/values');
 
   if (!user) return null;
 
@@ -149,15 +150,15 @@ export default function User() {
 
         <Counts>
           <Count>
-            <CountNumber>{data ? data.wantToWatch : '-'}</CountNumber>
+            <CountNumber>{data ? data.WANT_TO_WATCH : '-'}</CountNumber>
             <CountName>찜하기</CountName>
           </Count>
           <Count>
-            <CountNumber>{data ? data.watching : '-'}</CountNumber>
+            <CountNumber>{data ? data.WATCHING : '-'}</CountNumber>
             <CountName>보는중</CountName>
           </Count>
           <Count>
-            <CountNumber>{data ? data.watched : '-'}</CountNumber>
+            <CountNumber>{data ? data.WATCHED : '-'}</CountNumber>
             <CountName>봤어요</CountName>
           </Count>
         </Counts>

@@ -52,7 +52,7 @@ export default function Topbar() {
       <Link href="/search">
         <MagnifyingGlass color="#333" size="24" />
       </Link>
-      <Link href="/user">
+      <Link href="/setting">
         <User
           src={user?.avatar || '/images/avatar.png'}
           width="32"

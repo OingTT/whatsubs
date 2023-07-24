@@ -77,11 +77,13 @@ export default function WatchSelector({
   absoluteStars,
   count,
 }: WatchSelectorProps) {
-  const [updateReview] = useMutation(`/api/review/${type.toLowerCase()}/${id}`);
-  const { data: reviewCounts, mutate } = useSWR<ReviewCountsResponse>(
-    count && `/api/review/${type.toLowerCase()}/${id}`
+  const [updateReview] = useMutation(
+    `/api/contents/${type.toLowerCase()}/${id}/review`
   );
-  const { data } = useSWR<Review[]>('/api/review');
+  const { data: reviewCounts, mutate } = useSWR<ReviewCountsResponse>(
+    count && `/api/contents/${type.toLowerCase()}/${id}/reviews/values`
+  );
+  const { data } = useSWR<Review[]>('/api/users/me/reviews');
   const [watch, setWatch] = useState<Watch>();
   const [review, setReview] = useState<Review>();
 

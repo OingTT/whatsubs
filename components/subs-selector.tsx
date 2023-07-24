@@ -78,7 +78,7 @@ export default function SubsSelector() {
   const router = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: userSubscriptions } = useSWR<number[]>(
-    '/api/user/subscriptions'
+    '/api/users/me/subscriptions'
   );
   const { register, setValue, watch } = useForm<SubsForm>({
     defaultValues: {

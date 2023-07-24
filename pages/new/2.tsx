@@ -51,12 +51,12 @@ interface CategoriesForm {
 export default function Subscription() {
   const router = useRouter();
   const { data: userCategories, mutate } = useSWR<number[]>(
-    '/api/user/categories'
+    '/api/users/me/categories'
   );
   const { data: categories } = useSWR<Category[]>('/api/categories');
   const { handleSubmit, setValue, watch } = useForm<CategoriesForm>();
   const [updateCategories, { loading, data }] = useMutation<number[]>(
-    '/api/user/categories'
+    '/api/users/me/categories'
   );
 
   useEffect(() => {

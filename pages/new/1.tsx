@@ -58,12 +58,12 @@ interface SubscriptionsForm {
 export default function Subscriptions() {
   const router = useRouter();
   const { data: userSubscription, mutate } = useSWR<number[]>(
-    '/api/user/subscriptions'
+    '/api/users/me/subscriptions'
   );
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { register, handleSubmit, setValue } = useForm<SubscriptionsForm>();
   const [updateSubscriptions, { loading, data }] = useMutation<number[]>(
-    '/api/user/subscriptions'
+    '/api/users/me/subscriptions'
   );
 
   useEffect(() => {

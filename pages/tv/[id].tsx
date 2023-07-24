@@ -8,10 +8,10 @@ import styled from '@emotion/styled';
 import { Play, Star } from '@phosphor-icons/react';
 import { ContentType, Subscription } from '@prisma/client';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import React from 'react';
 import * as cheerio from 'cheerio';
+import { GetServerSideProps } from 'next';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -119,15 +119,25 @@ const Genre = styled.div`
   }
 `;
 
-export default function TV() {
-  const {
-    query: { id },
-  } = useRouter();
+export const getServerSideProps: GetServerSideProps = async context => {
+  return {
+    props: {
+      id: Number(context.query.id),
+    },
+  };
+};
+
+interface TVProps {
+  id: number;
+}
+
+export default function TV({ id }: TVProps) {
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
-  const { data: rating } = useSWR<{ rating?: number }>(`/api/review/tv/${id}`);
+  const { data: rating } = useSWR<{ rating?: number }>(
+    `/api/contents/tv/${id}/reviews/values`
+  );
   const { data } = useSWR<TVDetail>(
-    id &&
-      `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
+    `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
   );
 
   const recommendations = data?.recommendations?.results.map(
@@ -224,12 +234,7 @@ export default function TV() {
             </SubTitle>
           </TitleBar>
 
-          <WatchSelector
-            type={ContentType.TV}
-            id={Number(id)}
-            absoluteStars
-            count
-          />
+          <WatchSelector type={ContentType.TV} id={id} absoluteStars count />
         </Header>
 
         <Selector>

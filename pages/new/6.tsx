@@ -4,7 +4,7 @@ import TextInput from '@/components/input/text-input';
 import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
 import { Occupation } from '@prisma/client';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -45,13 +45,13 @@ interface PrivacyForm {
   privacy: boolean;
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps = async context => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   return {
     props: { session: JSON.parse(JSON.stringify(session)) },
   };
-}
+};
 
 export default function Privacy() {
   const router = useRouter();
@@ -64,8 +64,9 @@ export default function Privacy() {
       gender: session?.user.gender || undefined,
     },
   });
-  const [updatePrivacy, { loading, data }] =
-    useMutation<PrivacyForm>('/api/user/privacy');
+  const [updatePrivacy, { loading, data }] = useMutation<PrivacyForm>(
+    '/api/users/me/privacy'
+  );
 
   useEffect(() => {
     if (data) {

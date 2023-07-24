@@ -41,11 +41,12 @@ interface GenresForm {
 
 export default function Genres() {
   const router = useRouter();
-  const { data: userGenres, mutate } = useSWR<string[]>('/api/user/genres');
+  const { data: userGenres, mutate } = useSWR<string[]>('/api/users/me/genres');
   const { data: genres } = useSWR<Genre[]>('/api/genres');
   const { register, handleSubmit, setValue } = useForm<GenresForm>();
-  const [updateGenres, { loading, data }] =
-    useMutation<string[]>('/api/user/genres');
+  const [updateGenres, { loading, data }] = useMutation<string[]>(
+    '/api/users/me/genres'
+  );
 
   useEffect(() => {
     if (userGenres) {

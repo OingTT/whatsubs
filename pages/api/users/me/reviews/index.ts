@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/server/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]';
+import { authOptions } from '../../../auth/[...nextauth]';
 
 export default async function session(
   req: NextApiRequest,
@@ -11,15 +11,19 @@ export default async function session(
 
   if (!session) return res.status(400).end();
 
-  const { avatar, name } = req.body;
-
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: {
-      avatar,
-      name,
+  const reviews = await prisma.review.findMany({
+    where: {
+      user: {
+        email: session.user?.email!,
+      },
+    },
+    select: {
+      contentType: true,
+      contentId: true,
+      watch: true,
+      rating: true,
     },
   });
 
-  return res.status(200).json(req.body);
+  res.status(200).json(reviews);
 }

@@ -6,11 +6,11 @@ import styled from '@emotion/styled';
 import { Play, Star } from '@phosphor-icons/react';
 import { ContentType, Subscription } from '@prisma/client';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import * as cheerio from 'cheerio';
 import Person from '@/components/person';
 import { Grid, Section, Container, Caption } from '@/lib/client/style';
+import { GetServerSideProps } from 'next';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -118,17 +118,25 @@ const Genre = styled.div`
   }
 `;
 
-export default function Movie() {
-  const {
-    query: { id },
-  } = useRouter();
+export const getServerSideProps: GetServerSideProps = async context => {
+  return {
+    props: {
+      id: Number(context.query.id),
+    },
+  };
+};
+
+interface MovieProps {
+  id: number;
+}
+
+export default function Movie({ id }: MovieProps) {
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: rating } = useSWR<{ rating?: number }>(
-    `/api/review/movie/${id}`
+    `/api/contents/movie/${id}/reviews/values`
   );
   const { data } = useSWR<MovieDetail>(
-    id &&
-      `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
   );
 
   const { data: collection } = useSWR<Collection>(

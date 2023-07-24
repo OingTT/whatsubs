@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { authOptions } from './api/auth/[...nextauth]';
 import WelcomeLayout from '@/components/layout/welcome-layout';
 import Image from 'next/image';
@@ -39,7 +39,7 @@ const Buttons = styled.div`
 `;
 
 // Prevent user from accessing login page if they are already logged in
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps: GetServerSideProps = async context => {
   const session = await getServerSession(context.req, context.res, authOptions);
 
   if (session) {
@@ -54,7 +54,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {},
   };
-}
+};
 
 export default function Login() {
   const { data: session } = useSession();

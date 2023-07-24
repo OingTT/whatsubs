@@ -201,7 +201,7 @@ export default function Suggestion() {
   const user = useUser();
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: userSubscriptions } = useSWR<number[]>(
-    '/api/user/subscriptions'
+    '/api/users/me/subscriptions'
   );
   const { data: recommenderData, error } = useSWR<number[][]>(
     user &&

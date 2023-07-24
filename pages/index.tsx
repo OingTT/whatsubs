@@ -43,7 +43,7 @@ function getContents(data?: Recommendation[] | Review[], watch?: Watch) {
 
 export default function Home() {
   const user = useUser();
-  const { data: reviewData } = useSWR<Review[]>('/api/review');
+  const { data: reviewData } = useSWR<Review[]>('/api/users/me/reviews');
   const { data: recommendMovieData, error } = useSWR<Recommendation[]>(
     user &&
       `${process.env.NEXT_PUBLIC_API_URL}/recommendation/movie/${user?.id}`

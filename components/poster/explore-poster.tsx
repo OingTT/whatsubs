@@ -100,7 +100,7 @@ interface ExplorePosterProps {
 export default React.memo(function ExplorePoster({
   content,
 }: ExplorePosterProps) {
-  const { data } = useSWR<Review[]>('/api/review');
+  const { data } = useSWR<Review[]>('/api/users/me/reviews');
   const [isFlipped, setIsFlipped] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
