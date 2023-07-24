@@ -22,38 +22,14 @@ export default async function session(
   const contentType = type === 'movie' ? ContentType.MOVIE : ContentType.TV;
 
   if (req.method === 'GET') {
-    const WANT_TO_WATCH = await prisma.review.count({
+    const counts = await prisma.review.groupBy({
+      by: ['watch'],
       where: {
         contentId: Number(id),
         contentType,
-        watch: Watch.WANT_TO_WATCH,
       },
-    });
-
-    const WATCHING = await prisma.review.count({
-      where: {
-        contentId: Number(id),
-        contentType,
-        watch: Watch.WATCHING,
-      },
-    });
-
-    const WATCHED = await prisma.review.count({
-      where: {
-        contentId: Number(id),
-        contentType,
-        watch: Watch.WATCHED,
-      },
-    });
-
-    const rating = await prisma.review.aggregate({
-      where: {
-        contentId: Number(id),
-        contentType,
-        watch: Watch.WATCHED,
-        rating: {
-          not: 0,
-        },
+      _count: {
+        watch: true,
       },
       _avg: {
         rating: true,
@@ -61,10 +37,14 @@ export default async function session(
     });
 
     return res.status(200).json({
-      WANT_TO_WATCH,
-      WATCHING,
-      WATCHED,
-      rating: rating._avg.rating || 0,
+      [Watch.WANT_TO_WATCH]:
+        counts.find(count => count.watch === Watch.WANT_TO_WATCH)?._count
+          .watch || 0,
+      [Watch.WATCHING]:
+        counts.find(count => count.watch === Watch.WATCHING)?._count.watch || 0,
+      [Watch.WATCHED]:
+        counts.find(count => count.watch === Watch.WATCHED)?._count.watch || 0,
+      rating: counts.find(count => count.watch === Watch.WATCHED)?._avg.rating,
     });
   }
 

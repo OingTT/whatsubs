@@ -123,7 +123,7 @@ export default function Movie() {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
-  const { data: rating } = useSWR<{ rating: number }>(
+  const { data: rating } = useSWR<{ rating?: number }>(
     `/api/review/movie/${id}`
   );
   const { data } = useSWR<MovieDetail>(
@@ -236,7 +236,7 @@ export default function Movie() {
             <SubTitle>
               <Rating>
                 <Star weight="fill" />
-                {rating?.rating.toFixed(1) || '-.-'}
+                {rating?.rating?.toFixed(1) || '-.-'}
               </Rating>
               {data?.release_date.slice(0, 4)}
               <Certification>{certification || '정보 없음'}</Certification>

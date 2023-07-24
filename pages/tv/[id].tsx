@@ -124,7 +124,7 @@ export default function TV() {
     query: { id },
   } = useRouter();
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
-  const { data: rating } = useSWR<{ rating: number }>(`/api/review/tv/${id}`);
+  const { data: rating } = useSWR<{ rating?: number }>(`/api/review/tv/${id}`);
   const { data } = useSWR<TVDetail>(
     id &&
       `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`
@@ -217,7 +217,7 @@ export default function TV() {
             <SubTitle>
               <Rating>
                 <Star weight="fill" />
-                {rating?.rating.toFixed(1) || '-.-'}
+                {rating?.rating?.toFixed(1) || '-.-'}
               </Rating>
               {data?.first_air_date.slice(0, 4)}
               <Certification>{certification || '정보 없음'}</Certification>
