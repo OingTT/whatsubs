@@ -40,7 +40,6 @@ const Texts = styled.div`
 const Name = styled.div`
   white-space: pre-wrap;
   font-weight: 600;
-  color: #333333;
   font-size: 14px;
   word-break: keep-all;
 `;
@@ -48,7 +47,7 @@ const Name = styled.div`
 const Info = styled.div`
   white-space: pre-wrap;
   font-weight: 500;
-  color: #999999;
+  color: var(--text-secondary);
   font-size: 12px;
 `;
 

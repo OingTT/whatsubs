@@ -28,16 +28,19 @@ const Input = styled.input`
   appearance: none;
   width: 100%;
   height: 56px;
-  box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-light);
   overflow: hidden;
   border-radius: 16px;
   border: none;
-  padding: 16px 56px;
-  color: #333;
+  padding: 16px 52px;
   font-size: 16px;
   font-weight: bold;
   font-family: inherit;
+
+  @media (max-width: 809px) {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const SearchIcon = styled.label`
@@ -50,6 +53,7 @@ const ClearIcon = styled.label`
   position: absolute;
   top: 16px;
   right: 16px;
+  color: var(--text-secondary);
   cursor: pointer;
 `;
 
@@ -141,7 +145,7 @@ export default function Search() {
       <Container>
         <SearchBox>
           <SearchIcon htmlFor="query">
-            <MagnifyingGlass size={24} color="#333" />
+            <MagnifyingGlass size={24} />
           </SearchIcon>
           <Input
             id="query"
@@ -160,7 +164,7 @@ export default function Search() {
               setQuery('');
             }}
           >
-            {watch('query') && <XCircle size={24} weight="fill" color="#bbb" />}
+            {watch('query') && <XCircle size={24} weight="fill" />}
           </ClearIcon>
         </SearchBox>
       </Container>

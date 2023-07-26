@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   height: 12px;
   display: flex;
   justify-content: flex-start;
-  background-color: #eeeeee;
+  background-color: var(--secondary);
   border-radius: 6px;
 `;
 
@@ -14,7 +14,7 @@ const Progress = styled.div<{ value: number }>`
   width: ${props => props.value}%;
   height: 100%;
   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
-  background-color: #000000;
+  background-color: var(--primary);
   border-radius: 6px;
 `;
 

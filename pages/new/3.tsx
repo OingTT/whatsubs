@@ -24,14 +24,14 @@ const Genre = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 24px 0px 24px;
-  background-color: #eeeeee;
+  background-color: var(--secondary);
   border-radius: 8px;
-  color: #333;
+  font-weight: 500;
 
   @media (max-width: 809px) {
     height: 32px;
     padding: 0px 16px 0px 16px;
-    font-size: 12px;
+    font-size: 0.875rem; // 14px
   }
 `;
 

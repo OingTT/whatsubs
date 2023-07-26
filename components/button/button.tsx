@@ -9,12 +9,11 @@ const Wrapper = styled.button<{ primary?: boolean }>`
   align-items: center;
   box-shadow: ${props =>
     props.primary ? '0px 2px 8px 0px rgba(0, 0, 0, 0.25)' : 'none'};
-  background-color: ${props => (props.primary ? '#000' : '#eee')};
-  overflow: hidden;
+  background-color: var(
+    ${props => (props.primary ? '--primary' : '--secondary')}
+  );
   border-radius: 16px;
-  color: ${props => (props.primary ? '#fff' : '#333')};
-  font-weight: 600;
-  font-size: 16px;
+  color: var(${props => (props.primary ? '--text-primary' : '--text')});
   border: none;
   cursor: pointer;
 `;
@@ -34,7 +33,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <Wrapper type={type} onClick={onClick} primary={primary}>
-      {children}
+      <h6>{children}</h6>
     </Wrapper>
   );
 }

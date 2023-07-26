@@ -16,6 +16,7 @@ const Profile = styled.div`
   align-items: center;
   padding: 16px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-light);
   gap: 24px;
   border-radius: 16px;
 
@@ -33,17 +34,11 @@ const Info = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 8px;
-`;
-
-const Name = styled.div`
-  font-weight: 600;
-  color: #333333;
-  font-size: 16px;
+  gap: 4px;
 `;
 
 const Email = styled.div`
-  color: #999999;
+  color: var(--text-secondary);
   font-size: 12px;
 `;
 
@@ -54,6 +49,7 @@ const Counts = styled.div`
   align-items: center;
   padding: 8px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-light);
   border-radius: 16px;
 
   @media (max-width: 809px) {
@@ -72,13 +68,12 @@ const Count = styled.div`
 
 const CountNumber = styled.div`
   font-weight: 300;
-  color: #999999;
+  color: var(--text-secondary);
   font-size: 20px;
 `;
 
 const CountName = styled.div`
   font-weight: 600;
-  color: #333333;
   font-size: 12px;
 `;
 
@@ -90,6 +85,7 @@ const Group = styled.div`
   align-items: center;
   padding: 8px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
+  background-color: var(--background-light);
   gap: 8px;
   border-radius: 16px;
 
@@ -98,7 +94,7 @@ const Group = styled.div`
   }
 `;
 
-const Tab = styled.div`
+const Tab = styled.h6`
   width: 100%;
   height: 40px;
   display: flex;
@@ -107,13 +103,10 @@ const Tab = styled.div`
   align-items: center;
   padding: 8px;
   border-radius: 8px;
-  font-weight: 600;
-  color: #333333;
-  font-size: 16px;
   cursor: pointer;
 
   &:hover {
-    background-color: #eee;
+    background-color: var(--secondary);
   }
 `;
 
@@ -143,7 +136,7 @@ export default function User() {
             unoptimized
           />
           <Info>
-            <Name>{user.name}</Name>
+            <h6>{user.name}</h6>
             <Email>{user.email}</Email>
           </Info>
         </Profile>

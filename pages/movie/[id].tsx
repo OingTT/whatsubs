@@ -15,7 +15,7 @@ import { GetServerSideProps } from 'next';
 const Backdrop = styled.div`
   width: 100%;
   height: 320px;
-  background-color: #dddddd;
+  background-color: var(--secondary);
   position: relative;
   object-fit: fill;
 
@@ -42,7 +42,7 @@ const SubTitle = styled.h6`
   flex-direction: row;
   align-items: center;
   gap: 8px;
-  color: #bbb;
+  color: var(--text-secondary);
   font-weight: 400;
 `;
 
@@ -56,7 +56,7 @@ const Rating = styled.div`
 const Certification = styled.div`
   display: flex;
   padding: 0px 4px;
-  border: 1px solid #bbb;
+  border: 1px solid var(--text-secondary);
   border-radius: 4px;
   font-size: 0.75rem; // 12px
   line-height: 1.25;
@@ -80,7 +80,10 @@ const PlayButton = styled.button`
   font-size: 1rem;
   box-shadow: ${props =>
     props.disabled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.25)'};
-  background-color: ${props => (props.disabled ? '#eeeeee' : '#000000')};
+  background-color: var(
+    ${props => (props.disabled ? '--secondary' : '--primary')}
+  );
+  color: var(--text-primary);
   border-radius: 8px;
   cursor: ${props => (props.disabled ? 'default' : 'pointer')};
 `;
@@ -107,14 +110,14 @@ const Genre = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0px 24px 0px 24px;
-  background-color: #eeeeee;
+  background-color: var(--secondary);
   border-radius: 8px;
-  color: #333;
+  font-weight: 500;
 
   @media (max-width: 809px) {
     height: 32px;
     padding: 0px 16px 0px 16px;
-    font-size: 12px;
+    font-size: 0.875rem; // 14px
   }
 `;
 
@@ -262,7 +265,7 @@ export default function Movie({ id }: MovieProps) {
         <Selector>
           <a href={playLink?.urls[0]} target="_blank" rel="noopener">
             <PlayButton disabled={playLink?.urls.length === 0}>
-              <Play color="white" weight="fill" />
+              <Play weight="fill" />
             </PlayButton>
           </a>
 
@@ -275,7 +278,7 @@ export default function Movie({ id }: MovieProps) {
                 watchProvider && (
                   <Provider
                     key={provider.provider_id}
-                    src={`/images/${watchProvider.key}.png`}
+                    src={`/images/subs/${watchProvider.key}.png`}
                     width={32}
                     height={32}
                     alt="Provider"

@@ -1,5 +1,44 @@
+:root {
+  --background: #ffffff;
+  --background-light: #ffffff;
+  --text: #111111;
+  --text-primary: #eeeeee;
+  --text-secondary: #999999;
+  --primary: #111111;
+  --secondary: #eeeeee;
+  --success: #00cc88;
+  --success-light: #ccffee;
+  --danger: #ff3333;
+  --danger-light: #ffcccc;
+  --warning: #ffaa00;
+  --warning-light: #ffeecc;
+  --info: #00aaff;
+  --info-light: #cceeff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111111;
+    --background-light: #222222;
+    --text: #eeeeee;
+    --text-primary: #111111;
+    --text-secondary: #999999;
+    --primary: #eeeeee;
+    --secondary: #333333;
+    --success: #00cc88;
+    --success-light: #006644;
+    --danger: #ff3333;
+    --danger-light: #660000;
+    --warning: #ffaa00;
+    --warning-light: #664400;
+    --info: #00aaff;
+    --info-light: #004466;
+  }
+}
+
 html,
 body {
+  background-color: var(--background);
   padding: 0;
   margin: 0;
   font-family:
@@ -14,7 +53,7 @@ body {
     Droid Sans,
     Helvetica Neue,
     sans-serif;
-  color: #333333;
+  color: var(--text);
   word-break: keep-all;
 }
 
@@ -30,6 +69,11 @@ a {
 img,
 svg {
   display: block;
+}
+
+input,
+select {
+  color: inherit;
 }
 
 input::-webkit-date-and-time-value {

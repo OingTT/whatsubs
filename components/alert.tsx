@@ -1,8 +1,13 @@
 import { Caption } from '@/lib/client/style';
 import styled from '@emotion/styled';
-import { Info, Warning, WarningOctagon } from '@phosphor-icons/react';
+import {
+  CheckCircle,
+  Info,
+  Warning,
+  WarningOctagon,
+} from '@phosphor-icons/react';
 
-type AlertType = 'warning' | 'error' | 'info';
+type AlertType = 'success' | 'danger' | 'warning' | 'info';
 
 const Wrapper = styled.div<{ type: AlertType }>`
   width: 100%;
@@ -10,18 +15,32 @@ const Wrapper = styled.div<{ type: AlertType }>`
   justify-content: flex-start;
   align-items: center;
   padding: 16px;
-  background-color: ${props =>
-    props.type === 'warning'
-      ? '#fec'
-      : props.type === 'error'
-      ? '#fcc'
-      : '#cef'};
+  background-color: var(
+    ${props =>
+      props.type === 'success'
+        ? '--success'
+        : props.type === 'danger'
+        ? '--danger'
+        : props.type === 'warning'
+        ? '--warning'
+        : '--info'}-light
+  );
   overflow: auto;
   gap: 12px;
   border-radius: 16px;
 
   & > svg {
     min-width: 32px;
+    color: var(
+      ${props =>
+        props.type === 'success'
+          ? '--success'
+          : props.type === 'danger'
+          ? '--danger'
+          : props.type === 'warning'
+          ? '--warning'
+          : '--info'}
+    );
   }
 `;
 
@@ -33,11 +52,10 @@ interface AlertProps {
 export default function Alert({ type, children }: AlertProps) {
   return (
     <Wrapper type={type}>
-      {type === 'warning' && <Warning size={32} color="#fa0" weight="fill" />}
-      {type === 'error' && (
-        <WarningOctagon size={32} color="#f33" weight="fill" />
-      )}
-      {type === 'info' && <Info size={32} color="#0af" weight="fill" />}
+      {type === 'success' && <CheckCircle size={32} weight="fill" />}
+      {type === 'danger' && <WarningOctagon size={32} weight="fill" />}
+      {type === 'warning' && <Warning size={32} weight="fill" />}
+      {type === 'info' && <Info size={32} weight="fill" />}
 
       <Caption>{children}</Caption>
     </Wrapper>

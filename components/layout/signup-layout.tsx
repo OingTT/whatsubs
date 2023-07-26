@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import ProgressBar from '../progress-bar';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import { Description } from '@/lib/client/style';
 
 const Wrapper = styled.form`
   width: 100%;
@@ -22,32 +23,11 @@ const Header = styled.div`
   gap: 24px;
 `;
 
-const Titles = styled.div`
+const Title = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-`;
-
-const Title = styled.div`
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-word;
-  font-weight: 600;
-  color: #333333;
-  font-size: 20px;
-  letter-spacing: -0.5px;
-  line-height: 1.4;
-`;
-
-const Subtitle = styled.div`
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-word;
-  font-weight: 500;
-  color: #999999;
-  letter-spacing: -0.5px;
-  line-height: 1.4;
+  gap: 4px;
 `;
 
 const Buttons = styled.div`
@@ -93,10 +73,10 @@ export default function SignupLayout({
       <Wrapper onSubmit={onSubmit}>
         <Header>
           <ProgressBar value={progress} />
-          <Titles>
-            <Title>{title}</Title>
-            <Subtitle>{subtitle}</Subtitle>
-          </Titles>
+          <Title>
+            <h4>{title}</h4>
+            <Description as="h6">{subtitle}</Description>
+          </Title>
         </Header>
         {children}
         <Buttons>

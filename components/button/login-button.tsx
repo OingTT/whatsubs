@@ -13,26 +13,24 @@ const Button = styled.div`
   align-items: center;
   padding: 16px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background-light);
   overflow: hidden;
   align-content: center;
   flex-wrap: nowrap;
   gap: 16px;
   border-radius: 16px;
   cursor: pointer;
-
-  header {
-    flex: 1;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-  }
 `;
 
 const Logo = styled(Image)`
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 100%;
+`;
+
+const Text = styled.h6`
+  flex: 1;
+  text-align: center;
 `;
 
 interface LoginButtonProps {
@@ -44,13 +42,13 @@ export default function LoginButton({ provider, text }: LoginButtonProps) {
   return (
     <Button onClick={() => signIn(provider, { callbackUrl: '/' })}>
       <Logo
-        src={`/images/${provider}.png`}
+        src={`/images/login/${provider}.png`}
         width="24"
         height="24"
         alt="Logo"
         priority
       />
-      <header>{text}</header>
+      <Text>{text}</Text>
     </Button>
   );
 }

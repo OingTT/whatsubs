@@ -46,7 +46,7 @@ const Content = styled.div`
   display: flex;
   padding: 24px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background);
   border-radius: 16px;
 
   @media (max-width: 809px) {
@@ -66,7 +66,7 @@ export default function WelcomeLayout({ children }: WelcomeLayoutProps) {
       <Dimmer>
         <Left>
           <Image
-            src="/images/whatsubs-full-light.png"
+            src="/images/logo/whatsubs-full-light.png"
             width="191"
             height="64"
             alt="FullLogo"

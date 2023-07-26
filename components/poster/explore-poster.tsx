@@ -37,11 +37,11 @@ const Placeholder = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #333333;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #eeeeee;
   padding: 16px;
   text-align: center;
   line-height: 1.4;
@@ -51,7 +51,7 @@ const Placeholder = styled.div`
 
 const Back = styled(Front)`
   transform: rotateY(180deg);
-  background-color: white;
+  background-color: var(--background-light);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -59,7 +59,6 @@ const Back = styled(Front)`
   align-items: center;
   text-align: center;
   font-weight: 500;
-  color: #333333;
   white-space: pre-line;
   line-height: 1.2;
 
@@ -70,6 +69,11 @@ const Back = styled(Front)`
 
 const Content = styled.div`
   padding: 16px;
+`;
+
+const Subtitle = styled.div`
+  font-size: 14px;
+  color: var(--text-secondary);
 `;
 
 const frontVariants: Variants = {
@@ -169,10 +173,8 @@ export default React.memo(function ExplorePoster({
                 {content.type === ContentType.MOVIE &&
                   (content.title.includes(':') ? (
                     <>
-                      <div>{content.title.split(': ')[0]}</div>
-                      <div style={{ fontSize: 14, color: '#999' }}>
-                        {content.title.split(': ')[1]}
-                      </div>
+                      <h6>{content.title.split(': ')[0]}</h6>
+                      <Subtitle>{content.title.split(': ')[1]}</Subtitle>
                     </>
                   ) : (
                     content.title
@@ -180,10 +182,8 @@ export default React.memo(function ExplorePoster({
                 {content.type === ContentType.TV &&
                   (content.name.includes(':') ? (
                     <>
-                      <div>{content.name.split(': ')[0]}</div>
-                      <div style={{ fontSize: 14, color: '#999' }}>
-                        {content.name.split(': ')[1]}
-                      </div>
+                      <h6>{content.name.split(': ')[0]}</h6>
+                      <Subtitle>{content.name.split(': ')[1]}</Subtitle>
                     </>
                   ) : (
                     content.name

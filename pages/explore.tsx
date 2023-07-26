@@ -57,9 +57,8 @@ const ResetButton = styled.div`
   justify-content: center;
   align-items: center;
   padding: 16px;
-  background-color: #eeeeee;
+  background-color: var(--secondary);
   border-radius: 8px;
-  color: #333;
   gap: 8px;
   cursor: pointer;
 

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import useUser from '@/lib/client/useUser';
-import Nav from './nav';
+import NavLink from './nav-link';
 import { Spacer } from '@/lib/client/style';
 
 const Wrapper = styled.div`
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 32px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background-light);
   gap: 24px;
   position: fixed;
   top: 0;
@@ -22,6 +22,20 @@ const Wrapper = styled.div`
   @media (max-width: 809px) {
     padding: 24px;
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const Logo = styled.div`
+  width: 24px;
+  height: 24px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 24px;
+
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
   }
 `;
 
@@ -35,22 +49,24 @@ export default function Topbar() {
   return (
     <Wrapper>
       <Link href="/">
-        <Image
-          src="/images/whatsubs-small.png"
-          width="24"
-          height="24"
-          alt="Logo"
-          priority
-        />
+        <Logo>
+          <Image
+            src="/images/logo/whatsubs.png"
+            width="48"
+            height="48"
+            alt="Logo"
+            priority
+          />
+        </Logo>
       </Link>
 
-      <Nav href="/explore">탐색</Nav>
-      <Nav href="/chart">차트</Nav>
+      <NavLink href="/explore">탐색</NavLink>
+      <NavLink href="/chart">차트</NavLink>
 
       <Spacer />
 
       <Link href="/search">
-        <MagnifyingGlass color="#333" size="24" />
+        <MagnifyingGlass size="24" />
       </Link>
       <Link href="/setting">
         <User

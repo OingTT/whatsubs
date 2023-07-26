@@ -83,7 +83,7 @@ const DisabledText = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #999;
+  color: var(--text-secondary);
   position: absolute;
 `;
 
@@ -94,11 +94,14 @@ const Button = styled.div<{ disabled: boolean }>`
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(32px);
-  background-color: rgba(232, 232, 232, 0.75);
+  background-color: var(--secondary);
   border-radius: 100%;
   cursor: pointer;
   z-index: 1;
-  color: ${props => (props.disabled ? '#bbb' : '#333')};
+
+  & > svg {
+    opacity: ${props => (props.disabled ? 0.2 : 1)};
+  }
 
   @media (max-width: 1199px) {
     display: none;

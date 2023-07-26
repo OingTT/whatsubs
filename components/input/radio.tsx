@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   align-items: center;
   padding: 8px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background-light);
   gap: 8px;
   border-radius: 16px;
   user-select: none;
@@ -23,8 +23,8 @@ const Input = styled.input`
   cursor: pointer;
 
   &:checked ~ label {
-    background-color: #eee;
-    color: #333;
+    background-color: var(--secondary);
+    color: var(--text);
   }
 `;
 
@@ -35,8 +35,7 @@ const Label = styled.label`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  color: #bbb;
-  font-weight: bold;
+  color: var(--text-secondary);
   cursor: pointer;
 `;
 
@@ -77,7 +76,9 @@ export default function Radio({
               e.key === 'Enter' && e.preventDefault();
             }}
           />
-          <Label htmlFor={id}>{labels ? labels[index] : id}</Label>
+          <Label htmlFor={id}>
+            <h6>{labels ? labels[index] : id}</h6>
+          </Label>
         </Button>
       ))}
     </Wrapper>

@@ -25,11 +25,11 @@ const Placeholder = styled(motion.div)`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #333;
+  background-color: #333333;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #eeeeee;
   padding: 16px;
   text-align: center;
   line-height: 1.4;

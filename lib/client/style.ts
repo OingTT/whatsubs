@@ -16,7 +16,7 @@ export const VerticalBar = styled.div<{ size: number }>`
   width: 2px;
   border-radius: 1px;
   height: ${props => props.size}px;
-  background-color: #999;
+  background-color: var(--text-secondary);
 `;
 
 export const Spacer = styled.div`
@@ -25,7 +25,7 @@ export const Spacer = styled.div`
 
 export const Description = styled.span`
   font-weight: 500;
-  color: #999999;
+  color: var(--text-secondary);
 `;
 
 export const Caption = styled.p`

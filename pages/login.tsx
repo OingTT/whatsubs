@@ -16,16 +16,24 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 120px;
+  gap: 96px;
 `;
 
 const Logo = styled(Image)`
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
+
   @media (max-width: 1199px) {
     display: none;
   }
 `;
 
 const FullLogo = styled(Image)`
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
+
   @media (min-width: 1200px) {
     display: none;
   }
@@ -70,14 +78,14 @@ export default function Login() {
     <WelcomeLayout>
       <Wrapper>
         <Logo
-          src="/images/whatsubs-small.png"
-          width="48"
-          height="48"
+          src="/images/logo/whatsubs.png"
+          width="96"
+          height="96"
           alt="Logo"
           priority
         />
         <FullLogo
-          src="/images/whatsubs-full-dark.png"
+          src="/images/logo/whatsubs-full-dark.png"
           width="191"
           height="64"
           alt="FullLogo"

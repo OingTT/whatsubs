@@ -10,18 +10,20 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding: 16px;
-  background-color: #eee;
+  background-color: var(--secondary);
   gap: 8px;
   border-radius: 16px;
   margin-top: 8px;
   margin-bottom: 8px;
   cursor: grab;
+
+  & > svg {
+    color: var(--text-secondary);
+  }
 `;
 
-const Text = styled.div`
+const Text = styled.h6`
   width: 100%;
-  color: #333333;
-  font-weight: 600;
   text-align: center;
 `;
 
@@ -45,7 +47,7 @@ export default React.memo(function DraggableCard({
           {...provided.dragHandleProps}
         >
           <Text>{children}</Text>
-          <List size={24} color="#999" />
+          <List size={24} />
         </Wrapper>
       )}
     </Draggable>

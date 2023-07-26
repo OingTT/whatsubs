@@ -30,7 +30,7 @@ const ProviderSelector = styled.div`
   align-items: center;
   padding: 16px;
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background-light);
   border-radius: 16px;
   gap: 24px;
 
@@ -50,8 +50,10 @@ const Providers = styled.div`
 `;
 
 const Comparison = styled.div<{ comparison: number | undefined }>`
-  color: ${({ comparison }) =>
-    comparison && comparison > 0 ? '#ee4444' : '#1199ee'};
+  color: var(
+    ${({ comparison }) =>
+      comparison && comparison > 0 ? '--danger' : '--info'}
+  );
 `;
 
 interface fontWeight {
@@ -164,7 +166,7 @@ const Recommender = ({
               ottData?.includes(subscription.id) && (
                 <Ott
                   key={subscription.id}
-                  src={`/images/${subscription.key}.png`}
+                  src={`/images/subs/${subscription.key}.png`}
                   width={40}
                   height={40}
                   alt={subscription.name}
@@ -229,11 +231,11 @@ export default function Suggestion() {
   return (
     <Layout>
       <Container>
-        {error && <Alert type="error">추천 시스템을 점검하고 있어요.</Alert>}
+        {error && <Alert type="danger">추천 시스템을 점검하고 있어요.</Alert>}
 
         <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
-        {recommenderData && <ArrowDown color="#333" size={24} />}
+        {recommenderData && <ArrowDown size={24} />}
 
         {recommenderData?.map((ottData, index) => (
           <Recommender

@@ -28,8 +28,10 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: ${props => (props.selected ? 'black' : '#eee')};
-  color: ${props => (props.selected ? 'white' : 'black')};
+  background-color: var(
+    ${props => (props.selected ? '--primary' : '--secondary')}
+  );
+  color: var(${props => (props.selected ? '--text-primary' : '--text')});
   border-radius: 100%;
   cursor: pointer;
 

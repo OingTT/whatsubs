@@ -15,7 +15,7 @@ const Selector = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: #eee;
+  background-color: var(--secondary);
   overflow: auto;
   border-radius: 16px;
   user-select: none;
@@ -61,10 +61,7 @@ const TextButtons = styled.div`
   gap: 8px;
 `;
 
-const TextButton = styled.div`
-  color: #333;
-  font-weight: 600;
-  white-space: pre;
+const TextButton = styled.h6`
   cursor: pointer;
 `;
 
@@ -160,7 +157,7 @@ export default function SubsSelector() {
                   value={subscription.id}
                 />
                 <SubsImage
-                  src={`/images/${subscription.key}.png`}
+                  src={`/images/subs/${subscription.key}.png`}
                   width="40"
                   height="40"
                   alt={subscription.name}
@@ -184,7 +181,7 @@ export default function SubsSelector() {
                   value={subscription.id}
                 />
                 <SubsImage
-                  src={`/images/${subscription.key}.png`}
+                  src={`/images/subs/${subscription.key}.png`}
                   width="40"
                   height="40"
                   alt={subscription.name}

@@ -33,12 +33,6 @@ const SubsImage = styled(Image)`
   filter: contrast(50%) opacity(50%);
 `;
 
-const SubsName = styled.span`
-  font-weight: 500;
-  color: #999999;
-  white-space: pre;
-`;
-
 const Input = styled.input`
   display: none;
 
@@ -46,8 +40,8 @@ const Input = styled.input`
     filter: none;
   }
 
-  &:checked ~ span {
-    color: #333333;
+  &:not(:checked) ~ h6 {
+    opacity: 0.25;
   }
 `;
 
@@ -106,12 +100,12 @@ export default function Subscriptions() {
               value={subscription.id}
             />
             <SubsImage
-              src={`/images/${subscription.key}.png`}
+              src={`/images/subs/${subscription.key}.png`}
               width="64"
               height="64"
               alt={subscription.name}
             />
-            <SubsName>{subscription.name}</SubsName>
+            <h6>{subscription.name}</h6>
           </SubsWrapper>
         ))}
       </Wrapper>

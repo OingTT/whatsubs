@@ -32,7 +32,7 @@ const Number = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #bbbbbb;
+  color: var(--text-secondary);
   font-weight: 600;
 `;
 

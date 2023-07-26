@@ -8,14 +8,15 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  user-select: none;
 `;
 
 const Input = styled.input`
   display: none;
 
   &:checked ~ label div {
-    background-color: #111;
-    color: #fff;
+    background-color: var(--primary);
+    color: var(--text-primary);
   }
 `;
 
@@ -30,7 +31,7 @@ const Box = styled.div`
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  background-color: #eee;
+  background-color: var(--secondary);
   display: flex;
   justify-content: center;
   align-items: center;

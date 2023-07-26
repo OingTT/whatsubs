@@ -123,7 +123,7 @@ export default function Profile() {
               alt="UserImage"
             />
             {/* <EditButton>
-              <PencilSimple color="#333" />
+              <PencilSimple/>
             </EditButton> */}
           </ImageWrapper>
 

@@ -12,12 +12,11 @@ const Selector = styled.select`
   width: 100%;
   height: 56px;
   box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: var(--background-light);
   overflow: hidden;
   border-radius: 16px;
   border: none;
   padding: 24px 16px 8px 16px;
-  color: #333;
   font-size: 16px;
   font-weight: bold;
   font-family: inherit;
@@ -31,7 +30,7 @@ const Label = styled.label`
   position: absolute;
   top: 8px;
   left: 16px;
-  color: #999;
+  color: var(--text-secondary);
   font-weight: bold;
   font-size: 12px;
 `;
