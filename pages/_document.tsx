@@ -22,6 +22,16 @@ export default function Document() {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#222222"
+          media="(prefers-color-scheme: dark)"
+        />
       </Head>
       <body>
         <Main />
