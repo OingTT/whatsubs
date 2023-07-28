@@ -6,6 +6,10 @@ const Wrapper = styled(Link)<{ selected: boolean }>`
   color: ${props => (props.selected ? 'inherit' : 'var(--text-secondary)')};
 `;
 
+const Text = styled.h6`
+  font-weight: 400;
+`;
+
 interface NavProps {
   href: string;
   children: React.ReactNode;
@@ -16,7 +20,7 @@ export default function NavLink({ href, children }: NavProps) {
 
   return (
     <Wrapper href={href} selected={href === router.pathname}>
-      <h6>{children}</h6>
+      <Text>{children}</Text>
     </Wrapper>
   );
 }

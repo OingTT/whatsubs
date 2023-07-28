@@ -71,8 +71,12 @@ const Content = styled.div`
   padding: 16px;
 `;
 
+const Title = styled.h6`
+  font-weight: 500;
+`;
+
 const Subtitle = styled.div`
-  font-size: 14px;
+  font-size: 0.875rem; // 14px
   color: var(--text-secondary);
 `;
 
@@ -170,24 +174,18 @@ export default React.memo(function ExplorePoster({
 
             <Content onClick={handleClick}>
               <Link href={`/${content.type.toLowerCase()}/${content.id}`}>
-                {content.type === ContentType.MOVIE &&
-                  (content.title.includes(':') ? (
-                    <>
-                      <h6>{content.title.split(': ')[0]}</h6>
-                      <Subtitle>{content.title.split(': ')[1]}</Subtitle>
-                    </>
-                  ) : (
-                    content.title
-                  ))}
-                {content.type === ContentType.TV &&
-                  (content.name.includes(':') ? (
-                    <>
-                      <h6>{content.name.split(': ')[0]}</h6>
-                      <Subtitle>{content.name.split(': ')[1]}</Subtitle>
-                    </>
-                  ) : (
-                    content.name
-                  ))}
+                {content.type === ContentType.MOVIE && (
+                  <>
+                    <Title>{content.title.split(': ')[0]}</Title>
+                    <Subtitle>{content.title.split(': ')[1]}</Subtitle>
+                  </>
+                )}
+                {content.type === ContentType.TV && (
+                  <>
+                    <Title>{content.name.split(': ')[0]}</Title>
+                    <Subtitle>{content.name.split(': ')[1]}</Subtitle>
+                  </>
+                )}
               </Link>
             </Content>
           </Back>
