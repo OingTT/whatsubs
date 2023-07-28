@@ -56,6 +56,7 @@ export interface Movie {
 }
 
 export interface MovieDetail {
+  type: 'MOVIE';
   backdrop_path: string;
   belongs_to_collection?: {
     id: number;
@@ -134,6 +135,7 @@ export interface TV {
 }
 
 export interface TVDetail {
+  type: 'TV';
   backdrop_path: string;
   created_by: Array<{ id: number; name: string; profile_path: string }>;
   genres: Array<{ id: number; name: string }>;

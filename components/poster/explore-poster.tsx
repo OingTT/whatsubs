@@ -173,7 +173,9 @@ export default React.memo(function ExplorePoster({
             </Content>
 
             <Content onClick={handleClick}>
-              <Link href={`/${content.type.toLowerCase()}/${content.id}`}>
+              <Link
+                href={`/contents/${content.type.toLowerCase()}/${content.id}`}
+              >
                 {content.type === ContentType.MOVIE && (
                   <>
                     <Title>{content.title.split(': ')[0]}</Title>

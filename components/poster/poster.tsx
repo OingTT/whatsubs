@@ -66,7 +66,7 @@ export default function Poster({ type, id }: PosterProps) {
   }, [data]);
 
   return (
-    <Link href={`/${type.toLowerCase()}/${id}`}>
+    <Link href={`/contents/${type.toLowerCase()}/${id}`}>
       <Wrapper>
         {data?.poster_path && (
           <Image
