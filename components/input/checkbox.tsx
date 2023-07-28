@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Check } from '@phosphor-icons/react';
+import { IconCheck } from '@tabler/icons-react';
 import React from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
@@ -60,7 +60,7 @@ export default function Radio({ register, children, required }: RadioProps) {
       />
       <Label htmlFor={register.name}>
         <Box>
-          <Check size={16} weight="bold" />
+          <IconCheck size={20} />
         </Box>
         {children}
       </Label>

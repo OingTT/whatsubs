@@ -23,7 +23,7 @@ import useSWRInfinite, {
 } from 'swr/infinite';
 import useSWR from 'swr';
 import CheckButton from '@/components/input/check-button';
-import { ArrowCounterClockwise } from '@phosphor-icons/react';
+import { IconReload } from '@tabler/icons-react';
 
 const Filters = styled.div`
   width: 100%;
@@ -279,8 +279,8 @@ export default function Explore() {
           </CheckButton>
         )}
         <Spacer />
-        <ResetButton>
-          <ArrowCounterClockwise onClick={handleResetFilters} weight="bold" />
+        <ResetButton onClick={handleResetFilters}>
+          <IconReload size={16} />
           초기화
         </ResetButton>
       </Filters>

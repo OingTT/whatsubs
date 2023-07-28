@@ -3,7 +3,6 @@ import Slider from '@/components/slider';
 import WatchSelector from '@/components/watch-selector';
 import { Collection, Content, MovieDetail } from '@/lib/client/interface';
 import styled from '@emotion/styled';
-import { Play, Star } from '@phosphor-icons/react';
 import { ContentType, Subscription } from '@prisma/client';
 import Image from 'next/image';
 import useSWR from 'swr';
@@ -11,6 +10,7 @@ import * as cheerio from 'cheerio';
 import Person from '@/components/person';
 import { Grid, Section, Container, Caption } from '@/lib/client/style';
 import { GetServerSideProps } from 'next';
+import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -77,7 +77,6 @@ const PlayButton = styled.button`
   justify-content: center;
   align-items: center;
   border: none;
-  font-size: 1rem;
   box-shadow: ${props =>
     props.disabled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.25)'};
   background-color: var(
@@ -246,7 +245,7 @@ export default function Movie({ id }: MovieProps) {
             <h2>{data ? data.title : '제목'}</h2>
             <SubTitle>
               <Rating>
-                <Star weight="fill" />
+                <IconStarFilled size={16} />
                 {rating?.rating?.toFixed(1) || '-.-'}
               </Rating>
               {data?.release_date.slice(0, 4)}
@@ -265,7 +264,7 @@ export default function Movie({ id }: MovieProps) {
         <Selector>
           <a href={playLink?.urls[0]} target="_blank" rel="noopener">
             <PlayButton disabled={playLink?.urls.length === 0}>
-              <Play weight="fill" />
+              <IconPlayerPlayFilled size={16} />
             </PlayButton>
           </a>
 

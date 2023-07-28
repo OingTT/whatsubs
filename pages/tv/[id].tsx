@@ -5,13 +5,13 @@ import WatchSelector from '@/components/watch-selector';
 import { Content, TVDetail } from '@/lib/client/interface';
 import { Grid, Container, Section, Caption } from '@/lib/client/style';
 import styled from '@emotion/styled';
-import { Play, Star } from '@phosphor-icons/react';
 import { ContentType, Subscription } from '@prisma/client';
 import Image from 'next/image';
 import useSWR from 'swr';
 import React from 'react';
 import * as cheerio from 'cheerio';
 import { GetServerSideProps } from 'next';
+import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
 
 const Backdrop = styled.div`
   width: 100%;
@@ -229,7 +229,7 @@ export default function TV({ id }: TVProps) {
             <h2>{data ? data.name : '제목'}</h2>
             <SubTitle>
               <Rating>
-                <Star weight="fill" />
+                <IconStarFilled size={16} />
                 {rating?.rating?.toFixed(1) || '-.-'}
               </Rating>
               {data?.first_air_date.slice(0, 4)}
@@ -243,7 +243,7 @@ export default function TV({ id }: TVProps) {
         <Selector>
           <a href={playLink?.urls[0]} target="_blank" rel="noopener">
             <PlayButton disabled={playLink?.urls.length === 0}>
-              <Play weight="fill" />
+              <IconPlayerPlayFilled size={16} />
             </PlayButton>
           </a>
 

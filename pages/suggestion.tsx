@@ -1,6 +1,5 @@
 import Layout from '@/components/layout/layout';
 import styled from '@emotion/styled';
-import { ArrowDown } from '@phosphor-icons/react';
 import Button from '@/components/button/button';
 import { Subscription } from '@prisma/client';
 import useSWR from 'swr';
@@ -8,6 +7,7 @@ import { Spacer, Container } from '@/lib/client/style';
 import useUser from '@/lib/client/useUser';
 import Image from 'next/image';
 import Alert from '@/components/alert';
+import { IconArrowDown } from '@tabler/icons-react';
 
 const Costs = styled.div`
   width: 100%;
@@ -235,7 +235,7 @@ export default function Suggestion() {
 
         <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
-        {recommenderData && <ArrowDown size={24} />}
+        {recommenderData && <IconArrowDown size={32} stroke={1.5} />}
 
         {recommenderData?.map((ottData, index) => (
           <Recommender

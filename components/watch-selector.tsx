@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import { BookmarkSimple, Check, Eye } from '@phosphor-icons/react';
 import Stars from './stars';
 import React, { useEffect, useState } from 'react';
 import { ContentType, Review, Watch } from '@prisma/client';
 import useSWR from 'swr';
 import useMutation from '@/lib/client/useMutation';
+import { IconBookmark, IconCheck, IconEye } from '@tabler/icons-react';
 
 const Selector = styled.div`
   position: relative;
@@ -38,13 +38,6 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
   @media (min-width: 810px) {
     width: ${props => (props.small ? '40px' : '48px')};
     height: ${props => (props.small ? '40px' : '48px')};
-  }
-`;
-
-const Icon = styled.div<{ small?: boolean }>`
-  @media (min-width: 810px) {
-    width: ${props => (props.small ? '16px' : '20px')};
-    height: ${props => (props.small ? '16px' : '20px')};
   }
 `;
 
@@ -126,7 +119,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WANT_TO_WATCH')}
           small={small}
         >
-          <Icon as={BookmarkSimple} small={small} />
+          <IconBookmark size={20} stroke={1.5} />
           {count && (
             <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : '-'}</Count>
           )}
@@ -136,7 +129,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHING')}
           small={small}
         >
-          <Icon as={Eye} small={small} />
+          <IconEye size={20} stroke={1.5} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHING : '-'}</Count>}
         </Button>
         <Button
@@ -144,7 +137,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHED')}
           small={small}
         >
-          <Icon as={Check} small={small} />
+          <IconCheck size={20} stroke={1.5} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHED : '-'}</Count>}
         </Button>
       </Buttons>

@@ -1,11 +1,11 @@
 import { Caption } from '@/lib/client/style';
 import styled from '@emotion/styled';
 import {
-  CheckCircle,
-  Info,
-  Warning,
-  WarningOctagon,
-} from '@phosphor-icons/react';
+  IconAlertHexagonFilled,
+  IconAlertTriangleFilled,
+  IconCircleCheckFilled,
+  IconInfoCircleFilled,
+} from '@tabler/icons-react';
 
 type AlertType = 'success' | 'danger' | 'warning' | 'info';
 
@@ -52,10 +52,10 @@ interface AlertProps {
 export default function Alert({ type, children }: AlertProps) {
   return (
     <Wrapper type={type}>
-      {type === 'success' && <CheckCircle size={32} weight="fill" />}
-      {type === 'danger' && <WarningOctagon size={32} weight="fill" />}
-      {type === 'warning' && <Warning size={32} weight="fill" />}
-      {type === 'info' && <Info size={32} weight="fill" />}
+      {type === 'success' && <IconCircleCheckFilled size={32} />}
+      {type === 'danger' && <IconAlertHexagonFilled size={32} />}
+      {type === 'warning' && <IconAlertTriangleFilled size={32} />}
+      {type === 'info' && <IconInfoCircleFilled size={32} />}
 
       <Caption>{children}</Caption>
     </Wrapper>

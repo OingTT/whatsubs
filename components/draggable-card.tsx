@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Draggable } from '@hello-pangea/dnd';
-import { List } from '@phosphor-icons/react';
+import { IconGripHorizontal } from '@tabler/icons-react';
 import React from 'react';
 
 const Wrapper = styled.div`
@@ -47,7 +47,7 @@ export default React.memo(function DraggableCard({
           {...provided.dragHandleProps}
         >
           <Text>{children}</Text>
-          <List size={24} />
+          <IconGripHorizontal stroke={1.5} />
         </Wrapper>
       )}
     </Draggable>

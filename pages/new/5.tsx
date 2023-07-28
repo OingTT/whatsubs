@@ -1,7 +1,6 @@
 import TextInput from '@/components/input/text-input';
 import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
-import { PencilSimple } from '@phosphor-icons/react';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
@@ -37,20 +36,6 @@ const UserImage = styled(Image)`
   overflow: hidden;
   border-radius: 100%;
   filter: contrast(50%) opacity(50%);
-`;
-
-const EditButton = styled.div`
-  width: 32px;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-  background-color: rgba(232, 232, 232, 0.75);
-  position: absolute;
-  border-radius: 16px;
-  bottom: 0;
-  right: 0;
 `;
 
 const Input = styled.input`
@@ -122,9 +107,6 @@ export default function Profile() {
               height="80"
               alt="UserImage"
             />
-            {/* <EditButton>
-              <PencilSimple/>
-            </EditButton> */}
           </ImageWrapper>
 
           <ImageWrapper>

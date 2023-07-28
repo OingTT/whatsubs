@@ -9,11 +9,6 @@ const nextConfig = {
       'image.tmdb.org',
     ],
   },
-  modularizeImports: {
-    '@phosphor-icons/react': {
-      transform: '@phosphor-icons/react/{{member}}',
-    },
-  },
   experimental: {
     scrollRestoration: true,
   },

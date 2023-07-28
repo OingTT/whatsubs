@@ -1,10 +1,10 @@
 import useIsDesktop from '@/lib/client/useIsDesktop';
 import styled from '@emotion/styled';
-import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import Poster from './poster/poster';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { Content } from '@/lib/client/interface';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -175,7 +175,7 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
 
       <Contents>
         <Button onClick={handlePrev} disabled={index === 0}>
-          <CaretLeft size={24} weight="bold" />
+          <IconChevronLeft size={32} stroke={1.5} />
         </Button>
 
         <PostersWrapper>
@@ -208,7 +208,7 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
         </PostersWrapper>
 
         <Button onClick={handleNext} disabled={isLast}>
-          <CaretRight size={24} weight="bold" />
+          <IconChevronRight size={32} stroke={1.5} />
         </Button>
       </Contents>
     </Wrapper>

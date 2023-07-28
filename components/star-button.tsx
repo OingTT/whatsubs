@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { Star } from '@phosphor-icons/react';
+import { IconStarFilled } from '@tabler/icons-react';
 
-const StarIcon = styled(Star)<{ enabled?: boolean }>`
+const StarIcon = styled(IconStarFilled)<{ enabled?: boolean }>`
   color: var(${({ enabled }) => (enabled ? '--warning' : '--secondary')});
   cursor: pointer;
 `;
@@ -17,7 +17,5 @@ export default function StarButton({
   fill,
   onClick,
 }: StarButtonProps) {
-  return (
-    <StarIcon size={size} weight="fill" enabled={fill} onClick={onClick} />
-  );
+  return <StarIcon size={size} enabled={fill} onClick={onClick} />;
 }

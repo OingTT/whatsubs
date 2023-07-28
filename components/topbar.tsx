@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MagnifyingGlass } from '@phosphor-icons/react';
 import useUser from '@/lib/client/useUser';
 import NavLink from './nav-link';
 import { Spacer } from '@/lib/client/style';
+import { IconSearch } from '@tabler/icons-react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -66,7 +66,7 @@ export default function Topbar() {
       <Spacer />
 
       <Link href="/search">
-        <MagnifyingGlass size="24" />
+        <IconSearch size="24" stroke={1.5} />
       </Link>
       <Link href="/setting">
         <User

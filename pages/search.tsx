@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import Layout from '@/components/layout/layout';
 import { useForm } from 'react-hook-form';
-import { MagnifyingGlass, XCircle } from '@phosphor-icons/react';
 import Slider from '@/components/slider';
 import { ContentType } from '@prisma/client';
 import { Grid, Section, Container } from '@/lib/client/style';
@@ -11,6 +10,7 @@ import useSWR from 'swr';
 import { Movie, TV } from '@/lib/client/interface';
 import { useRecoilState } from 'recoil';
 import { searchQueryState } from '@/lib/client/state';
+import { IconCircleXFilled, IconSearch } from '@tabler/icons-react';
 
 interface Person {
   id: number;
@@ -145,7 +145,7 @@ export default function Search() {
       <Container>
         <SearchBox>
           <SearchIcon htmlFor="query">
-            <MagnifyingGlass size={24} />
+            <IconSearch size="24" stroke={1.5} />
           </SearchIcon>
           <Input
             id="query"
@@ -164,7 +164,7 @@ export default function Search() {
               setQuery('');
             }}
           >
-            {watch('query') && <XCircle size={24} weight="fill" />}
+            {watch('query') && <IconCircleXFilled />}
           </ClearIcon>
         </SearchBox>
       </Container>
