@@ -19,13 +19,52 @@ import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
 import Skeleton from 'react-loading-skeleton';
 
 const Backdrop = styled.div`
-  width: 100%;
-  height: 320px;
+  width: 936px;
+  height: 400px;
+  background-color: var(--secondary);
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+
+  & > img {
+    object-fit: cover;
+  }
+
+  @media (max-width: 1199px) {
+    width: 100%;
+    border-radius: 0px;
+  }
+
+  @media (max-width: 809px) {
+    height: 240px;
+  }
+`;
+
+const Background = styled.div`
+  width: 105%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--secondary);
   position: relative;
 
   & > img {
     object-fit: cover;
+    filter: opacity(75%) blur(40px);
+
+    @media (max-width: 1199px) {
+      filter: opacity(75%) blur(24px);
+    }
+
+    @media (max-width: 809px) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    width: 100%;
+    height: 400px;
   }
 
   @media (max-width: 809px) {
@@ -293,16 +332,26 @@ export default function Content({ type, id }: ContentProps) {
       }
       fit
     >
-      <Backdrop>
+      <Background>
         {contentDetail?.backdrop_path && (
           <Image
             src={`https://image.tmdb.org/t/p/original${contentDetail.backdrop_path}`}
             fill
-            alt="Backdrop"
+            alt="Background"
             unoptimized
           />
         )}
-      </Backdrop>
+        <Backdrop>
+          {contentDetail?.backdrop_path && (
+            <Image
+              src={`https://image.tmdb.org/t/p/original${contentDetail.backdrop_path}`}
+              fill
+              alt="Backdrop"
+              unoptimized
+            />
+          )}
+        </Backdrop>
+      </Background>
       <Container>
         <Header>
           <TitleBar>
