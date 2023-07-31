@@ -41,7 +41,7 @@ const Backdrop = styled.div`
 `;
 
 const Background = styled.div`
-  width: 105%;
+  width: 110%;
   height: 480px;
   display: flex;
   justify-content: center;

@@ -8,6 +8,7 @@ const Wrapper = styled.div<{ fit?: boolean }>`
   justify-content: flex-start;
   align-items: center;
   padding: ${props => (props.fit ? '64px 0px 0px 0px' : '72px 0px 0px 0px')};
+  overflow: hidden;
 `;
 
 interface LayoutProps {
