@@ -12,7 +12,7 @@ const Selector = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   user-select: none;
 `;
 
@@ -43,12 +43,16 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
 
 const Count = styled.div`
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
 `;
 
 const StarsWrapper = styled.div<{ absolute?: boolean }>`
   position: ${props => (props.absolute ? 'absolute' : 'static')};
-  bottom: ${props => (props.absolute ? '-40px' : '0')};
+  bottom: -36px;
+
+  @media (max-width: 809px) {
+    bottom: -32px;
+  }
 `;
 
 interface ReviewCountsResponse {
@@ -75,10 +79,13 @@ export default function WatchSelector({
   const [updateReview] = useMutation(
     `/api/contents/${type.toLowerCase()}/${id}/review`
   );
-  const { data: reviewCounts, mutate } = useSWR<ReviewCountsResponse>(
-    count && `/api/contents/${type.toLowerCase()}/${id}/reviews/values`
+  const { data: reviewCounts, mutate: mutateReviewCounts } =
+    useSWR<ReviewCountsResponse>(
+      count && `/api/contents/${type.toLowerCase()}/${id}/reviews/values`
+    );
+  const { data: reviews, mutate: mutateReviews } = useSWR<Review[]>(
+    '/api/users/me/reviews'
   );
-  const { data } = useSWR<Review[]>('/api/users/me/reviews');
   const [watch, setWatch] = useState<Watch>();
   const [review, setReview] = useState<Review>();
 
@@ -87,8 +94,19 @@ export default function WatchSelector({
 
     setWatch(newWatch);
     updateReview({ watch: newWatch });
+    if (reviews) {
+      mutateReviews(
+        reviews.reduce((acc, cur) => {
+          if (cur.contentId === id && cur.contentType === type) {
+            return newWatch ? [...acc, { ...cur, watch: newWatch }] : acc;
+          }
+          return [...acc, cur];
+        }, [] as Review[]),
+        false
+      );
+    }
     if (reviewCounts) {
-      mutate(
+      mutateReviewCounts(
         {
           ...reviewCounts,
           ...(watch && { [watch]: reviewCounts[watch] - 1 }),
@@ -101,11 +119,27 @@ export default function WatchSelector({
 
   const handleStars = (stars: number) => {
     updateReview({ watch, rating: stars });
+    if (reviews) {
+      mutateReviews(
+        reviews.reduce(
+          (acc, cur) =>
+            cur.contentId === id && cur.contentType === type
+              ? [...acc, { ...cur, rating: stars }]
+              : [...acc, cur],
+          [] as Review[]
+        ),
+        false
+      );
+    }
   };
 
   useEffect(() => {
-    setReview(data?.find(review => review.contentId === id));
-  }, [data, id]);
+    setReview(
+      reviews?.find(
+        review => review.contentType === type && review.contentId === id
+      )
+    );
+  }, [id, reviews, type]);
 
   useEffect(() => {
     setWatch(review?.watch);
@@ -143,7 +177,7 @@ export default function WatchSelector({
       </Buttons>
 
       <StarsWrapper absolute={absoluteStars}>
-        {watch === 'WATCHED' && (
+        {(watch === 'WATCHING' || watch === 'WATCHED') && (
           <Stars rating={review?.rating} onChange={handleStars} />
         )}
       </StarsWrapper>

@@ -77,7 +77,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 24px;
 
   @media (max-width: 809px) {
@@ -85,7 +85,7 @@ const Header = styled.div`
   }
 `;
 
-const TitleBar = styled.div`
+const Left = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -98,6 +98,10 @@ const SubTitle = styled.h6`
   gap: 8px;
   color: var(--text-secondary);
   font-weight: 400;
+`;
+
+const Right = styled.div`
+  margin-top: 4px;
 `;
 
 const Rating = styled.div`
@@ -198,7 +202,7 @@ export default function Content({ type, id }: ContentProps) {
     `/api/contents/${type.toLowerCase()}/${id}/reviews/values`
   );
 
-  const getContentDetail: Fetcher<
+  const fetchContentDetail: Fetcher<
     MovieDetail | TVDetail,
     string
   > = async url => {
@@ -213,7 +217,7 @@ export default function Content({ type, id }: ContentProps) {
     type === ContentType.MOVIE
       ? `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=credits,recommendations,release_dates,similar,watch/providers`
       : `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR&watch_region=KR&append_to_response=aggregate_credits,content_ratings,recommendations,similar,watch/providers`,
-    getContentDetail
+    fetchContentDetail
   );
 
   const { data: collection } = useSWR<Collection>(
@@ -354,7 +358,7 @@ export default function Content({ type, id }: ContentProps) {
       </Background>
       <Container>
         <Header>
-          <TitleBar>
+          <Left>
             <h2>
               {contentDetail ? (
                 contentDetail.type === 'MOVIE' ? (
@@ -382,9 +386,11 @@ export default function Content({ type, id }: ContentProps) {
                 <Skeleton width={120} />
               )}
             </SubTitle>
-          </TitleBar>
+          </Left>
 
-          <WatchSelector type={type} id={id} absoluteStars count />
+          <Right>
+            <WatchSelector type={type} id={id} absoluteStars count />
+          </Right>
         </Header>
 
         <Selector>
