@@ -97,6 +97,8 @@ model Review {
   userId      String
   contentType ContentType
   contentId   Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   watch       Watch
   rating      Int?        @db.TinyInt
 
