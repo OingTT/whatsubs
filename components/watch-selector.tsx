@@ -5,6 +5,7 @@ import { ContentType, Review, Watch } from '@prisma/client';
 import useSWR from 'swr';
 import useMutation from '@/lib/client/useMutation';
 import { IconBookmark, IconCheck, IconEye } from '@tabler/icons-react';
+import useUser from '@/lib/client/useUser';
 
 const Selector = styled.div`
   position: relative;
@@ -76,6 +77,7 @@ export default function WatchSelector({
   absoluteStars,
   count,
 }: WatchSelectorProps) {
+  const user = useUser();
   const [updateReview] = useMutation(
     `/api/contents/${type.toLowerCase()}/${id}/review`
   );
@@ -91,17 +93,33 @@ export default function WatchSelector({
 
   const handleWatch = (value: Watch) => {
     const newWatch = watch === value ? undefined : value;
+    const rating =
+      (newWatch !== 'WATCHING' && newWatch !== 'WATCHED') ||
+      review?.rating === 0
+        ? null
+        : review?.rating;
 
     setWatch(newWatch);
-    updateReview({ watch: newWatch });
+    updateReview({ watch: newWatch, rating });
     if (reviews) {
       mutateReviews(
-        reviews.reduce((acc, cur) => {
-          if (cur.contentId === id && cur.contentType === type) {
-            return newWatch ? [...acc, { ...cur, watch: newWatch }] : acc;
-          }
-          return [...acc, cur];
-        }, [] as Review[]),
+        reviews
+          .filter(
+            review => review.contentId !== id || review.contentType !== type
+          )
+          .concat(
+            newWatch
+              ? [
+                  {
+                    userId: user?.id,
+                    contentId: id,
+                    contentType: type,
+                    watch: newWatch,
+                    rating,
+                  } as Review,
+                ]
+              : []
+          ),
         false
       );
     }
@@ -118,13 +136,14 @@ export default function WatchSelector({
   };
 
   const handleStars = (stars: number) => {
-    updateReview({ watch, rating: stars });
+    const rating = stars === 0 ? null : stars;
+    updateReview({ watch, rating });
     if (reviews) {
       mutateReviews(
         reviews.reduce(
           (acc, cur) =>
             cur.contentId === id && cur.contentType === type
-              ? [...acc, { ...cur, rating: stars }]
+              ? [...acc, { ...cur, rating }]
               : [...acc, cur],
           [] as Review[]
         ),
@@ -178,7 +197,7 @@ export default function WatchSelector({
 
       <StarsWrapper absolute={absoluteStars}>
         {(watch === 'WATCHING' || watch === 'WATCHED') && (
-          <Stars rating={review?.rating} onChange={handleStars} />
+          <Stars rating={review?.rating ?? 0} onChange={handleStars} />
         )}
       </StarsWrapper>
     </Selector>

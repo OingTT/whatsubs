@@ -98,7 +98,7 @@ model Review {
   contentType ContentType
   contentId   Int
   watch       Watch
-  rating      Int         @default(0) @db.TinyInt
+  rating      Int?        @db.TinyInt
 
   @@id([userId, contentType, contentId])
   @@index([userId])
