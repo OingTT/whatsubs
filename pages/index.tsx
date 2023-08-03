@@ -20,7 +20,7 @@ function isReviewArray(data: Recommendation[] | Review[]): data is Review[] {
 }
 
 function getContents(data?: Recommendation[] | Review[], watch?: Watch) {
-  if (!data) return;
+  if (!data || data.length === 0) return [];
 
   if (isReviewArray(data)) {
     return data
