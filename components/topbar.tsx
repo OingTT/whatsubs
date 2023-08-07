@@ -66,7 +66,7 @@ export default function Topbar() {
       <Spacer />
 
       <Link href="/search">
-        <IconSearch size="24" stroke={1.5} />
+        <IconSearch stroke={1.5} />
       </Link>
       <Link href="/setting">
         <User

@@ -140,12 +140,10 @@ export default function WatchSelector({
     updateReview({ watch, rating });
     if (reviews) {
       mutateReviews(
-        reviews.reduce(
-          (acc, cur) =>
-            cur.contentId === id && cur.contentType === type
-              ? [...acc, { ...cur, rating }]
-              : [...acc, cur],
-          [] as Review[]
+        reviews.map(review =>
+          review.contentId === id && review.contentType === type
+            ? { ...review, rating }
+            : review
         ),
         false
       );
@@ -172,7 +170,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WANT_TO_WATCH')}
           small={small}
         >
-          <IconBookmark size={20} stroke={1.5} />
+          <IconBookmark size={20} stroke={1.6} />
           {count && (
             <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : '-'}</Count>
           )}
@@ -182,7 +180,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHING')}
           small={small}
         >
-          <IconEye size={20} stroke={1.5} />
+          <IconEye size={20} stroke={1.6} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHING : '-'}</Count>}
         </Button>
         <Button
@@ -190,7 +188,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHED')}
           small={small}
         >
-          <IconCheck size={20} stroke={1.5} />
+          <IconCheck size={20} stroke={1.6} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHED : '-'}</Count>}
         </Button>
       </Buttons>
