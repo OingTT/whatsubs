@@ -11,12 +11,15 @@ import styled from '@emotion/styled';
 import { ContentType, Subscription } from '@prisma/client';
 import Image from 'next/image';
 import useSWR, { Fetcher } from 'swr';
-import * as cheerio from 'cheerio';
-import Person from '@/components/person';
-import { Grid, Section, Container, Caption } from '@/lib/client/style';
+import { Section, Container } from '@/lib/client/style';
 import { GetServerSideProps } from 'next';
 import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
 import Skeleton from 'react-loading-skeleton';
+import Comments from '@/components/content/comments';
+import Casts from '@/components/content/casts';
+import usePlayLinks from '@/lib/client/usePlayLinks';
+import Genres from '@/components/content/genres';
+import Details from '@/components/content/details';
 
 const Backdrop = styled.div`
   width: 936px;
@@ -112,12 +115,16 @@ const Rating = styled.div`
 `;
 
 const Certification = styled.div`
+  height: 16px;
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0px 4px;
-  border: 1px solid var(--text-secondary);
+  border: 1.5px solid var(--text-secondary);
   border-radius: 4px;
   font-size: 0.75rem; // 12px
   line-height: 1.25;
+  font-weight: 500;
 `;
 
 const Selector = styled.div`
@@ -152,30 +159,6 @@ const Providers = styled.div`
 
 const Provider = styled(Image)`
   border-radius: 100%;
-`;
-
-const Genres = styled.div`
-  display: flex;
-  gap: 8px;
-  width: 100%;
-  flex-wrap: wrap;
-`;
-
-const Genre = styled.div`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0px 24px 0px 24px;
-  background-color: var(--secondary);
-  border-radius: 8px;
-  font-weight: 500;
-
-  @media (max-width: 809px) {
-    height: 32px;
-    padding: 0px 16px 0px 16px;
-    font-size: 0.875rem; // 14px
-  }
 `;
 
 const Overview = styled.p`
@@ -246,42 +229,6 @@ export default function Content({ type, id }: ContentProps) {
     })
   );
 
-  const directorNames =
-    contentDetail?.type === ContentType.MOVIE
-      ? contentDetail.credits?.crew
-          .filter(crew => crew.job === 'Director')
-          .map(crew => crew.name)
-      : undefined;
-  const writerNames =
-    contentDetail?.type === ContentType.MOVIE
-      ? contentDetail.credits?.crew
-          .filter(crew => crew.job === 'Writer' || crew.job === 'Screenplay')
-          .map(crew => crew.name)
-      : undefined;
-  const { data: translatedDirectors } = useSWR(
-    directorNames &&
-      `/api/translate/${encodeURIComponent(directorNames.join(','))}`
-  );
-  const { data: translatedWriters } = useSWR(
-    writerNames && `/api/translate/${encodeURIComponent(writerNames.join(','))}`
-  );
-
-  const director =
-    translatedDirectors?.translatedText || directorNames?.join(', ');
-  const writer = translatedWriters?.translatedText || writerNames?.join(', ');
-
-  const creatorNames =
-    contentDetail?.type === ContentType.TV
-      ? contentDetail.created_by.map(creator => creator.name)
-      : undefined;
-  const { data: translatedCreators } = useSWR(
-    creatorNames &&
-      `/api/translate/${encodeURIComponent(creatorNames.join(','))}`
-  );
-
-  const creator =
-    translatedCreators?.translatedText || creatorNames?.join(', ');
-
   const certification =
     contentDetail?.type === 'MOVIE'
       ? contentDetail.release_dates?.results
@@ -292,40 +239,9 @@ export default function Content({ type, id }: ContentProps) {
           result => result.iso_3166_1 === 'KR'
         )?.rating;
 
-  const origin_url = contentDetail?.['watch/providers']?.results?.KR?.link;
-  const result_url =
-    'https://whatsubs.herokuapp.com/https://www.themoviedb.org/' +
-    origin_url?.replace('https://www.themoviedb.org/', '');
-
-  const { data: playLink } = useSWR(result_url, async url => {
-    const response = await fetch(url);
-    const html = await response.text();
-
-    const $ = cheerio.load(html);
-
-    const providers: string[] = [];
-    const urls: string[] = [];
-
-    $('ul.providers li a').each((index, element) => {
-      const provider = $(element).attr('title');
-
-      if (
-        typeof provider === 'string' &&
-        provider[0] === 'W' &&
-        !providers.includes(provider)
-      ) {
-        providers.push(provider);
-
-        const url = $(element).attr('href');
-
-        if (typeof url === 'string') {
-          urls.push(url);
-        }
-      }
-    });
-
-    return { providers, urls };
-  });
+  const playLinks = usePlayLinks(
+    contentDetail?.['watch/providers']?.results?.KR?.link
+  );
 
   return (
     <Layout
@@ -374,7 +290,7 @@ export default function Content({ type, id }: ContentProps) {
               {contentDetail ? (
                 <>
                   <Rating>
-                    <IconStarFilled size={16} />
+                    <IconStarFilled size={14} />
                     {rating?.rating?.toFixed(1) || '-.-'}
                   </Rating>
                   {contentDetail?.type === ContentType.MOVIE
@@ -394,8 +310,8 @@ export default function Content({ type, id }: ContentProps) {
         </Header>
 
         <Selector>
-          <a href={playLink?.urls[0]} target="_blank" rel="noopener">
-            <PlayButton disabled={!playLink || playLink.urls.length === 0}>
+          <a href={playLinks?.urls[0]} target="_blank" rel="noopener">
+            <PlayButton disabled={!playLinks || playLinks.urls.length === 0}>
               <IconPlayerPlayFilled size={16} />
             </PlayButton>
           </a>
@@ -429,46 +345,9 @@ export default function Content({ type, id }: ContentProps) {
           </Overview>
         </Section>
 
-        <Genres>
-          {contentDetail?.genres.map(genre => (
-            <Genre key={genre.id}>{genre.name}</Genre>
-          )) || (
-            <>
-              <Skeleton wrapper={Genre} width={40} />
-              <Skeleton wrapper={Genre} width={40} />
-              <Skeleton wrapper={Genre} width={40} />
-            </>
-          )}
-        </Genres>
-
-        <Section>
-          <h5>출연진</h5>
-          <Grid>
-            {contentDetail?.type === ContentType.MOVIE
-              ? contentDetail.credits?.cast
-                  .slice(0, 6)
-                  .map(person => (
-                    <Person
-                      key={person.id}
-                      id={person.id}
-                      name={person.name}
-                      profilePath={person.profile_path}
-                      info={person.character}
-                    />
-                  ))
-              : contentDetail?.aggregate_credits?.cast
-                  .slice(0, 6)
-                  .map(person => (
-                    <Person
-                      key={person.id}
-                      id={person.id}
-                      name={person.name}
-                      profilePath={person.profile_path}
-                      info={person.roles[0].character}
-                    />
-                  ))}
-          </Grid>
-        </Section>
+        <Genres genres={contentDetail?.genres} />
+        <Casts contentDetail={contentDetail} />
+        <Comments type={type} id={id} />
       </Container>
 
       <Container fill>
@@ -478,24 +357,7 @@ export default function Content({ type, id }: ContentProps) {
       </Container>
 
       <Container>
-        <Section>
-          <h5>상세 정보</h5>
-          <Caption>
-            {contentDetail ? (
-              contentDetail.type === ContentType.MOVIE ? (
-                <>
-                  감독: {director || '정보 없음'}
-                  <br />
-                  각본: {writer || '정보 없음'}
-                </>
-              ) : (
-                <>크리에이터: {creator || '정보 없음'}</>
-              )
-            ) : (
-              <Skeleton width={160} />
-            )}
-          </Caption>
-        </Section>
+        <Details contentDetail={contentDetail} />
       </Container>
     </Layout>
   );

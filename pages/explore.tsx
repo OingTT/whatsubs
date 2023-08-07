@@ -210,11 +210,8 @@ export default function Explore() {
       <Container compact>
         <SubsSelector />
 
-        <Alert type="info">
-          평점을 남겨보세요. 포스터 클릭 → 체크(봤어요) 클릭 → 평점 남기기
-        </Alert>
         <Alert type="warning">
-          티빙 ・ 쿠팡플레이는 현재 일부 TV 콘텐츠만 지원해요.
+          티빙 ・ 쿠팡플레이는 일부 TV 콘텐츠만 지원해요.
         </Alert>
 
         <Radio

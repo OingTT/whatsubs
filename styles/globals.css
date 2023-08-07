@@ -84,8 +84,11 @@ svg {
 }
 
 input,
-select {
+select,
+textarea {
   color: inherit;
+  background-color: transparent;
+  font-size: inherit;
 }
 
 input::-webkit-date-and-time-value {

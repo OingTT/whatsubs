@@ -145,7 +145,7 @@ export default function Search() {
       <Container>
         <SearchBox>
           <SearchIcon htmlFor="query">
-            <IconSearch size="24" stroke={1.5} />
+            <IconSearch stroke={1.5} />
           </SearchIcon>
           <Input
             id="query"
