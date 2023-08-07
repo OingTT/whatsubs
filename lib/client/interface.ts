@@ -1,4 +1,4 @@
-import { ContentType } from '@prisma/client';
+import { Comment, ContentType } from '@prisma/client';
 
 export interface Certifications {
   certifications: {
@@ -227,4 +227,24 @@ export interface ExploreForm {
   movieGenres: string[];
   tvGenres: string[];
   movieCertifications: string[];
+}
+
+export interface CommentWithCounts extends Comment {
+  _count: {
+    likes: number;
+  };
+}
+
+export interface UserWithComment {
+  id: number;
+  name: string;
+  avatar: string;
+  reviews: Array<{
+    rating: number;
+  }>;
+  comments: CommentWithCounts[];
+}
+
+export interface CommentLike {
+  commentId: number;
 }

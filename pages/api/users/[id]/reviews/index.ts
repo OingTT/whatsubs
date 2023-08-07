@@ -11,11 +11,15 @@ export default async function session(
 
   if (!session) return res.status(400).end();
 
+  const {
+    query: { id },
+  } = req;
+
+  const userId = id === 'me' ? session.user?.id! : String(id);
+
   const reviews = await prisma.review.findMany({
     where: {
-      user: {
-        email: session.user?.email!,
-      },
+      userId: userId,
     },
     select: {
       contentType: true,
