@@ -117,18 +117,18 @@ export default function CommentInput({ type, id }: CommentInputProps) {
         <ReviewInfo>
           {review?.rating && (
             <IconGroup gap={4}>
-              <IconStar size={16} stroke={2.25} />
+              <IconStar size={16} />
               {review.rating}
             </IconGroup>
           )}
           {review?.watch === Watch.WANT_TO_WATCH && (
-            <IconBookmark size={20} stroke={1.8} />
+            <IconBookmark size={20} stroke={1.6} />
           )}
           {review?.watch === Watch.WATCHING && (
-            <IconEye size={20} stroke={1.8} />
+            <IconEye size={20} stroke={1.6} />
           )}
           {review?.watch === Watch.WATCHED && (
-            <IconCheck size={20} stroke={1.8} />
+            <IconCheck size={20} stroke={1.6} />
           )}
         </ReviewInfo>
       </Top>

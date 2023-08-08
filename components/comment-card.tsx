@@ -202,7 +202,7 @@ export default function CommentCard({ type, id, user }: CommentCardProps) {
         <ReviewInfo>
           {user.reviews[0]?.rating && (
             <IconGroup gap={4}>
-              <IconStar size={16} stroke={2.25} />
+              <IconStar size={16} />
               {user.reviews[0].rating}
             </IconGroup>
           )}
@@ -211,25 +211,25 @@ export default function CommentCard({ type, id, user }: CommentCardProps) {
             <IconButton disabled={index === 0}>
               <IconCircleChevronLeft
                 size={20}
-                stroke={1.8}
+                stroke={1.6}
                 onClick={handleLeft}
               />
             </IconButton>
 
             {user.comments[index].watch === Watch.WANT_TO_WATCH && (
-              <IconBookmark size={20} stroke={1.8} />
+              <IconBookmark size={20} stroke={1.6} />
             )}
             {user.comments[index].watch === Watch.WATCHING && (
-              <IconEye size={20} stroke={1.8} />
+              <IconEye size={20} stroke={1.6} />
             )}
             {user.comments[index].watch === Watch.WATCHED && (
-              <IconCheck size={20} stroke={1.8} />
+              <IconCheck size={20} stroke={1.6} />
             )}
 
             <IconButton disabled={index === user.comments.length - 1}>
               <IconCircleChevronRight
                 size={20}
-                stroke={1.8}
+                stroke={1.6}
                 onClick={handleRight}
               />
             </IconButton>
@@ -242,14 +242,14 @@ export default function CommentCard({ type, id, user }: CommentCardProps) {
       <Bottom>
         <IconGroup button gap={4} onClick={handleLike}>
           {likes?.some(like => like.commentId === user.comments[index].id) ? (
-            <IconThumbUpFilled size={20} stroke={1.8} />
+            <IconThumbUpFilled size={20} stroke={1.6} />
           ) : (
-            <IconThumbUp size={20} stroke={1.8} />
+            <IconThumbUp size={20} stroke={1.6} />
           )}
           {user.comments[index]._count.likes}
         </IconGroup>
         <IconGroup gap={6}>
-          <IconMessage size={20} stroke={1.8} />
+          <IconMessage size={20} stroke={1.6} />
           준비중
         </IconGroup>
       </Bottom>
