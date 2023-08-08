@@ -238,10 +238,6 @@ export default function CommentCard({ type, id, user }: CommentCardProps) {
       </Top>
 
       <Text>{user.comments[index].text}</Text>
-      {user.comments.length > 1 &&
-        [...Array(user.comments.length - 1 - index)].map((_, i) => (
-          <Stack key={i} index={-i - 1} />
-        ))}
 
       <Bottom>
         <IconGroup button gap={4} onClick={handleLike}>
@@ -257,6 +253,11 @@ export default function CommentCard({ type, id, user }: CommentCardProps) {
           준비중
         </IconGroup>
       </Bottom>
+
+      {user.comments.length > 1 &&
+        [...Array(user.comments.length - 1 - index)].map((_, i) => (
+          <Stack key={i} index={-i - 1} />
+        ))}
     </Wrapper>
   );
 }

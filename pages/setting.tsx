@@ -39,7 +39,7 @@ const Info = styled.div`
 
 const Email = styled.div`
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 const Counts = styled.div`
@@ -69,12 +69,12 @@ const Count = styled.div`
 const CountNumber = styled.div`
   font-weight: 300;
   color: var(--text-secondary);
-  font-size: 20px;
+  font-size: 1.25rem; // 20px
 `;
 
 const CountName = styled.div`
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 const Group = styled.div`

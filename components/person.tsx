@@ -38,17 +38,14 @@ const Texts = styled.div`
 `;
 
 const Name = styled.div`
-  white-space: pre-wrap;
   font-weight: 600;
-  font-size: 14px;
-  word-break: keep-all;
+  font-size: 0.875rem; // 14px
 `;
 
 const Info = styled.div`
-  white-space: pre-wrap;
   font-weight: 500;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 interface PersonProps {

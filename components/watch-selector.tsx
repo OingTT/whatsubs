@@ -43,7 +43,7 @@ const Button = styled.div<{ selected?: boolean; small?: boolean }>`
 `;
 
 const Count = styled.div`
-  font-size: 10px;
+  font-size: 0.625rem; // 10px
   font-weight: 600;
 `;
 
@@ -170,7 +170,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WANT_TO_WATCH')}
           small={small}
         >
-          <IconBookmark size={20} stroke={1.6} />
+          <IconBookmark size={20} stroke={1.5} />
           {count && (
             <Count>{reviewCounts ? reviewCounts.WANT_TO_WATCH : '-'}</Count>
           )}
@@ -180,7 +180,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHING')}
           small={small}
         >
-          <IconEye size={20} stroke={1.6} />
+          <IconEye size={20} stroke={1.5} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHING : '-'}</Count>}
         </Button>
         <Button
@@ -188,7 +188,7 @@ export default function WatchSelector({
           onClick={() => handleWatch('WATCHED')}
           small={small}
         >
-          <IconCheck size={20} stroke={1.6} />
+          <IconCheck size={20} stroke={1.5} />
           {count && <Count>{reviewCounts ? reviewCounts.WATCHED : '-'}</Count>}
         </Button>
       </Buttons>

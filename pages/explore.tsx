@@ -10,8 +10,8 @@ import {
   ExploreForm,
   Genres,
 } from '@/lib/client/interface';
-import { checkedSubsState, expolreFormState } from '@/lib/client/state';
-import { Grid, Spacer, Container } from '@/lib/client/style';
+import { checkedSubsState, exploreFormState } from '@/lib/client/state';
+import { Grid, Container } from '@/lib/client/style';
 import styled from '@emotion/styled';
 import { ContentType } from '@prisma/client';
 import { useCallback, useEffect, useRef } from 'react';
@@ -24,6 +24,7 @@ import useSWRInfinite, {
 import useSWR from 'swr';
 import CheckButton from '@/components/input/check-button';
 import { IconReload } from '@tabler/icons-react';
+import Button from '@/components/button/button';
 
 const Filters = styled.div`
   width: 100%;
@@ -51,24 +52,6 @@ const Options = styled.div`
   flex-wrap: wrap;
 `;
 
-const ResetButton = styled.div`
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  background-color: var(--secondary);
-  border-radius: 8px;
-  gap: 8px;
-  cursor: pointer;
-
-  @media (max-width: 809px) {
-    height: 32px;
-    padding: 12px;
-    font-size: 12px;
-  }
-`;
-
 const swrInfiniteConfig: SWRInfiniteConfiguration = {
   parallel: true,
   revalidateFirstPage: false,
@@ -89,7 +72,7 @@ export default function Explore() {
   const movieCertKR = movieCertifications?.certifications.KR?.slice(0, -1);
 
   const subscriptions = useRecoilValue(checkedSubsState);
-  const [state, setState] = useRecoilState(expolreFormState);
+  const [state, setState] = useRecoilState(exploreFormState);
 
   const handleResetFilters = () => {
     setValue('filters', []);
@@ -275,11 +258,10 @@ export default function Explore() {
               .join(' ・ ') || '관람등급'}
           </CheckButton>
         )}
-        <Spacer />
-        <ResetButton onClick={handleResetFilters}>
+
+        <Button small onClick={handleResetFilters}>
           <IconReload size={16} />
-          초기화
-        </ResetButton>
+        </Button>
       </Filters>
 
       <Container>

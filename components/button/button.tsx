@@ -21,11 +21,39 @@ const Wrapper = styled.button<{
   background-color: var(
     ${props => (props.primary ? '--primary' : '--secondary')}
   );
-  padding: ${props => (props.small ? '0 24px' : '0 48px')};
+  padding: 0px ${props => (props.small ? '24px' : '48px')};
   border-radius: ${props => (props.small ? '8px' : '16px')};
   color: var(${props => (props.primary ? '--text-primary' : '--text')});
   border: none;
   cursor: ${props => (props.loading ? 'not-allowed' : 'pointer')};
+
+  @media (max-width: 809px) {
+    height: ${props => (props.small ? '36px' : '56px')};
+    padding: 0 ${props => (props.small ? '20px' : '32px')};
+  }
+`;
+
+const Text = styled.h6<{ primary?: boolean; small?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-weight: ${props => (props.primary ? '600' : '500')};
+
+  & > svg {
+    width: 1rem; // 16px
+    height: 1rem; // 16px
+  }
+
+  @media (max-width: 809px) {
+    gap: 6px;
+    font-size: ${props => (props.small ? '0.875rem' : '1rem')}; // 14px, 16px
+
+    & > svg {
+      width: 0.875rem; // 14px
+      height: 0.875rem; // 14px
+    }
+  }
 `;
 
 interface ButtonProps {
@@ -53,7 +81,9 @@ export default function Button({
       small={small}
       loading={loading}
     >
-      <h6>{loading ? <Skeleton width={40} /> : children}</h6>
+      <Text primary={primary} small={small}>
+        {loading ? <Skeleton width={40} /> : children}
+      </Text>
     </Wrapper>
   );
 }

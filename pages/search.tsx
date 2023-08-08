@@ -34,7 +34,6 @@ const Input = styled.input`
   border-radius: 16px;
   border: none;
   padding: 16px 52px;
-  font-size: 16px;
   font-weight: bold;
   font-family: inherit;
 

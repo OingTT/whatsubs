@@ -12,7 +12,7 @@ export const checkedSubsState = atom<Subscription[]>({
   default: [],
 });
 
-export const expolreFormState = atom<ExploreForm>({
+export const exploreFormState = atom<ExploreForm>({
   key: 'expolreFormState',
   default: {
     type: ContentType.MOVIE,
