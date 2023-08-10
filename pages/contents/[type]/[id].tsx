@@ -44,7 +44,7 @@ const Backdrop = styled.div`
 `;
 
 const Background = styled.div`
-  width: 110%;
+  width: calc(100% + 80px);
   height: 480px;
   display: flex;
   justify-content: center;
@@ -54,10 +54,12 @@ const Background = styled.div`
 
   & > img {
     object-fit: cover;
-    filter: opacity(75%) blur(40px);
+    opacity: 0.75;
+    transform: translate3d(0, 0, 0);
+    filter: blur(40px);
 
     @media (max-width: 1199px) {
-      filter: opacity(75%) blur(24px);
+      filter: blur(24px);
     }
 
     @media (max-width: 809px) {
