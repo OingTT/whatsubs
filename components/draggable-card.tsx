@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
-import { Draggable } from '@hello-pangea/dnd';
 import { IconGripHorizontal } from '@tabler/icons-react';
 import React from 'react';
+import { Reorder } from 'framer-motion';
 
-const Wrapper = styled.div`
+const Wrapper = styled(Reorder.Item)`
   width: 100%;
   height: 56px;
   display: flex;
@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   border-radius: 16px;
   margin-top: 8px;
   margin-bottom: 8px;
+
   cursor: grab;
 
   & > svg {
@@ -28,28 +29,18 @@ const Text = styled.h6`
 `;
 
 interface DraggableCardProps {
-  draggableId: string;
-  index: number;
   children?: React.ReactNode;
+  id: number;
 }
 
 export default React.memo(function DraggableCard({
-  draggableId,
-  index,
   children,
+  id,
 }: DraggableCardProps) {
   return (
-    <Draggable draggableId={draggableId} index={index}>
-      {provided => (
-        <Wrapper
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
-          <Text>{children}</Text>
-          <IconGripHorizontal stroke={1.5} />
-        </Wrapper>
-      )}
-    </Draggable>
+    <Wrapper value={id}>
+      <Text>{children}</Text>
+      <IconGripHorizontal stroke={1.5} />
+    </Wrapper>
   );
 });
