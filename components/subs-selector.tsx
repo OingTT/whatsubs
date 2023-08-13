@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { checkedSubsState, selectedSubsState } from '@/lib/client/state';
 import { VerticalBar } from '@/lib/client/style';
+import useUser from '@/lib/client/useUser';
 
 const Selector = styled.div`
   width: 100%;
@@ -70,6 +71,7 @@ interface SubsForm {
 }
 
 export default function SubsSelector() {
+  const user = useUser();
   const [selectedSubs, setSelectedSubs] = useRecoilState(selectedSubsState);
   const [checkedSubs, setCheckedSubs] = useRecoilState(checkedSubsState);
   const router = useRouter();
@@ -86,10 +88,20 @@ export default function SubsSelector() {
   // If selectedSubs is empty, set checkedSubs to userSubscriptions
   useEffect(() => {
     if (subscriptions && userSubscriptions && selectedSubs.length === 0) {
-      setValue('subscriptions', userSubscriptions.map(String));
-      setCheckedSubs(
-        userSubscriptions.map(id => subscriptions.find(s => s.id === id)!)
-      );
+      if (userSubscriptions.length === 0) {
+        // If userSubscriptions is empty, set checkedSubs to all subscriptions
+        setValue(
+          'subscriptions',
+          subscriptions.map(sub => sub.id.toString())
+        );
+        setCheckedSubs(subscriptions);
+      } else {
+        // If userSubscriptions is not empty, set checkedSubs to userSubscriptions
+        setValue('subscriptions', userSubscriptions.map(String));
+        setCheckedSubs(
+          userSubscriptions.map(id => subscriptions.find(s => s.id === id)!)
+        );
+      }
     }
   }, [
     selectedSubs.length,
@@ -166,7 +178,14 @@ export default function SubsSelector() {
               </SubsWrapper>
             )
         )}
-        <VerticalBar size={20} />
+
+        {subscriptions &&
+          userSubscriptions &&
+          userSubscriptions.length > 0 &&
+          userSubscriptions.length < subscriptions.length && (
+            <VerticalBar size={20} />
+          )}
+
         {subscriptions?.map(
           subscription =>
             !userSubscriptions?.includes(subscription.id) && (

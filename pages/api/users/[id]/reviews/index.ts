@@ -9,13 +9,15 @@ export default async function session(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(400).end();
-
   const {
     query: { id },
   } = req;
 
-  const userId = id === 'me' ? session.user?.id! : String(id);
+  if (!session && id === 'me') {
+    return res.status(200).json([]);
+  }
+
+  const userId = id === 'me' ? session?.user?.id! : String(id);
 
   const reviews = await prisma.review.findMany({
     where: {

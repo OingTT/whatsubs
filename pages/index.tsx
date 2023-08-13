@@ -60,6 +60,8 @@ export default function Home() {
       </Container>
 
       <Container fill>
+        <IntegrateChart />
+
         <Slider
           title="맞춤 추천 영화"
           contents={getContents(recommendMovieData)}
@@ -68,7 +70,7 @@ export default function Home() {
           title="맞춤 추천 TV 프로그램"
           contents={getContents(recommendTVData)}
         />
-        <IntegrateChart />
+
         <Slider
           title="시청 중인 콘텐츠"
           contents={getContents(reviewData, Watch.WATCHING)}
@@ -81,3 +83,5 @@ export default function Home() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

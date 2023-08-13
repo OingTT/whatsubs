@@ -10,7 +10,7 @@ export default async function session(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(400).end();
+  if (!session) return res.status(200).json([]);
 
   const {
     query: { type, id },

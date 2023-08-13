@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import useMutation from '@/lib/client/useMutation';
 import { IconBookmark, IconCheck, IconEye } from '@tabler/icons-react';
 import useUser from '@/lib/client/useUser';
+import { useRouter } from 'next/router';
 
 const Selector = styled.div`
   position: relative;
@@ -78,6 +79,7 @@ export default function WatchSelector({
   count,
 }: WatchSelectorProps) {
   const user = useUser();
+  const router = useRouter();
   const [updateReview] = useMutation(
     `/api/contents/${type.toLowerCase()}/${id}/review`
   );
@@ -92,6 +94,11 @@ export default function WatchSelector({
   const [review, setReview] = useState<Review>();
 
   const handleWatch = (value: Watch) => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
     const newWatch = watch === value ? undefined : value;
     const rating =
       (newWatch !== 'WATCHING' && newWatch !== 'WATCHED') ||

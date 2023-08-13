@@ -342,3 +342,5 @@ export default function Explore() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

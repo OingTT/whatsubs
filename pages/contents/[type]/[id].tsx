@@ -20,6 +20,8 @@ import Casts from '@/components/content/casts';
 import usePlayLinks from '@/lib/client/usePlayLinks';
 import Genres from '@/components/content/genres';
 import Details from '@/components/content/details';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Backdrop = styled.div`
   width: 936px;
@@ -166,15 +168,6 @@ const Provider = styled(Image)`
 const Overview = styled.p`
   width: 100%;
 `;
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  return {
-    props: {
-      type: context.query.type?.toString().toUpperCase(),
-      id: Number(context.query.id),
-    },
-  };
-};
 
 interface ContentProps {
   type: ContentType;
@@ -364,3 +357,15 @@ export default function Content({ type, id }: ContentProps) {
     </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async context => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  return {
+    props: {
+      session: JSON.parse(JSON.stringify(session)),
+      type: context.query.type?.toString().toUpperCase(),
+      id: Number(context.query.id),
+    },
+  };
+};
