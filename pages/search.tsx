@@ -202,3 +202,5 @@ export default function Search() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

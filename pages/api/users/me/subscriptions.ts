@@ -9,9 +9,9 @@ export default async function session(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(400).end();
-
   if (req.method === 'GET') {
+    if (!session) return res.status(200).json([]);
+
     const subscriptions = await prisma.subscription.findMany({
       where: { users: { some: { id: session.user.id } } },
       select: {
@@ -25,6 +25,8 @@ export default async function session(
   }
 
   if (req.method === 'POST') {
+    if (!session) return res.status(400).end();
+
     await prisma.user.update({
       where: { id: session.user.id },
       data: {

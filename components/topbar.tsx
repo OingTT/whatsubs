@@ -68,16 +68,20 @@ export default function Topbar() {
       <Link href="/search">
         <IconSearch stroke={1.5} />
       </Link>
-      <Link href="/setting">
-        <User
-          src={user?.avatar || '/images/avatar.png'}
-          width="32"
-          height="32"
-          alt="User"
-          priority
-          unoptimized
-        />
-      </Link>
+      {user ? (
+        <Link href="/setting">
+          <User
+            src={user?.avatar || '/images/avatar.png'}
+            width="32"
+            height="32"
+            alt="User"
+            priority
+            unoptimized
+          />
+        </Link>
+      ) : (
+        <NavLink href="/login">로그인</NavLink>
+      )}
     </Wrapper>
   );
 }

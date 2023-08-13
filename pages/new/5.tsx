@@ -1,13 +1,10 @@
 import TextInput from '@/components/input/text-input';
 import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
-import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { authOptions } from '../api/auth/[...nextauth]';
 import useMutation from '@/lib/client/useMutation';
 import { useEffect } from 'react';
 
@@ -50,14 +47,6 @@ interface ProfileForm {
   avatar: string;
   name: string;
 }
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  return {
-    props: { session: JSON.parse(JSON.stringify(session)) },
-  };
-};
 
 export default function Profile() {
   const router = useRouter();
@@ -134,3 +123,5 @@ export default function Profile() {
     </SignupLayout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

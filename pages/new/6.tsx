@@ -4,13 +4,10 @@ import TextInput from '@/components/input/text-input';
 import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
 import { Occupation } from '@prisma/client';
-import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import { authOptions } from '../api/auth/[...nextauth]';
 import useMutation from '@/lib/client/useMutation';
 import { useEffect } from 'react';
 import Checkbox from '@/components/input/checkbox';
@@ -44,14 +41,6 @@ interface PrivacyForm {
   terms: boolean;
   privacy: boolean;
 }
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  return {
-    props: { session: JSON.parse(JSON.stringify(session)) },
-  };
-};
 
 export default function Privacy() {
   const router = useRouter();
@@ -137,3 +126,5 @@ export default function Privacy() {
     </SignupLayout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';
