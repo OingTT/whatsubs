@@ -15,7 +15,6 @@ const Wrapper = styled(motion.div)`
   perspective: 800px;
   user-select: none;
   will-change: transform;
-  word-break: keep-all;
 `;
 
 const Front = styled(motion.div)`
@@ -33,7 +32,7 @@ const Front = styled(motion.div)`
   }
 `;
 
-const Placeholder = styled.div`
+const Placeholder = styled.h6`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -44,9 +43,6 @@ const Placeholder = styled.div`
   color: #eeeeee;
   padding: 16px;
   text-align: center;
-  line-height: 1.4;
-  font-size: 16px;
-  font-weight: 600;
 `;
 
 const Back = styled(Front)`
@@ -59,7 +55,6 @@ const Back = styled(Front)`
   align-items: center;
   text-align: center;
   font-weight: 500;
-  white-space: pre-line;
   line-height: 1.2;
 
   @media (max-width: 809px) {

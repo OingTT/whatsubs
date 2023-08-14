@@ -34,7 +34,6 @@ const Input = styled.input`
   border-radius: 16px;
   border: none;
   padding: 16px 52px;
-  font-size: 16px;
   font-weight: bold;
   font-family: inherit;
 
@@ -145,7 +144,7 @@ export default function Search() {
       <Container>
         <SearchBox>
           <SearchIcon htmlFor="query">
-            <IconSearch size="24" stroke={1.5} />
+            <IconSearch stroke={1.5} />
           </SearchIcon>
           <Input
             id="query"
@@ -203,3 +202,5 @@ export default function Search() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

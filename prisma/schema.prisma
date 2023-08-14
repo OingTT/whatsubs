@@ -56,7 +56,9 @@ model User {
   categories    CategoriesOnUsers[]
   genres        Genre[]
   reviews       Review[]
-  UserCluster   UserCluster[]
+  userClusters  UserCluster[]
+  comments      Comment[]
+  commentLikes  CommentLike[]
 
   @@index([occupationId])
 }
@@ -97,8 +99,10 @@ model Review {
   userId      String
   contentType ContentType
   contentId   Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   watch       Watch
-  rating      Int         @default(0) @db.TinyInt
+  rating      Int?        @db.TinyInt
 
   @@id([userId, contentType, contentId])
   @@index([userId])
@@ -139,5 +143,33 @@ model UserCluster {
   userId String @id
   label  Int
 
+  @@index([userId])
+}
+
+model Comment {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  contentType ContentType
+  contentId   Int
+  watch       Watch
+  text        String        @db.Text
+  likes       CommentLike[]
+
+  @@unique([userId, contentType, contentId, watch])
+  @@index([userId])
+  @@index([contentType, contentId])
+}
+
+model CommentLike {
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId Int
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@id([commentId, userId])
+  @@index([commentId])
   @@index([userId])
 }

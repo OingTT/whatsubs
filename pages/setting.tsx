@@ -39,7 +39,7 @@ const Info = styled.div`
 
 const Email = styled.div`
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 const Counts = styled.div`
@@ -69,12 +69,12 @@ const Count = styled.div`
 const CountNumber = styled.div`
   font-weight: 300;
   color: var(--text-secondary);
-  font-size: 20px;
+  font-size: 1.25rem; // 20px
 `;
 
 const CountName = styled.div`
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 const Group = styled.div`
@@ -116,62 +116,64 @@ interface reviewCountResponse {
   [Watch.WATCHED]: number;
 }
 
-export default function User() {
-  const user = useUser();
+export default function Setting() {
+  const user = useUser({ required: true });
   const router = useRouter();
   const { data } = useSWR<reviewCountResponse>('/api/users/me/reviews/values');
 
-  if (!user) return null;
-
   return (
-    <Layout title="사용자 정보">
-      <Container compact>
-        <Profile>
-          <Avatar
-            src={user.avatar || '/images/avatar.png'}
-            width={64}
-            height={64}
-            alt="profile"
-            priority
-            unoptimized
-          />
-          <Info>
-            <h6>{user.name}</h6>
-            <Email>{user.email}</Email>
-          </Info>
-        </Profile>
+    user && (
+      <Layout title="사용자 정보">
+        <Container compact>
+          <Profile>
+            <Avatar
+              src={user.avatar || '/images/avatar.png'}
+              width={64}
+              height={64}
+              alt="profile"
+              priority
+              unoptimized
+            />
+            <Info>
+              <h6>{user.name}</h6>
+              <Email>{user.email}</Email>
+            </Info>
+          </Profile>
 
-        <Counts>
-          <Count>
-            <CountNumber>{data ? data.WANT_TO_WATCH : '-'}</CountNumber>
-            <CountName>찜하기</CountName>
-          </Count>
-          <Count>
-            <CountNumber>{data ? data.WATCHING : '-'}</CountNumber>
-            <CountName>보는중</CountName>
-          </Count>
-          <Count>
-            <CountNumber>{data ? data.WATCHED : '-'}</CountNumber>
-            <CountName>봤어요</CountName>
-          </Count>
-        </Counts>
-      </Container>
-      <Container compact>
-        <Group>
-          <Tab onClick={() => router.push('/new/1')}>초기설정 수정</Tab>
-        </Group>
+          <Counts>
+            <Count>
+              <CountNumber>{data ? data.WANT_TO_WATCH : '-'}</CountNumber>
+              <CountName>찜하기</CountName>
+            </Count>
+            <Count>
+              <CountNumber>{data ? data.WATCHING : '-'}</CountNumber>
+              <CountName>보는중</CountName>
+            </Count>
+            <Count>
+              <CountNumber>{data ? data.WATCHED : '-'}</CountNumber>
+              <CountName>봤어요</CountName>
+            </Count>
+          </Counts>
+        </Container>
+        <Container compact>
+          <Group>
+            <Tab onClick={() => router.push('/new/1')}>초기설정 수정</Tab>
+          </Group>
 
-        <Group>
-          <Tab onClick={() => router.push('/policy/terms')}>이용약관</Tab>
-          <Tab onClick={() => router.push('/policy/privacy')}>
-            개인정보처리방침
-          </Tab>
-        </Group>
+          <Group>
+            <Tab onClick={() => router.push('/policy/terms')}>이용약관</Tab>
+            <Tab onClick={() => router.push('/policy/privacy')}>
+              개인정보처리방침
+            </Tab>
+          </Group>
 
-        <Group>
-          <Tab onClick={() => signOut()}>로그아웃</Tab>
-        </Group>
-      </Container>
-    </Layout>
+          <Group>
+            <Tab onClick={() => signOut({ callbackUrl: '/' })}>로그아웃</Tab>
+          </Group>
+        </Container>
+      </Layout>
+    )
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

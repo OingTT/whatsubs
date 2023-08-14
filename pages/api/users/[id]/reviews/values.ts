@@ -10,18 +10,32 @@ export default async function session(
 ) {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) return res.status(400).end();
+  const {
+    query: { id },
+  } = req;
+
+  if (!session && id === 'me') {
+    return res.status(200).json([]);
+  }
+
+  const userId = id === 'me' ? session?.user?.id! : String(id);
 
   const values = await prisma.review.groupBy({
     by: ['watch'],
     where: {
-      userId: session.user?.id!,
+      userId,
     },
     _count: {
       watch: true,
     },
+  });
+
+  const rating = await prisma.review.aggregate({
     _avg: {
       rating: true,
+    },
+    where: {
+      userId,
     },
   });
 
@@ -33,6 +47,6 @@ export default async function session(
       values.find(count => count.watch === Watch.WATCHING)?._count.watch || 0,
     [Watch.WATCHED]:
       values.find(count => count.watch === Watch.WATCHED)?._count.watch || 0,
-    rating: values.find(count => count.watch === Watch.WATCHED)?._avg.rating,
+    rating: rating._avg.rating,
   });
 }

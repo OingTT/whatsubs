@@ -17,7 +17,6 @@ const Input = styled.input`
   border-radius: 16px;
   border: none;
   padding: 24px 16px 8px 16px;
-  font-size: 16px;
   font-weight: bold;
   font-family: inherit;
 `;
@@ -28,7 +27,7 @@ const Label = styled.label`
   left: 16px;
   color: var(--text-secondary);
   font-weight: bold;
-  font-size: 12px;
+  font-size: 0.75rem; // 12px
 `;
 
 interface TextInputProps {

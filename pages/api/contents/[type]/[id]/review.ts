@@ -2,7 +2,7 @@ import { prisma } from '@/lib/server/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../auth/[...nextauth]';
-import { ContentType } from '@prisma/client';
+import { ContentType, Watch } from '@prisma/client';
 
 export default async function session(
   req: NextApiRequest,
@@ -14,12 +14,20 @@ export default async function session(
 
   const {
     query: { type, id },
-    body: { watch, rating },
+    body: { watch, rating: userRating },
   } = req;
 
-  if (type !== 'movie' && type !== 'tv') return res.status(400).end();
+  if (!Object.keys(ContentType).some(key => key.toLowerCase() === type))
+    return res.status(400).end();
 
-  const contentType = type === 'movie' ? ContentType.MOVIE : ContentType.TV;
+  const userId = session.user?.id!;
+  const rating =
+    (watch !== Watch.WATCHING && watch !== Watch.WATCHED) ||
+    (userRating > 0 && userRating <= 5)
+      ? userRating
+      : null;
+  const contentType = String(type).toUpperCase() as ContentType;
+  const contentId = Number(id);
 
   if (!watch) {
     // HACK: Delete is not working as expected
@@ -27,9 +35,9 @@ export default async function session(
       await prisma.review.delete({
         where: {
           userId_contentType_contentId: {
-            userId: session.user?.id!,
+            userId,
             contentType,
-            contentId: Number(id),
+            contentId,
           },
         },
       });
@@ -40,9 +48,9 @@ export default async function session(
       await prisma.review.upsert({
         where: {
           userId_contentType_contentId: {
-            userId: session.user?.id!,
+            userId,
             contentType,
-            contentId: Number(id),
+            contentId,
           },
         },
         update: {
@@ -52,11 +60,11 @@ export default async function session(
         create: {
           user: {
             connect: {
-              id: session.user?.id!,
+              id: userId,
             },
           },
           contentType,
-          contentId: Number(id),
+          contentId,
           watch,
         },
       });
@@ -64,9 +72,9 @@ export default async function session(
       await prisma.review.update({
         where: {
           userId_contentType_contentId: {
-            userId: session.user?.id!,
+            userId,
             contentType,
-            contentId: Number(id),
+            contentId,
           },
         },
         data: {

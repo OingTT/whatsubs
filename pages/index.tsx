@@ -20,7 +20,7 @@ function isReviewArray(data: Recommendation[] | Review[]): data is Review[] {
 }
 
 function getContents(data?: Recommendation[] | Review[], watch?: Watch) {
-  if (!data) return;
+  if (!data || data.length === 0) return [];
 
   if (isReviewArray(data)) {
     return data
@@ -57,13 +57,11 @@ export default function Home() {
       <Container compact>
         <SubsSelector />
         {error && <Alert type="danger">추천 시스템을 점검하고 있어요.</Alert>}
-        <Alert type="info">
-          평점을 남겨보세요. 탐색 → 포스터 클릭 → 체크(봤어요) 클릭 → 평점
-          남기기
-        </Alert>
       </Container>
 
       <Container fill>
+        <IntegrateChart />
+
         <Slider
           title="맞춤 추천 영화"
           contents={getContents(recommendMovieData)}
@@ -72,7 +70,7 @@ export default function Home() {
           title="맞춤 추천 TV 프로그램"
           contents={getContents(recommendTVData)}
         />
-        <IntegrateChart />
+
         <Slider
           title="시청 중인 콘텐츠"
           contents={getContents(reviewData, Watch.WATCHING)}
@@ -85,3 +83,5 @@ export default function Home() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

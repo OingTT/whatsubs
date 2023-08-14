@@ -56,17 +56,20 @@ body {
   font-family:
     -apple-system,
     BlinkMacSystemFont,
-    Segoe UI,
+    Apple SD Gothic Neo,
+    Pretendard Variable,
+    Pretendard,
     Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    Droid Sans,
-    Helvetica Neue,
+    Noto Sans KR,
+    Segoe UI,
+    Malgun Gothic,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
     sans-serif;
   color: var(--text);
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 a {
@@ -84,8 +87,16 @@ svg {
 }
 
 input,
-select {
+select,
+textarea {
   color: inherit;
+  background-color: transparent;
+  font-size: inherit;
+}
+
+button,
+textarea {
+  font-family: inherit;
 }
 
 input::-webkit-date-and-time-value {
@@ -99,7 +110,6 @@ h4,
 h5,
 h6 {
   margin: 0;
-  word-break: keep-all;
   line-height: 1.4;
   letter-spacing: -0.025em;
   font-weight: 600;

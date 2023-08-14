@@ -25,3 +25,5 @@ export default function Chart() {
     </Layout>
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';

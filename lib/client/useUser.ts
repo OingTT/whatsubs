@@ -2,16 +2,20 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-export default function useUser() {
+interface options {
+  required?: boolean;
+}
+
+export default function useUser({ required }: options = {}) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   // Check login
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (required && status === 'unauthenticated') {
       router.replace('/login');
     }
-  }, [router, status]);
+  }, [required, router, status]);
 
   // Check signup
   useEffect(() => {

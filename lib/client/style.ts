@@ -3,9 +3,10 @@ import styled from '@emotion/styled';
 export const Grid = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
   grid-auto-rows: min-content;
   gap: 24px;
+  align-items: center;
 
   @media (max-width: 809px) {
     gap: 16px;
@@ -47,6 +48,7 @@ export const Container = styled.div<{
   padding: 24px ${props => (props.fill ? '0px' : '')};
   padding-top: ${props => (props.fit ? '8px' : '')};
   gap: ${props => (props.compact ? '24px' : '32px')};
+  z-index: 0;
 
   @media (max-width: 1199px) {
     width: 100%;
@@ -70,4 +72,15 @@ export const Section = styled.section`
   @media (max-width: 809px) {
     gap: 12px;
   }
+`;
+
+export const IconGroup = styled.div<{ gap: number; button?: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: ${({ gap }) => gap}px;
+  color: var(--text-secondary);
+  user-select: none;
+  cursor: ${({ button }) => (button ? 'pointer' : 'default')};
 `;

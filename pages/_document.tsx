@@ -5,6 +5,12 @@ export default function Document() {
     <Html lang="ko">
       <Head>
         <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin=""
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable-dynamic-subset.css"
+        />
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"

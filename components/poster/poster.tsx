@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Placeholder = styled(motion.div)`
+const Placeholder = styled(motion.h6)`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -32,9 +32,6 @@ const Placeholder = styled(motion.div)`
   color: #eeeeee;
   padding: 16px;
   text-align: center;
-  line-height: 1.4;
-  font-size: 16px;
-  font-weight: 600;
 `;
 
 interface PosterProps {

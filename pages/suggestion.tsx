@@ -200,7 +200,7 @@ const Recommender = ({
 };
 
 export default function Suggestion() {
-  const user = useUser();
+  const user = useUser({ required: true });
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: userSubscriptions } = useSWR<number[]>(
     '/api/users/me/subscriptions'
@@ -229,24 +229,28 @@ export default function Suggestion() {
   }
 
   return (
-    <Layout>
-      <Container>
-        {error && <Alert type="danger">추천 시스템을 점검하고 있어요.</Alert>}
+    user && (
+      <Layout>
+        <Container>
+          {error && <Alert type="danger">추천 시스템을 점검하고 있어요.</Alert>}
 
-        <Recommender title="현재 조합" ottData={userSubscriptions || []} />
+          <Recommender title="현재 조합" ottData={userSubscriptions || []} />
 
-        {recommenderData && <IconArrowDown size={32} stroke={1.5} />}
+          {recommenderData && <IconArrowDown size={32} stroke={1.5} />}
 
-        {recommenderData?.map((ottData, index) => (
-          <Recommender
-            key={index}
-            title={'추천 조합' + (index + 1)}
-            ottData={ottData}
-            myPrice={myPrice}
-            mySharing={mySharing}
-          />
-        ))}
-      </Container>
-    </Layout>
+          {recommenderData?.map((ottData, index) => (
+            <Recommender
+              key={index}
+              title={'추천 조합' + (index + 1)}
+              ottData={ottData}
+              myPrice={myPrice}
+              mySharing={mySharing}
+            />
+          ))}
+        </Container>
+      </Layout>
+    )
   );
 }
+
+export { getServerSideSession as getServerSideProps } from '@/lib/server/session';
