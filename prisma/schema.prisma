@@ -107,6 +107,7 @@ model Review {
   @@id([userId, contentType, contentId])
   @@index([userId])
   @@index([contentType, contentId])
+  @@index([userId, contentType, contentId])
 }
 
 model Subscription {
