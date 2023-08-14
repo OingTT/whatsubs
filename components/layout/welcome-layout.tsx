@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import Image from 'next/image';
 
 const Wrapper = styled.div`
+  position: fixed;
   width: 100dvw;
   height: 100dvh;
   display: flex;
