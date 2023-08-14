@@ -13,9 +13,7 @@ const Wrapper = styled(Reorder.Item)`
   background-color: var(--secondary);
   gap: 8px;
   border-radius: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-
+  margin: 8px 0px;
   cursor: grab;
 
   & > svg {
@@ -29,18 +27,15 @@ const Text = styled.h6`
 `;
 
 interface DraggableCardProps {
+  value: number;
   children?: React.ReactNode;
-  id: number;
 }
 
-export default React.memo(function DraggableCard({
-  children,
-  id,
-}: DraggableCardProps) {
+export default function DraggableCard({ value, children }: DraggableCardProps) {
   return (
-    <Wrapper value={id}>
+    <Wrapper value={value}>
       <Text>{children}</Text>
       <IconGripHorizontal stroke={1.5} />
     </Wrapper>
   );
-});
+}

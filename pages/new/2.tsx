@@ -2,11 +2,11 @@ import SignupLayout from '@/components/layout/signup-layout';
 import styled from '@emotion/styled';
 import { Category } from '@prisma/client';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import DraggableCard from '@/components/draggable-card';
 import { useEffect, useState } from 'react';
 import useMutation from '@/lib/client/useMutation';
 import { Reorder } from 'framer-motion';
+import useSWRImmutable from 'swr/immutable';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -41,17 +41,15 @@ const Buttons = styled(Reorder.Group)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  list-style-type: none;
   padding: 0;
-  margin: 0;
 `;
 
 export default function Subscription() {
   const router = useRouter();
-  const { data: userCategories, mutate } = useSWR<number[]>(
+  const { data: userCategories, mutate } = useSWRImmutable<number[]>(
     '/api/users/me/categories'
   );
-  const { data: categories } = useSWR<Category[]>('/api/categories');
+  const { data: categories } = useSWRImmutable<Category[]>('/api/categories');
   const [updateCategories, { loading, data }] = useMutation<number[]>(
     '/api/users/me/categories'
   );
@@ -95,9 +93,9 @@ export default function Subscription() {
             <Number key={index}>{index + 1}</Number>
           ))}
         </Numbers>
-        <Buttons values={ids} onReorder={setIds}>
+        <Buttons onReorder={setIds} values={ids}>
           {ids.map(id => (
-            <DraggableCard key={id} id={id}>
+            <DraggableCard key={id} value={id}>
               {categories?.find(ct => ct.id === id)?.name}
             </DraggableCard>
           ))}
