@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { Content } from '@/lib/client/interface';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import Skeleton from 'react-loading-skeleton';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -202,6 +203,15 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
                   : contents?.map((content, index) => (
                       <Poster key={index} {...content} />
                     ))}
+                {!contents &&
+                  Array.from({ length: offset }).map((_, index) => (
+                    <Skeleton
+                      key={index}
+                      width={168}
+                      height={252}
+                      style={{ borderRadius: '8px' }}
+                    />
+                  ))}
               </Posters>
             )}
           </AnimatePresence>

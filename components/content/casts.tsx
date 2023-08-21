@@ -3,6 +3,7 @@ import Person from '../person';
 import { ContentType } from '@prisma/client';
 import { MovieDetail, TVDetail } from '@/lib/client/interface';
 import Button from '../button/button';
+import Skeleton from 'react-loading-skeleton';
 
 interface CastsProps {
   contentDetail?: MovieDetail | TVDetail;
@@ -37,7 +38,14 @@ export default function Casts({ contentDetail }: CastsProps) {
                     info={person.roles[0].character}
                   />
                 ))
-          : null}
+          : [...Array(10)].map((_, i) => (
+              <Skeleton
+                key={i}
+                height={100}
+                width={80}
+                style={{ margin: '4px' }}
+              />
+            ))}
         {/* <Button>더보기</Button> */}
       </Grid>
     </Section>

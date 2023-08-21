@@ -188,7 +188,7 @@ export default function Content({ type, id }: ContentProps) {
     const data = await response.json();
     data.type = type;
 
-    return data;
+    //return data;
   };
 
   const { data: contentDetail } = useSWR(
