@@ -37,7 +37,7 @@
     "remark-parse": "^10.0.2",
     "swr": "^2.2.0",
     "typescript": "5.2.2",
-    "unified": "^10.1.2"
+    "unified": "^11.0.2"
   },
   "devDependencies": {
     "eslint-config-prettier": "^9.0.0",
