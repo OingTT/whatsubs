@@ -1,3 +1,7 @@
+import Casts from '@/components/content/casts';
+import Comments from '@/components/content/comments';
+import Details from '@/components/content/details';
+import Genres from '@/components/content/genres';
 import Layout from '@/components/layout/layout';
 import Slider from '@/components/slider';
 import WatchSelector from '@/components/watch-selector';
@@ -7,21 +11,17 @@ import {
   MovieDetail,
   TVDetail,
 } from '@/lib/client/interface';
+import { Container, Section } from '@/lib/client/style';
+import usePlayLinks from '@/lib/client/usePlayLinks';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import styled from '@emotion/styled';
 import { ContentType, Subscription } from '@prisma/client';
-import Image from 'next/image';
-import useSWR, { Fetcher } from 'swr';
-import { Section, Container } from '@/lib/client/style';
-import { GetServerSideProps } from 'next';
 import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
-import Skeleton from 'react-loading-skeleton';
-import Comments from '@/components/content/comments';
-import Casts from '@/components/content/casts';
-import usePlayLinks from '@/lib/client/usePlayLinks';
-import Genres from '@/components/content/genres';
-import Details from '@/components/content/details';
+import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import Image from 'next/image';
+import Skeleton from 'react-loading-skeleton';
+import useSWR, { Fetcher } from 'swr';
 
 const Backdrop = styled.div`
   width: 936px;

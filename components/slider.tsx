@@ -1,10 +1,12 @@
-import useIsDesktop from '@/lib/client/useIsDesktop';
-import styled from '@emotion/styled';
-import Poster from './poster/poster';
-import { useEffect, useState } from 'react';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { Content } from '@/lib/client/interface';
+import useIsDesktop from '@/lib/client/useIsDesktop';
+import useIsMobile from '@/lib/client/useIsMobile';
+import styled from '@emotion/styled';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import Poster from './poster/poster';
+import PosterSkeleton from './poster/poster-skeleton';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -136,6 +138,7 @@ interface SliderProps {
 
 export default function Slider({ title, contents, disabled }: SliderProps) {
   const isDesktop = useIsDesktop();
+  const isMobile = useIsMobile();
   const [index, setIndex] = useState(0);
   const [isLast, setIsLast] = useState(true);
   const [isGoingBack, setIsGoingBack] = useState(false);
@@ -202,6 +205,10 @@ export default function Slider({ title, contents, disabled }: SliderProps) {
                   : contents?.map((content, index) => (
                       <Poster key={index} {...content} />
                     ))}
+                {!contents &&
+                  [...Array(isMobile ? 10 : offset)].map((_, index) => (
+                    <PosterSkeleton key={index} />
+                  ))}
               </Posters>
             )}
           </AnimatePresence>
