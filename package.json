@@ -35,7 +35,7 @@
     "recoil": "^0.7.7",
     "remark-html": "^15.0.2",
     "remark-parse": "^10.0.2",
-    "swr": "^2.2.0",
+    "swr": "^2.2.2",
     "typescript": "5.2.2",
     "unified": "^10.1.2"
   },
