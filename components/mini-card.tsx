@@ -1,12 +1,22 @@
 import styled from '@emotion/styled';
+import { Variants, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
-const Wrapper = styled(Link)`
+const Wrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   aspect-ratio: 2/1;
+  position: relative;
+`;
+
+const AbsoluteLink = styled(Link)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 `;
 
 const Left = styled.div`
@@ -48,11 +58,27 @@ const Subtitle = styled.div`
   text-overflow: ellipsis;
 `;
 
+const Placeholder = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary);
+`;
+
+const placeholderVariants: Variants = {
+  initial: {
+    opacity: 1,
+  },
+  animate: {
+    opacity: 0,
+  },
+};
+
 interface MiniCardProps {
-  src: string;
+  src?: string;
   title: string;
   subtitle: string;
-  href: string;
+  href?: string;
 }
 
 export default function MiniCard({
@@ -61,10 +87,26 @@ export default function MiniCard({
   subtitle,
   href,
 }: MiniCardProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <Wrapper href={href}>
+    <Wrapper>
+      {href && <AbsoluteLink href={href} />}
       <Left>
-        <Image src={src} alt={title} fill unoptimized />
+        {src && (
+          <Image
+            src={src}
+            alt={title}
+            fill
+            unoptimized
+            onLoadingComplete={() => setIsLoaded(true)}
+          />
+        )}
+        <Placeholder
+          variants={placeholderVariants}
+          initial="initial"
+          animate={isLoaded ? 'animate' : 'initial'}
+        />
       </Left>
       <Right>
         <Titles>

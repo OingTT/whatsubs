@@ -2,6 +2,7 @@ import Casts from '@/components/content/casts';
 import Comments from '@/components/content/comments';
 import Details from '@/components/content/details';
 import Genres from '@/components/content/genres';
+import Seasons from '@/components/content/seasons';
 import Layout from '@/components/layout/layout';
 import Slider from '@/components/slider';
 import WatchSelector from '@/components/watch-selector';
@@ -198,8 +199,10 @@ export default function Content({ type, id }: ContentProps) {
     fetchContentDetail
   );
 
+  const isMovie = contentDetail?.type === ContentType.MOVIE;
+
   const { data: collection } = useSWR<Collection>(
-    contentDetail?.type === 'MOVIE' &&
+    isMovie &&
       contentDetail.belongs_to_collection &&
       `https://api.themoviedb.org/3/collection/${contentDetail.belongs_to_collection.id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
   );
@@ -224,29 +227,20 @@ export default function Content({ type, id }: ContentProps) {
     })
   );
 
-  const certification =
-    contentDetail?.type === 'MOVIE'
-      ? contentDetail.release_dates?.results
-          ?.find(result => result.iso_3166_1 === 'KR')
-          ?.release_dates?.find(date => date.certification !== '')
-          ?.certification
-      : contentDetail?.content_ratings?.results?.find(
-          result => result.iso_3166_1 === 'KR'
-        )?.rating;
+  const certification = isMovie
+    ? contentDetail.release_dates?.results
+        ?.find(result => result.iso_3166_1 === 'KR')
+        ?.release_dates?.find(date => date.certification !== '')?.certification
+    : contentDetail?.content_ratings?.results?.find(
+        result => result.iso_3166_1 === 'KR'
+      )?.rating;
 
   const playLinks = usePlayLinks(
     contentDetail?.['watch/providers']?.results?.KR?.link
   );
 
   return (
-    <Layout
-      title={
-        contentDetail?.type === ContentType.MOVIE
-          ? contentDetail.title
-          : contentDetail?.name
-      }
-      fit
-    >
+    <Layout title={isMovie ? contentDetail.title : contentDetail?.name} fit>
       <Background>
         {contentDetail?.backdrop_path && (
           <Image
@@ -272,7 +266,7 @@ export default function Content({ type, id }: ContentProps) {
           <Left>
             <h2>
               {contentDetail ? (
-                contentDetail.type === 'MOVIE' ? (
+                isMovie ? (
                   contentDetail.title
                 ) : (
                   contentDetail.name
@@ -288,7 +282,7 @@ export default function Content({ type, id }: ContentProps) {
                     <IconStarFilled size={14} />
                     {rating?.rating?.toFixed(1) || '-.-'}
                   </Rating>
-                  {contentDetail?.type === ContentType.MOVIE
+                  {isMovie
                     ? contentDetail.release_date.slice(0, 4)
                     : contentDetail?.first_air_date.slice(0, 4)}
                   <Certification>{certification || '정보 없음'}</Certification>
@@ -341,7 +335,11 @@ export default function Content({ type, id }: ContentProps) {
         </Section>
 
         <Genres genres={contentDetail?.genres} />
+
+        {!isMovie && <Seasons contentDetail={contentDetail} />}
+
         <Casts contentDetail={contentDetail} />
+
         <Comments type={type} id={id} />
       </Container>
 

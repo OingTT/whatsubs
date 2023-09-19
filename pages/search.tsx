@@ -1,16 +1,18 @@
-import styled from '@emotion/styled';
-import { useEffect, useState } from 'react';
 import Layout from '@/components/layout/layout';
-import { useForm } from 'react-hook-form';
-import Slider from '@/components/slider';
-import { ContentType } from '@prisma/client';
-import { Grid, Section, Container } from '@/lib/client/style';
+import MiniCard from '@/components/mini-card';
 import Person from '@/components/person';
-import useSWR from 'swr';
+import Slider from '@/components/slider';
+import { getTmdbImagePath } from '@/lib/client/api';
 import { Movie, TV } from '@/lib/client/interface';
-import { useRecoilState } from 'recoil';
 import { searchQueryState } from '@/lib/client/state';
+import { Container, Grid, Section } from '@/lib/client/style';
+import styled from '@emotion/styled';
+import { ContentType } from '@prisma/client';
 import { IconCircleXFilled, IconSearch } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
+import useSWR from 'swr';
 
 interface Person {
   id: number;
@@ -188,12 +190,12 @@ export default function Search() {
           <h5>인물</h5>
           <Grid>
             {people.map(person => (
-              <Person
+              <MiniCard
                 key={person.id}
-                id={person.id}
-                name={person.name}
-                info={person.known_for_department}
-                profilePath={person.profile_path}
+                title={person.name}
+                subtitle={person.known_for_department}
+                src={getTmdbImagePath(person.profile_path)}
+                href={`/person/${person.id}`}
               />
             ))}
           </Grid>

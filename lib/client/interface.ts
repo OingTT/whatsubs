@@ -65,6 +65,7 @@ export interface MovieDetail {
     backdrop_path: string;
   };
   genres: Array<{ id: number; name: string }>;
+  id: number;
   overview: string;
   poster_path: string;
   release_date: string;
@@ -142,6 +143,7 @@ export interface TVDetail {
   overview: string;
   poster_path: string;
   first_air_date: string;
+  id: number;
   name: string;
   vote_average: number;
   content_ratings: {
