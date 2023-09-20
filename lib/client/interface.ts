@@ -69,6 +69,7 @@ export interface MovieDetail {
   overview: string;
   poster_path: string;
   release_date: string;
+  runtime: number;
   title: string;
   vote_average: number;
   credits: {
@@ -142,6 +143,7 @@ export interface TVDetail {
   genres: Array<{ id: number; name: string }>;
   overview: string;
   poster_path: string;
+  episode_run_time: number[];
   first_air_date: string;
   id: number;
   name: string;

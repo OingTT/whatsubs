@@ -174,3 +174,13 @@ model CommentLike {
   @@index([commentId])
   @@index([userId])
 }
+
+model Content {
+  type         ContentType
+  id           Int
+  genresString String
+  releaseDate  DateTime
+  runtime      Int?
+
+  @@id([type, id])
+}
