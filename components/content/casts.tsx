@@ -2,7 +2,7 @@ import { getTmdbImagePath } from '@/lib/client/api';
 import { MovieDetail, TVDetail } from '@/lib/client/interface';
 import { Grid, Section } from '@/lib/client/style';
 import { ContentType } from '@prisma/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../button/button';
 import MiniCard from '../mini-card';
 import MiniCardSkeleton from '../mini-card-skeleton';
@@ -13,6 +13,10 @@ interface CastsProps {
 
 export default function Casts({ contentDetail }: CastsProps) {
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [contentDetail]);
 
   const handleClick = () => {
     setIndex(index => ++index);
@@ -45,7 +49,7 @@ export default function Casts({ contentDetail }: CastsProps) {
                   key={person.id}
                   title={person.name}
                   subtitle={person.character}
-                  src={getTmdbImagePath(person.profile_path)}
+                  src={getTmdbImagePath(person.profile_path, 'w154')}
                   href={`/person/${person.id}`}
                 />
               ))

@@ -194,7 +194,7 @@ export default function Search() {
                 key={person.id}
                 title={person.name}
                 subtitle={person.known_for_department}
-                src={getTmdbImagePath(person.profile_path)}
+                src={getTmdbImagePath(person.profile_path, 'w154')}
                 href={`/person/${person.id}`}
               />
             ))}

@@ -1,7 +1,7 @@
 import { getTmdbImagePath } from '@/lib/client/api';
 import { TVDetail } from '@/lib/client/interface';
 import { Grid, Section } from '@/lib/client/style';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../button/button';
 import MiniCard from '../mini-card';
 import MiniCardSkeleton from '../mini-card-skeleton';
@@ -12,6 +12,10 @@ interface SeasonsProps {
 
 export default function Seasons({ contentDetail }: SeasonsProps) {
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [contentDetail]);
 
   const handleClick = () => {
     setIndex(index => ++index);
@@ -30,7 +34,7 @@ export default function Seasons({ contentDetail }: SeasonsProps) {
                   key={season.id}
                   title={season.name}
                   subtitle={season.air_date}
-                  src={getTmdbImagePath(season.poster_path)}
+                  src={getTmdbImagePath(season.poster_path, 'w154')}
                   // href={`/contents/tv/${contentDetail.id}/season/${season.season_number}`}
                 />
               ))

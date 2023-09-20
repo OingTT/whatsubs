@@ -1,3 +1,4 @@
+import Backdrop from '@/components/content/backdrop';
 import Casts from '@/components/content/casts';
 import Comments from '@/components/content/comments';
 import Details from '@/components/content/details';
@@ -6,6 +7,7 @@ import Seasons from '@/components/content/seasons';
 import Layout from '@/components/layout/layout';
 import Slider from '@/components/slider';
 import WatchSelector from '@/components/watch-selector';
+import { getTmdbImagePath } from '@/lib/client/api';
 import {
   Collection,
   Content,
@@ -23,62 +25,6 @@ import { getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import useSWR, { Fetcher } from 'swr';
-
-const Backdrop = styled.div`
-  width: 936px;
-  height: 400px;
-  background-color: var(--secondary);
-  position: relative;
-  border-radius: 32px;
-  overflow: hidden;
-
-  & > img {
-    object-fit: cover;
-  }
-
-  @media (max-width: 1199px) {
-    width: 100%;
-    border-radius: 0px;
-  }
-
-  @media (max-width: 809px) {
-    height: 240px;
-  }
-`;
-
-const Background = styled.div`
-  width: calc(100% + 80px);
-  height: 480px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--secondary);
-  position: relative;
-
-  & > img {
-    object-fit: cover;
-    opacity: 0.75;
-    transform: translate3d(0, 0, 0);
-    filter: blur(40px);
-
-    @media (max-width: 1199px) {
-      filter: blur(24px);
-    }
-
-    @media (max-width: 809px) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 1199px) {
-    width: 100%;
-    height: 400px;
-  }
-
-  @media (max-width: 809px) {
-    height: 240px;
-  }
-`;
 
 const Header = styled.div`
   width: 100%;
@@ -241,26 +187,8 @@ export default function Content({ type, id }: ContentProps) {
 
   return (
     <Layout title={isMovie ? contentDetail.title : contentDetail?.name} fit>
-      <Background>
-        {contentDetail?.backdrop_path && (
-          <Image
-            src={`https://image.tmdb.org/t/p/original${contentDetail.backdrop_path}`}
-            fill
-            alt="Background"
-            unoptimized
-          />
-        )}
-        <Backdrop>
-          {contentDetail?.backdrop_path && (
-            <Image
-              src={`https://image.tmdb.org/t/p/original${contentDetail.backdrop_path}`}
-              fill
-              alt="Backdrop"
-              unoptimized
-            />
-          )}
-        </Backdrop>
-      </Background>
+      <Backdrop src={getTmdbImagePath(contentDetail?.backdrop_path)} />
+
       <Container>
         <Header>
           <Left>
