@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Image from 'next/image';
 import useSWRImmutable from 'swr/immutable';
+import Link from 'next/link';
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,25 +66,27 @@ export default function Person({ id, name, profilePath, info }: PersonProps) {
   const { data: translatedName } = useSWRImmutable(name, fetchTranslation);
 
   return (
-    <Wrapper>
-      <Left>
-        <Image
-          src={
-            profilePath
-              ? `https://image.tmdb.org/t/p/w154${profilePath}`
-              : '/images/profile.png'
-          }
-          fill
-          alt="Cast"
-          unoptimized
-        />
-      </Left>
-      <Right>
-        <Texts>
-          <Name>{translatedName || name}</Name>
-          <Info>{info}</Info>
-        </Texts>
-      </Right>
-    </Wrapper>
+    <Link href={`/person/${id}`}>
+      <Wrapper>
+        <Left>
+          <Image
+            src={
+              profilePath
+                ? `https://image.tmdb.org/t/p/w154${profilePath}`
+                : '/images/profile.png'
+            }
+            fill
+            alt="Cast"
+            unoptimized
+          />
+        </Left>
+        <Right>
+          <Texts>
+            <Name>{translatedName || name}</Name>
+            <Info>{info}</Info>
+          </Texts>
+        </Right>
+      </Wrapper>
+    </Link>
   );
 }
