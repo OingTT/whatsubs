@@ -1,4 +1,4 @@
-import { Comment, ContentType } from '@prisma/client';
+import { Comment, ContentType, Subscription } from '@prisma/client';
 
 export interface Certifications {
   certifications: {
@@ -251,4 +251,8 @@ export interface UserWithComment {
 
 export interface CommentLike {
   commentId: number;
+}
+
+export interface SubscriptionWithUrl extends Subscription {
+  url?: string;
 }

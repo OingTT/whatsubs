@@ -3,6 +3,7 @@ import Casts from '@/components/content/casts';
 import Comments from '@/components/content/comments';
 import Details from '@/components/content/details';
 import Genres from '@/components/content/genres';
+import PlaySelector from '@/components/content/play-selector';
 import Seasons from '@/components/content/seasons';
 import Layout from '@/components/layout/layout';
 import Slider from '@/components/slider';
@@ -15,14 +16,12 @@ import {
   TVDetail,
 } from '@/lib/client/interface';
 import { Container, Section } from '@/lib/client/style';
-import usePlayLinks from '@/lib/client/usePlayLinks';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import styled from '@emotion/styled';
-import { ContentType, Subscription } from '@prisma/client';
-import { IconPlayerPlayFilled, IconStarFilled } from '@tabler/icons-react';
+import { ContentType } from '@prisma/client';
+import { IconStarFilled } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import useSWR, { Fetcher } from 'swr';
 
@@ -78,40 +77,6 @@ const Certification = styled.div`
   font-weight: 500;
 `;
 
-const Selector = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 24px;
-`;
-
-const PlayButton = styled.button`
-  width: 96px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  box-shadow: ${props =>
-    props.disabled ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.25)'};
-  background-color: var(
-    ${props => (props.disabled ? '--secondary' : '--primary')}
-  );
-  color: var(--text-primary);
-  border-radius: 8px;
-  cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-`;
-
-const Providers = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const Provider = styled(Image)`
-  border-radius: 100%;
-`;
-
 const Overview = styled.p`
   width: 100%;
 `;
@@ -122,7 +87,6 @@ interface ContentProps {
 }
 
 export default function Content({ type, id }: ContentProps) {
-  const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data: rating } = useSWR<{ rating?: number }>(
     `/api/contents/${type.toLowerCase()}/${id}/reviews/values`
   );
@@ -181,10 +145,6 @@ export default function Content({ type, id }: ContentProps) {
         result => result.iso_3166_1 === 'KR'
       )?.rating;
 
-  const playLinks = usePlayLinks(
-    contentDetail?.['watch/providers']?.results?.KR?.link
-  );
-
   return (
     <Layout title={isMovie ? contentDetail.title : contentDetail?.name} fit>
       <Backdrop src={getTmdbImagePath(contentDetail?.backdrop_path)} />
@@ -226,35 +186,7 @@ export default function Content({ type, id }: ContentProps) {
           </Right>
         </Header>
 
-        <Selector>
-          <a href={playLinks?.urls[0]} target="_blank" rel="noopener">
-            <PlayButton disabled={!playLinks || playLinks.urls.length === 0}>
-              <IconPlayerPlayFilled size={16} />
-            </PlayButton>
-          </a>
-
-          <Providers>
-            {contentDetail?.['watch/providers']?.results?.KR?.flatrate?.map(
-              provider => {
-                const watchProvider = subscriptions?.find(
-                  subscription =>
-                    subscription.providerId === provider.provider_id
-                );
-                return (
-                  watchProvider && (
-                    <Provider
-                      key={provider.provider_id}
-                      src={`/images/subs/${watchProvider.key}.png`}
-                      width={32}
-                      height={32}
-                      alt="Provider"
-                    />
-                  )
-                );
-              }
-            )}
-          </Providers>
-        </Selector>
+        <PlaySelector contentDetail={contentDetail} />
 
         <Section>
           <Overview>
