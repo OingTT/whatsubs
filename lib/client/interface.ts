@@ -214,10 +214,27 @@ export interface Person {
   profile_path: string;
   known_for: Array<Movie | TV>;
   external_ids: {
-    imdb_id: string;
     facebook_id: string;
     instagram_id: string;
+    tiktok_id: string;
     twitter_id: string;
+    youtube_id: string;
+  };
+  combined_credits: {
+    cast: Array<{
+      id: number;
+      title: string;
+      poster_path: string;
+      character: string;
+      media_type: 'movie' | 'tv';
+    }>;
+    crew: Array<{
+      id: number;
+      title: string;
+      poster_path: string;
+      job: string;
+      media_type: 'movie' | 'tv';
+    }>;
   };
 }
 

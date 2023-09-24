@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { Variants, motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import Placeholder from './placeholder';
 
 const Wrapper = styled.div`
   display: flex;
@@ -58,22 +58,6 @@ const Subtitle = styled.div`
   text-overflow: ellipsis;
 `;
 
-const Placeholder = styled(motion.div)`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: var(--secondary);
-`;
-
-const placeholderVariants: Variants = {
-  initial: {
-    opacity: 1,
-  },
-  animate: {
-    opacity: 0,
-  },
-};
-
 interface MiniCardProps {
   src?: string;
   title: string;
@@ -102,11 +86,7 @@ export default function MiniCard({
             onLoadingComplete={() => setIsLoaded(true)}
           />
         )}
-        <Placeholder
-          variants={placeholderVariants}
-          initial="initial"
-          animate={isLoaded ? 'animate' : 'initial'}
-        />
+        <Placeholder isLoaded={isLoaded} />
       </Left>
       <Right>
         <Titles>
