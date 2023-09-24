@@ -1,11 +1,10 @@
-import { getTmdbImagePath } from '@/lib/client/api';
 import { MovieDetail, TVDetail } from '@/lib/client/interface';
 import { Grid, Section } from '@/lib/client/style';
 import { ContentType } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import Button from '../button/button';
-import MiniCard from '../mini-card';
 import MiniCardSkeleton from '../mini-card-skeleton';
+import PersonCard from '../person-card';
 
 interface CastsProps {
   contentDetail?: MovieDetail | TVDetail;
@@ -45,12 +44,10 @@ export default function Casts({ contentDetail }: CastsProps) {
           ? casts
               .slice(0, 10 * (index + 1) - 1)
               .map(person => (
-                <MiniCard
+                <PersonCard
                   key={person.id}
-                  title={person.name}
+                  id={person.id}
                   subtitle={person.character}
-                  src={getTmdbImagePath(person.profile_path, 'w154')}
-                  href={`/person/${person.id}`}
                 />
               ))
           : [...Array(9)].map((_, i) => <MiniCardSkeleton key={i} />)}

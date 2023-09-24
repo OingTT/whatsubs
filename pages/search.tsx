@@ -1,8 +1,6 @@
 import Layout from '@/components/layout/layout';
-import MiniCard from '@/components/mini-card';
-import Person from '@/components/person';
+import PersonCard from '@/components/person-card';
 import Slider from '@/components/slider';
-import { getTmdbImagePath } from '@/lib/client/api';
 import { Movie, TV } from '@/lib/client/interface';
 import { searchQueryState } from '@/lib/client/state';
 import { Container, Grid, Section } from '@/lib/client/style';
@@ -191,13 +189,7 @@ export default function Search() {
           <h5>인물</h5>
           <Grid>
             {people.map(person => (
-              <MiniCard
-                key={person.id}
-                title={person.name}
-                subtitle={person.known_for_department}
-                src={getTmdbImagePath(person.profile_path, 'w154')}
-                href={`/person/${person.id}`}
-              />
+              <PersonCard key={person.id} id={person.id} />
             ))}
           </Grid>
         </Section>

@@ -1,244 +1,197 @@
 import Layout from '@/components/layout/layout';
-import { Person, Movie, TV } from '@/lib/client/interface';
+import Placeholder from '@/components/placeholder';
+import Slider from '@/components/slider';
+import { getKoreanDepartment, getKoreanName } from '@/lib/client/api';
+import { Person } from '@/lib/client/interface';
+import { Container } from '@/lib/client/style';
+import styled from '@emotion/styled';
+import { ContentType } from '@prisma/client';
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandTiktok,
+  IconBrandX,
+  IconBrandYoutube,
+} from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import useSWR from 'swr';
-import { authOptions } from '../api/auth/[...nextauth]';
-import styled from '@emotion/styled';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import Slider from '@/components/slider';
-import { ContentType } from '@prisma/client';
-import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
-import { searchQueryState } from '@/lib/client/state';
-import { Container } from '@/lib/client/style';
-import {
-  IconBrandInstagram,
-  IconBrandTwitter,
-  IconBrandFacebook,
-} from '@tabler/icons-react';
+import { useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
+import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  aspect-ratio: 2/1;
-  //cursor: pointer;
+  gap: 24px;
+
+  @media (max-width: 809px) {
+    gap: 16px;
+  }
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  width: 168px;
+  height: 252px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: var(--secondary);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: 809px) {
+    width: 120px;
+    height: 180px;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.25);
+  }
+`;
+
+const Right = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 0px 16px 0px;
+
+  @media (max-width: 809px) {
+    padding: 8px 0px 8px 0px;
+  }
 `;
 
 const Texts = styled.div`
-  flex: 2;
-  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  padding: 8px 0px 8px 12px;
-  gap: 4px;
 `;
 
-const Name = styled.div`
-  font-weight: 600;
-  font-size: 50px;
+const Subtitle = styled.h5`
+  color: var(--text-secondary);
 `;
 
-const Info = styled.div`
-  font-weight: 500;
-  font-size: 50px;
+const Links = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
 `;
 
-interface SearchForm {
-  query: string;
+interface PersonProfileProps {
+  id: number;
 }
 
-function checkKor(str: string) {
-  const regExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g;
-  if (regExp.test(str)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+const fetchTranslation = async (name: string) => {
+  const response = await fetch(`/api/translate/${encodeURIComponent(name)}`);
+  const data = await response.json();
+  return data.translatedText || '';
+};
 
-function getKoreanName(data: Person) {
-  if (checkKor(data.name)) {
-    return data.name;
-  }
-  const koreanName = data.also_known_as.find(name => checkKor(name));
-  if (koreanName) {
-    return koreanName;
-  }
-
-  return data.name;
-}
-
-function getKoreanDepartment(department: string) {
-  if (department === 'Acting') {
-    return '배우';
-  } else if (department === 'Directing') {
-    return '감독';
-  } else if (department === 'Production') {
-    return '제작';
-  }
-  return department;
-}
-
-export default function PersonProfile({
-  id,
-  name,
-  profile_path,
-  known_for_department,
-}: Person) {
-  const [query, setQuery] = useRecoilState(searchQueryState);
-  const [person, setPerson] = useState<Person>();
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [tvShows, setTVShows] = useState<TV[]>([]);
-  const [people, setPeople] = useState<Person[]>([]);
-  const { data: data } = useSWR<Person>(
-    `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=external_ids&language=ko-KR`
+export default function PersonProfile({ id }: PersonProfileProps) {
+  const { data } = useSWR<Person>(
+    `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=external_ids,combined_credits&language=ko-KR`
   );
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const { watch } = useForm<SearchForm>({
-    defaultValues: {
-      query: query,
-    },
-  });
-  const { data: moviesData } = useSWR(
-    `https://api.themoviedb.org/3/search/movie?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch('query')}`
+  const { data: translatedName } = useSWRImmutable(
+    data && !getKoreanName(data) && data.name,
+    fetchTranslation
   );
-
-  const { data: tvShowsData } = useSWR(
-    `https://api.themoviedb.org/3/search/tv?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch('query')}`
-  );
-
-  const { data: peopleData } = useSWR(
-    `https://api.themoviedb.org/3/search/person?api_key=${
-      process.env.NEXT_PUBLIC_TMDB_API_KEY
-    }&language=ko-KR&query=${watch('query')}`
-  );
-
-  const { data: personMovies } = useSWR(
-    person &&
-      `https://api.themoviedb.org/3/person/${person.id}/movie_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
-  );
-
-  const { data: personTVShows } = useSWR(
-    person &&
-      `https://api.themoviedb.org/3/person/${person.id}/tv_credits?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=ko-KR`
-  );
-  useEffect(() => {
-    if (moviesData) {
-      setMovies(moviesData.results);
-    }
-  }, [moviesData]);
-
-  useEffect(() => {
-    if (tvShowsData) {
-      setTVShows(tvShowsData.results);
-    }
-  }, [tvShowsData]);
-
-  useEffect(() => {
-    if (peopleData) {
-      setPeople(peopleData.results);
-    }
-  }, [peopleData]);
-
-  useEffect(() => {
-    if (people.length === 1) {
-      setPerson(people[0]);
-    } else {
-      setPerson(undefined);
-    }
-  }, [people]);
-
-  useEffect(() => {
-    if (personMovies && movies.length === 0) {
-      setMovies(personMovies.cast);
-    }
-  }, [movies.length, personMovies]);
-
-  useEffect(() => {
-    if (personTVShows && tvShows.length === 0) {
-      setTVShows(personTVShows.cast);
-    }
-  }, [personTVShows, tvShows.length]);
-
-  console.log(data?.external_ids.instagram_id);
 
   return (
     <Layout>
       <Container>
         <Wrapper>
-          <Image
-            src={
-              (profile_path = `https://image.tmdb.org/t/p/w154${data?.profile_path}`)
-            }
-            alt={name}
-            priority
-            unoptimized
-            width={168}
-            height={252}
-          />
-          <Texts>
-            <Name>{data ? getKoreanName(data) : '...'}</Name>
-            <Info>
-              {data ? getKoreanDepartment(data.known_for_department) : '...'}
-            </Info>
-          </Texts>
+          <ImageWrapper>
+            <Image
+              src={'https://image.tmdb.org/t/p/w342' + data?.profile_path}
+              alt="Profile"
+              priority
+              fill
+              unoptimized
+              onLoadingComplete={() => setIsLoaded(true)}
+            />
+            <Placeholder isLoaded={isLoaded} />
+          </ImageWrapper>
+          <Right>
+            <Texts>
+              <h2>
+                {data ? (
+                  getKoreanName(data) || translatedName || data.name
+                ) : (
+                  <Skeleton width={120} />
+                )}
+              </h2>
+              <Subtitle>
+                {data ? (
+                  getKoreanDepartment(data.known_for_department)
+                ) : (
+                  <Skeleton width={40} />
+                )}
+              </Subtitle>
+            </Texts>
+            <Links>
+              {data?.external_ids.facebook_id && (
+                <a
+                  href={`https://www.facebook.com/${data.external_ids.facebook_id}`}
+                  target="_blank"
+                >
+                  <IconBrandFacebook stroke={1.5} />
+                </a>
+              )}
+              {data?.external_ids.instagram_id && (
+                <a
+                  href={`https://www.instagram.com/${data.external_ids.instagram_id}`}
+                  target="_blank"
+                >
+                  <IconBrandInstagram stroke={1.5} />
+                </a>
+              )}
+              {data?.external_ids.twitter_id && (
+                <a
+                  href={`https://www.twitter.com/${data.external_ids.twitter_id}`}
+                  target="_blank"
+                >
+                  <IconBrandX stroke={1.5} />
+                </a>
+              )}
+              {data?.external_ids.tiktok_id && (
+                <a
+                  href={`https://www.tiktok.com/@${data.external_ids.tiktok_id}`}
+                  target="_blank"
+                >
+                  <IconBrandTiktok stroke={1.5} />
+                </a>
+              )}
+              {data?.external_ids.youtube_id && (
+                <a
+                  href={`https://www.youtube.com/channel/${data.external_ids.youtube_id}`}
+                  target="_blank"
+                >
+                  <IconBrandYoutube stroke={1.5} />
+                </a>
+              )}
+            </Links>
+          </Right>
         </Wrapper>
-        <IconBrandTwitter
-          size={24}
-          cursor={'pointer'}
-          onClick={() => {
-            if (data?.external_ids?.twitter_id) {
-              window.open(
-                `https://twitter.com/${data.external_ids.twitter_id}`
-              );
-            }
-          }}
-        />
-        <IconBrandFacebook
-          size={24}
-          cursor={'pointer'}
-          onClick={() => {
-            if (data?.external_ids?.facebook_id) {
-              window.open(
-                `https://www.facebook.com/${data.external_ids.facebook_id}`
-              );
-            }
-          }}
-        />
-        <IconBrandTwitter
-          size={24}
-          cursor={'pointer'}
-          onClick={() => {
-            if (data?.external_ids?.twitter_id) {
-              window.open(
-                `https://twitter.com/${data.external_ids.twitter_id}`
-              );
-            }
-          }}
-        />
       </Container>
-      <Container>
+      <Container fill>
         <Slider
-          title="영화"
-          contents={movies.map(movie => ({
-            type: ContentType.MOVIE,
-            id: movie.id,
+          title="출연"
+          contents={data?.combined_credits.cast.map(content => ({
+            type: content.media_type.toUpperCase() as ContentType,
+            id: content.id,
           }))}
         />
         <Slider
-          title="TV 프로그램"
-          contents={tvShows.map(tvShow => ({
-            type: ContentType.TV,
-            id: tvShow.id,
+          title="연출"
+          contents={data?.combined_credits.crew.map(content => ({
+            type: content.media_type.toUpperCase() as ContentType,
+            id: content.id,
           }))}
         />
       </Container>
