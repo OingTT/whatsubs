@@ -156,6 +156,7 @@ export default function Search() {
                 setQuery(e.target.value);
               },
             })}
+            autoFocus
           />
 
           <ClearIcon
