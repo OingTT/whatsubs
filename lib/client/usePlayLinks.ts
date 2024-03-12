@@ -19,6 +19,7 @@ export default function usePlayLinks(props?: Props) {
   const { data: subscriptions } = useSWR<Subscription[]>('/api/subscriptions');
   const { data } = useSWR(subscriptions && props?.link, async url => {
     const response = await fetch(`https://whatsubs.herokuapp.com/${url}`);
+    console.log('response', response);
     const html = await response.text();
 
     const $ = cheerio.load(html);
